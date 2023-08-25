@@ -1,0 +1,1 @@
+void nullCheck(void* ptr);
