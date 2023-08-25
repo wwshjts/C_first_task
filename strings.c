@@ -4,18 +4,18 @@
 #include"strings.h"
 #include"support.h"
 
-void strInit(string* s){
-	s->len = 0;
-	s->capacity = BASE_STRING_CAPACITY;
+void strInit(string* struct_ptr){
+	struct_ptr->len = 0;
+	struct_ptr->capacity = BASE_STRING_CAPACITY;
 	char* str = (char*) malloc(sizeof(char) * BASE_STRING_CAPACITY);
 	nullCheck(str);
-	s->str = str;
+	struct_ptr->str = str;
 }
 
-void strAdd(string* s, char ch){
-	char* str = s->str;
-	size_t len = s->len;
-	size_t capacity = s->capacity;
+void strAdd(string* struct_ptr, int ch){
+	char* str = struct_ptr->str;
+	size_t len = struct_ptr->len;
+	size_t capacity = struct_ptr->capacity;
 
 	assert(len <= capacity);
 	
@@ -26,15 +26,25 @@ void strAdd(string* s, char ch){
 		capacity = capacity * 2; 
 		str = (char *) realloc(str, capacity);
 		nullCheck(str);
-		s->str = str;
+		struct_ptr->str = str;
 	}
-	s->len = len;
-	s->capacity = capacity;
+	struct_ptr->len = len;
+	struct_ptr->capacity = capacity;
 }
 
-size_t strLen(string* s){
-	char* str = s->str;
+size_t strLen(string* struct_ptr){
+	char* str = struct_ptr->str;
 	size_t result = 0;
 	while(*str++) result++;
 	return result;
+}
+
+char* strChr(string* struct_prt, int ch){
+	char* s = struct_prt->str; 
+	while(*s){
+		if(*s == ch)
+			return s;
+		s++;
+	}
+	return NULL;
 }

@@ -6,7 +6,7 @@ typedef struct{
 	size_t capacity;
 } string;
 
-void strInit(string* s);
-void strAdd(string* s, char ch);
-size_t strLen(string* s);
-
+void strInit(string* struct_ptr);
+void strAdd(string* struct_ptr, int ch);
+size_t strLen(string* struct_ptr);
+char* strChr(string* struct_prt, int ch);
