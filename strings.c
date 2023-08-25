@@ -5,9 +5,11 @@
 #include"support.h"
 
 void strInit(string* s){
-	s->str = NULL;
 	s->len = 0;
 	s->capacity = BASE_STRING_CAPACITY;
+	char* str = (char*) malloc(sizeof(char) * BASE_STRING_CAPACITY);
+	nullCheck(str);
+	s->str = str;
 }
 
 void strAdd(string* s, char ch){
