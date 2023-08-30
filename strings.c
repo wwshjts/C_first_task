@@ -22,7 +22,6 @@ void strResize(String* struct_ptr){
 
 	if(capacity - 1 == len){
 		capacity = capacity * 2; 
-		printf("string size %zu capacity %zu\n", len, capacity);
 		str = (char *) realloc(str, capacity * sizeof(char));
 		nullCheck(str);
 		struct_ptr->str = str;

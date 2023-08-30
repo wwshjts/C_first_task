@@ -1,5 +1,5 @@
 int isDel(char ch){
-	return ch < '1';
+	return ch <= ' ';
 }
 
 int isAlpha(char ch){
