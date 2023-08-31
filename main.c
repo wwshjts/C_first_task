@@ -38,10 +38,6 @@ int main(int argc, char** argv){
 	arrAdd(&arr, NULL);
 	strAdd(arrSeek(&arr), ch);	
 	
-	String tmp;
-	strInit(&tmp);
-	strWith(&tmp, "why");
-	printf("%d\n", strIsWord(&tmp));
 	//read file to arr, and skip extra delimiters
 	while((ch = getc(fin)) != EOF){
 		if(ch == ' '){
@@ -59,7 +55,6 @@ int main(int argc, char** argv){
 		}
 		else if(isAlpha(ch) || (ch == '+') || (ch == '-')){
 			if (!strIsWord(arrSeek(&arr))){
-				printf(">%c\n", ch);
 				arrAdd(&arr, NULL);
 			}
 			strAdd(arrSeek(&arr), ch);
@@ -70,8 +65,19 @@ int main(int argc, char** argv){
 		}
 	}
 
+	//procesing text
+	int ruleFlag = 1;
+	while(ruleFlag){
+		ruleFlag = 0;
+		for(size_t i = 0; i < arr.size; i++){
+			if(isPal(&arr.data[i])){
+				strWith(&arr.data[i], "PALINDROM");
+				ruleFlag = 1;
+			}
+		}
+	}
+
 	for(size_t i = 0; i < arr.size; i++){
-		printf("<%s>\n", arr.data[i].str);
 		fprintf(fout,"%s", arr.data[i].str);
 	}
 	arrFree(&arr);
@@ -87,10 +93,11 @@ int main(int argc, char** argv){
 int isPal(String* str){
 	char* s = str->str;
 	size_t size = str->len;
+	if(size < 2)
+		return 0;
 	Stack st;
 	stackInit(&st);
 	for(size_t i = 0; i < size/2; i++){
-		printf(">%c\n", s[i]);
 		stackAdd(&st, s[i]);
 	}
 

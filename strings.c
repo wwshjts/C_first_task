@@ -103,7 +103,6 @@ void strWith(String* s, const char* src){
 	char* dst = s->str;
 	size_t capacity = s->capacity;
 	size_t src_len = strlen(src);
-	printf("len: %zu\n", src_len);
 	if(s->len < src_len){
 		free(dst);
 		dst = (char*) malloc(sizeof(char) * src_len * 2);
