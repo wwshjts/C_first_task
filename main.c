@@ -69,10 +69,31 @@ int main(int argc, char** argv){
 	int ruleFlag = 1;
 	while(ruleFlag){
 		ruleFlag = 0;
+		Stack brackets;
+		Stack ind;
+		stackInit(&brackets);
+		stackInit(&ind);
 		for(size_t i = 0; i < arr.size; i++){
 			if(isPal(&arr.data[i])){
 				strWith(&arr.data[i], "PALINDROM");
 				ruleFlag = 1;
+			}
+			if( (arr.data[i].str[0] == '(') || strIsDel(&arr.data[i])){
+				stackAdd(&brackets, arr.data[i].str[0]);
+				stackAdd(&ind, i); 
+			}
+			if(arr.data[i].str[0] == ')'){
+				int dels = 0;
+				while(isDel(stackSeek(&brackets))){
+					dels++;
+					stackPop(&brackets);
+					stackPop(&ind);
+				}
+				int tmp = stackPop(&ind);
+				if(i - dels - tmp - 1 == 1){
+					strInit(&arr.data[i]);
+					strInit(&arr.data[tmp]);
+				}
 			}
 		}
 	}
