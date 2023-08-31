@@ -90,7 +90,7 @@ int strIsWord(String* s){
 	int res = 1;
 	for(size_t i = 0; i < s->len; i++){
 		char ch = s->str[i];
-		res = res && (isAlpha(ch) || (ch == 0x2b) || (ch == 0x2d));
+		res = res && (isAlpha(ch) || (ch == '+') || (ch == '-'));
 	}
 	return res;
 }

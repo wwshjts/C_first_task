@@ -4,7 +4,7 @@ int isDel(char ch){
 
 int isAlpha(char ch){
 	int isLow = ('a' <= ch) && (ch <= 'z');
-	int isBig = ('A' <= ch) && (ch <= 'z');
-	int isDig = ('1' <= ch) && (ch <= '9');
+	int isBig = ('A' <= ch) && (ch <= 'Z');
+	int isDig = ('0' <= ch) && (ch <= '9');
 	return isBig || isLow || isDig;
 }

@@ -4,8 +4,11 @@
 #include"support.h"
 #include"dynArr.h"
 #include"charIs.h"
+#include"stack.h"
 
 #define LF 0xa
+
+int isPal(String* str);
 
 int main(int argc, char** argv){
 	FILE* fin;
@@ -34,7 +37,11 @@ int main(int argc, char** argv){
 
 	arrAdd(&arr, NULL);
 	strAdd(arrSeek(&arr), ch);	
-
+	
+	String tmp;
+	strInit(&tmp);
+	strWith(&tmp, "why");
+	printf("%d\n", strIsWord(&tmp));
 	//read file to arr, and skip extra delimiters
 	while((ch = getc(fin)) != EOF){
 		if(ch == ' '){
@@ -43,23 +50,28 @@ int main(int argc, char** argv){
 				strAdd(arrSeek(&arr), ch);
 			}
 		}
-		else if((ch == LF) ){
-			printf(">%d\n", arr.data[arr.size - 1].str[0]);
-			if( (arr.size > 1) && (arr.data[arr.size - 2].str[0] == LF) && \
-				(arr.data[arr.size - 1].str[0] == LF) ){
-				continue;
-			}
-			arrAdd(&arr, NULL);
-			strAdd(arrSeek(&arr), ch);
-		}
-		else{
-			if (strIsDel(arrSeek(&arr)))
+		else if((ch == LF)){
+			if( !((arr.size > 1) && (arr.data[arr.size - 2].str[0] == LF) && \
+				(arr.data[arr.size - 1].str[0] == LF) )){
 				arrAdd(&arr, NULL);
+				strAdd(arrSeek(&arr), ch);
+			}
+		}
+		else if(isAlpha(ch) || (ch == '+') || (ch == '-')){
+			if (!strIsWord(arrSeek(&arr))){
+				printf(">%c\n", ch);
+				arrAdd(&arr, NULL);
+			}
+			strAdd(arrSeek(&arr), ch);
+		}		
+		else{
+			arrAdd(&arr, NULL);
 			strAdd(arrSeek(&arr), ch);
 		}
 	}
 
 	for(size_t i = 0; i < arr.size; i++){
+		printf("<%s>\n", arr.data[i].str);
 		fprintf(fout,"%s", arr.data[i].str);
 	}
 	arrFree(&arr);
@@ -71,4 +83,23 @@ int main(int argc, char** argv){
 	}
 	return 0; 
 }
+
+int isPal(String* str){
+	char* s = str->str;
+	size_t size = str->len;
+	Stack st;
+	stackInit(&st);
+	for(size_t i = 0; i < size/2; i++){
+		printf(">%c\n", s[i]);
+		stackAdd(&st, s[i]);
+	}
+
+	for(size_t i = size/2 + (size%2) ; i < size; i++){
+		if(stackSeek(&st) == s[i]){
+			stackPop(&st);
+		}
+	}
+	return st.size == 0;
+}
+
 
