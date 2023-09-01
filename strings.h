@@ -17,6 +17,9 @@ int strCmp(String* a, String* b);
 void strResise(String* struct_prt);
 void strFree(String* s);
 void strResize(String* struct_ptr);
+int strToInt(String* struct_prt); 
 
 int strIsDel(String* s);
 int strIsWord(String* s);
+int strIsDigit(String* s);
+

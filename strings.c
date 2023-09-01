@@ -6,6 +6,7 @@
 #include"strings.h"
 #include"support.h"
 #include"charIs.h"
+#include"stack.h"
 
 void strInit(String* struct_ptr){
 	struct_ptr->len = 0;
@@ -95,6 +96,15 @@ int strIsWord(String* s){
 	return res;
 }
 
+int strIsDigit(String* s){
+	char* word = s->str;
+	int res = 1;
+	while(*word){
+		res = res && (isDigit(*word));
+		word++;
+	}
+	return res;
+}
 void strFree(String* s){
 	free(s->str);
 }
@@ -113,4 +123,16 @@ void strWith(String* s, const char* src){
 	s->len = src_len;
 	s->capacity = capacity;
 	s->str = dst;
+}
+
+int strToInt(String* s){
+	char* word = s->str;
+	int res = 0;	
+	while(*word){	
+		res += *word - '0';
+		res *= 10;
+		word++;
+	}
+	res /= 10;
+	return res;
 }
