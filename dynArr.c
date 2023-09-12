@@ -53,6 +53,7 @@ String* arrSeek(DynArr* arr){
 }
 
 String* arrPop(DynArr* arr){	
+	arrShrink(arr);
 	String* res = arrSeek(arr);
 	arr->size--;
 	return res;
@@ -61,11 +62,17 @@ String* arrPop(DynArr* arr){
 void arrShrink(DynArr* arr){
 	size_t size = arr->size;
 	size_t capacity = arr->capacity;
-	if(size <= capacity/4){
+	if(size < capacity/4){
 		capacity = capacity/4;
-		arr->data = (String*) realloc(arr->data, capacity);
+		arr->data = (String*) realloc(arr->data, capacity * sizeof(String));
 		nullCheck(arr->data);
 	}
 	arr->capacity = capacity;
 }
 
+void arrPrint(DynArr* arr){
+	printf("size %zu capacity %zu\n", arr->size, arr->capacity);
+	for(size_t i = 0; i < arr->size; i++)
+		printf("<%s> ", arr->data[i].str);
+	printf("\n");
+}

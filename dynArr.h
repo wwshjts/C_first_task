@@ -9,4 +9,9 @@ typedef struct {
 void initEmptyDyn(DynArr* arr);
 void arrFree(DynArr* arr);
 void arrAdd(DynArr* arr, String* item);
+
 String* arrSeek(DynArr* arr);
+String* arrPop(DynArr* arr);
+void arrShrink(DynArr* arr);
+
+void arrPrint(DynArr* arr);
