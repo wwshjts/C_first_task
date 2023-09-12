@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+
 #include"strings.h"
 #include"support.h"
 #include"dynArr.h"
@@ -10,8 +11,11 @@
 
 int isPal(String* str);
 int isTemperature(String* s);
-int isDigit(char ch);
+int isBracket(String* s);
+int isMathSign(String* s);
+int isExpression(String* s);
 void convertTemp(String* s);
+
 
 int main(int argc, char** argv){
 	FILE* fin;
@@ -74,20 +78,22 @@ int main(int argc, char** argv){
 		ruleFlag = 0;
 		Stack brackets;
 		Stack ind;
+		DynArr expr;
 		stackInit(&brackets);
 		stackInit(&ind);
+		initEmptyDyn(&expr);
 		for(size_t i = 0; i < arr.size; i++){
 			String s = arr.data[i];
-			char* str = s.str;
+			char* word = s.str;
 			if(isPal(&arr.data[i])){
 				strWith(&arr.data[i], "PALINDROM");
 				ruleFlag = 1;
 			}
-			if( (str[0] == '(') || strIsDel(&s)){
-				stackAdd(&brackets, str[0]);
+			if( (word[0] == '(') || strIsDel(&s)){
+				stackAdd(&brackets, word[0]);
 				stackAdd(&ind, i); 
 			}
-			if(str[0] == ')'){
+			if(word[0] == ')'){
 				int dels = 0;
 				while(isDel(stackSeek(&brackets))){
 					dels++;
@@ -100,6 +106,7 @@ int main(int argc, char** argv){
 					strWith(&arr.data[i]," ");
 					strInit(&arr.data[tmp]);
 					strWith(&arr.data[tmp]," ");
+					ruleFlag = 1;
 				}
 			}
 			if(isTemperature(&s)){
@@ -142,10 +149,6 @@ int isPal(String* str){
 		}
 	}
 	return st.size == 0;
-}
-
-int isDigit(char ch){
-	return ('0' <= ch) && (ch <= '9');
 }
 
 int isTemperature(String* s){
@@ -198,3 +201,37 @@ void convertTemp(String* s){
 	strAdd(&res, 'C');
 	strCopy(s, &res);
 }
+int isMathSign(String* s){
+	char* word = s->str;
+	if (strcmp(word, "+") == 0)
+		return 1;
+	if (strcmp(word, "-") == 0)
+		return 1;
+	if (strcmp(word, "*") == 0)
+		return 1;
+	if (strcmp(word, "/") == 0)
+		return 1;
+	return 0;
+}
+
+int isBracket(String* s){
+	char* word = s->str;
+	if (strcmp(word, "(") == 0)
+		return 1;
+	if (strcmp(word, ")") == 0)
+		return 1;
+	return 0;
+}
+
+int isExpression(String* s){
+	if (strIsDigit(s))
+		return 1;
+	if (strIsDel(s))
+		return 1;
+	if (isBracket(s))
+		return 1;
+	if (isMathSign(s))
+		return 1;
+	return 0;
+}
+

@@ -11,3 +11,4 @@ void stackFree(Stack* st);
 void stackAdd(Stack* st, int item);
 int stackSeek(Stack* st);
 int stackPop(Stack*  st);
+void stackShrink(Stack* st);

@@ -42,6 +42,7 @@ int stackSeek(Stack* st){
 }
 
 int stackPop(Stack* st){	
+	stackShrink(st);
 	int res = stackSeek(st);
 	st->size--;
 	return res;
@@ -50,9 +51,9 @@ int stackPop(Stack* st){
 void stackShrink(Stack* st){
 	size_t size = st->size;
 	size_t capacity = st->capacity;
-	if(size <= capacity/4){
+	if(size < capacity/4){
 		capacity = capacity/4;
-		st->data = (int*) realloc(st->data, capacity);
+		st->data = (int*) realloc(st->data, capacity * sizeof(int));
 		nullCheck(st->data);
 	}
 	st->capacity = capacity;
