@@ -15,6 +15,8 @@ int isBracket(String* s);
 int isMathSign(String* s);
 int isExpression(String* s);
 void convertTemp(String* s);
+int convertToPolish(DynArr*, DynArr*);
+int evalPolish(DynArr*, String*);
 
 
 int main(int argc, char** argv){
@@ -180,23 +182,7 @@ void convertTemp(String* s){
 	if(sign == '-')
 		temp *= -1;
 	temp = (temp - 32) * (5.0 / 9);
-	int x = (int) (temp * 10);
-	Stack num;
-	stackInit(&num);
-	if(x < 0){
-		strAdd(&res, '-');
-		x *= -1;
-	}
-	printf("%d\n", x);
-	while (x > 0){
-		stackAdd(&num, x % 10);
-		x /= 10; 
-	}
-	while (num.size > 1){
-		strAdd(&res, stackPop(&num) + '0');
-	}
-	strAdd(&res, '.');
-	strAdd(&res, stackPop(&num) + '0');
+	strFloatToString(&res, temp);
 	strAdd(&res, 't');
 	strAdd(&res, 'C');
 	strCopy(s, &res);
@@ -235,3 +221,80 @@ int isExpression(String* s){
 	return 0;
 }
 
+int convertToPolish(DynArr* arr, DynArr* res){
+	DynArr st;
+	initEmptyDyn(&st);
+	for(size_t i = 0; i < arr->size; i++){
+		String curr = arr->data[i];
+		if(strIsDigit(&curr)){
+			arrAdd(res, &curr);
+		}
+		else if(strcmp(curr.str, ")") == 0){
+			while((strcmp(arrSeek(&st)->str, "(") != 0) && (st.size > 0)){
+				arrAdd(res, arrPop(&st));
+			}
+			if(st.size > 0){
+				arrPop(&st);
+			}
+		}
+		else{
+			arrAdd(&st, &curr);
+		}
+
+	}
+	if(res -> size == 0)
+		return 0;
+	while(st.size > 0){
+		if(!isMathSign(arrSeek(&st)))
+			return 0;
+		arrAdd(res, arrPop(&st));
+	}
+	arrPrint(res);
+	return 1;
+}
+
+int evalPolish(DynArr* expr, String* res){
+	Stack st;
+	stackInit(&st);
+	for(size_t i = 0; i < expr->size; i++){
+
+		String* curr = &expr->data[i];
+		if (strIsDigit(curr)){
+			stackAdd(&st, strToInt(curr));
+			stackPrint(&st);
+		}
+		else{
+			char op = expr->data[i].str[0];
+			int errFlag = 0;
+			int fr;
+			int sc;
+			switch(op){
+				case '+' : stackAdd(&st, stackPop(&st) + stackPop(&st));
+				break;
+				case '-' :
+						   sc = stackPop(&st);
+						   fr = stackPop(&st);
+						   stackAdd(&st, fr - sc);
+				break;
+				case '*' :
+						   stackAdd(&st, stackPop(&st) * stackPop(&st));
+				break;
+				case '/' : 
+						   sc = stackPop(&st);
+						   fr = stackPop(&st);
+						   if (sc == 0){
+							   errFlag = 1;
+							   break;
+						   }
+						   stackAdd(&st, fr / sc);
+				break;
+			}
+			if (errFlag){
+				strWith(res, "ERROR");
+				return 0;
+			}
+		}
+	}
+	printf("RESULT> %d\n", stackPop(&st));
+	return 1;
+}
