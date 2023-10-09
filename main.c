@@ -74,6 +74,44 @@ int main(int argc, char** argv){
 		}
 	}
 
+	//eval all expressions in the file
+	DynArr expr; 
+	initEmptyDyn(&expr);
+	for(size_t i = 0; i < arr.size; i++){
+		String s = arr.data[i];
+		size_t expr_start = 0;
+		if(isExpression(&s) || strIsDel(&s)){
+			if(!strIsDel(&s)){
+				arrAdd(&expr, &s);
+				expr_start = i;
+			}
+		}
+		else{
+			arrPrint(&expr);
+			DynArr res;
+			initEmptyDyn(&res);
+			String ans;
+			strInit(&ans);
+			int rs = convertToPolish(&expr, &res);
+			printf("result: %d\n", rs);
+			if (rs > 0){
+				//if expr is evaluated
+				if (evalPolish(&res, &ans)){
+					printf("%s\n", ans.str);
+					strCopy(&arr.data[expr_start], &ans);
+					for(size_t dl = expr_start + 1; dl < i; dl++){
+						strWith(&arr.data[dl], " ");				
+					}
+				}
+			}
+			else{
+				arrFree(&expr);
+				initEmptyDyn(&expr);
+			}
+
+		}
+	}
+
 	//procesing text
 	int ruleFlag = 1;
 	while(ruleFlag){
@@ -240,7 +278,6 @@ int convertToPolish(DynArr* arr, DynArr* res){
 		else{
 			arrAdd(&st, &curr);
 		}
-
 	}
 	if(res -> size == 0)
 		return 0;
