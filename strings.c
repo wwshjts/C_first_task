@@ -116,6 +116,25 @@ int strIsDigit(String* s){
 	return res;
 }
 
+int strIsSpace(String*s){
+	char* word = s->str;
+	int res = 0;
+	while(*word){
+		res = (*word == ' ');
+		word++;
+	}
+	return res; 
+}
+
+int strIsLf(String* s){
+	char* word = s->str;
+	int res = 0;
+	while(*word){
+		res = (*word == LF);
+		word++;
+	}
+	return res;
+}
 void strFree(String* s){
 	free(s->str);
 }

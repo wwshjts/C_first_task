@@ -7,7 +7,6 @@
 #include"dynArr.h"
 #include"charIs.h"
 #include"stack.h"
-#define LF 0xa
 
 int isPal(String* str);
 int isTemperature(String* s);
@@ -46,34 +45,22 @@ int main(int argc, char** argv){
 
 	arrAdd(&arr, NULL);
 	strAdd(arrSeek(&arr), ch);	
-	
-	//read file to arr, and skip extra delimiters
-	while((ch = getc(fin)) != EOF){
-		if(ch == ' '){
-			if(!strIsDel(arrSeek(&arr))){
-				arrAdd(&arr, NULL);
-				strAdd(arrSeek(&arr), ch);
-			}
-		}
-		else if((ch == LF)){
-			if( !((arr.size > 1) && (arr.data[arr.size - 2].str[0] == LF) && \
-				(arr.data[arr.size - 1].str[0] == LF) )){
-				arrAdd(&arr, NULL);
-				strAdd(arrSeek(&arr), ch);
-			}
+	while ( ( (ch = getc(fin)) != EOF) ){
+		if (isDel(ch)){
+			arrAdd(&arr, NULL);
+			strAdd(arrSeek(&arr), ch);
 		}
 		else if(isAlpha(ch) || (ch == '+') || (ch == '-')){
 			if (!strIsWord(arrSeek(&arr))){
 				arrAdd(&arr, NULL);
 			}
 			strAdd(arrSeek(&arr), ch);
-		}		
+		}
 		else{
 			arrAdd(&arr, NULL);
 			strAdd(arrSeek(&arr), ch);
 		}
-	}
-
+	}		
 	//eval all expressions in the file
 	DynArr expr; 
 	initEmptyDyn(&expr);
@@ -87,8 +74,6 @@ int main(int argc, char** argv){
 		String s = arr.data[i];
 		//TODO поправить костыль
 		if(isExpression(&s) && (s.str[0] != LF) ){
-
-			arrPrint(&expr);
 			if(!strIsDel(&s)){
 				arrAdd(&expr, &s);
 				if (expr_flag == 0){
@@ -98,26 +83,22 @@ int main(int argc, char** argv){
 			}
 		}
 		else {
-			printf("evaled\n");
-			arrPrint(&expr);
 			int rs = convertToPolish(&expr, &res);
 			if (rs > 0){
 				//if expr is evaluated
 				if (evalPolish(&res, &ans)){
 					strCopy(&arr.data[expr_start], &ans);
-					printf("copied %s\n", arr.data[expr_start].str);
 					for(size_t dl = expr_start + 1; dl < i; dl++){
 						strWith(&arr.data[dl], " ");				
 					}
 					expr_flag = 0;
 				}
 			}
-			printf("end eval\n");
 			arrFree(&res);
 			initEmptyDyn(&res);
 			strFree(&ans);
 			strInit(&ans);
-			arrFree(&expr); //here if double free
+			arrFree(&expr); 
 			initEmptyDyn(&expr);
 
 		}
@@ -165,10 +146,17 @@ int main(int argc, char** argv){
 		stackFree(&brackets);
 		stackFree(&ind);
 	}
+	
 
 	for(size_t i = 0; i < arr.size; i++){
-		/*if(!strIsDel(&arr.data[i]))
-			printf("<%s>\n", arr.data[i].str); */
+		String s = arr.data[i];
+		/*if(strIsDel(&arr.data[i]))
+			fprintf(fout, "<%d>", arr.data[i].str[0]); */
+		if (strIsSpace(&s) && ((i > 0) && strIsSpace(&arr.data[i - 1])))
+			continue;
+		if (strIsLf(&s) && ( (i > 1) && strIsLf(&arr.data[i - 1]) && \
+										strIsLf(&arr.data[i - 2])))
+			continue; 
 		fprintf(fout,"%s", arr.data[i].str);
 	}
 	arrFree(&arr);
@@ -295,7 +283,6 @@ int convertToPolish(DynArr* arr, DynArr* res){
 			return 0;
 		arrAdd(res, arrPop(&st));
 	}
-	arrPrint(res);
 	return 1;
 }
 

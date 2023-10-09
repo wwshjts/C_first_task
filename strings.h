@@ -25,4 +25,5 @@ void strIntToString(String* dst, int x);
 int strIsDel(String* s);
 int strIsWord(String* s);
 int strIsDigit(String* s);
-
+int strIsLf(String* s);
+int strIsSpace(String*s);
