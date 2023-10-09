@@ -77,37 +77,48 @@ int main(int argc, char** argv){
 	//eval all expressions in the file
 	DynArr expr; 
 	initEmptyDyn(&expr);
+	DynArr res;
+	initEmptyDyn(&res);
+	String ans;
+	strInit(&ans);
+	int expr_flag = 0;
+	size_t expr_start = 0;
 	for(size_t i = 0; i < arr.size; i++){
 		String s = arr.data[i];
-		size_t expr_start = 0;
-		if(isExpression(&s) || strIsDel(&s)){
+		//TODO поправить костыль
+		if(isExpression(&s) && (s.str[0] != LF) ){
+
+			arrPrint(&expr);
 			if(!strIsDel(&s)){
 				arrAdd(&expr, &s);
-				expr_start = i;
+				if (expr_flag == 0){
+					expr_start = i;
+					expr_flag = 1;
+				}
 			}
 		}
-		else{
+		else {
+			printf("evaled\n");
 			arrPrint(&expr);
-			DynArr res;
-			initEmptyDyn(&res);
-			String ans;
-			strInit(&ans);
 			int rs = convertToPolish(&expr, &res);
-			printf("result: %d\n", rs);
 			if (rs > 0){
 				//if expr is evaluated
 				if (evalPolish(&res, &ans)){
-					printf("%s\n", ans.str);
 					strCopy(&arr.data[expr_start], &ans);
+					printf("copied %s\n", arr.data[expr_start].str);
 					for(size_t dl = expr_start + 1; dl < i; dl++){
 						strWith(&arr.data[dl], " ");				
 					}
+					expr_flag = 0;
 				}
 			}
-			else{
-				arrFree(&expr);
-				initEmptyDyn(&expr);
-			}
+			printf("end eval\n");
+			arrFree(&res);
+			initEmptyDyn(&res);
+			strFree(&ans);
+			strInit(&ans);
+			arrFree(&expr); //here if double free
+			initEmptyDyn(&expr);
 
 		}
 	}
@@ -118,10 +129,8 @@ int main(int argc, char** argv){
 		ruleFlag = 0;
 		Stack brackets;
 		Stack ind;
-		DynArr expr;
 		stackInit(&brackets);
 		stackInit(&ind);
-		initEmptyDyn(&expr);
 		for(size_t i = 0; i < arr.size; i++){
 			String s = arr.data[i];
 			char* word = s.str;
@@ -298,7 +307,6 @@ int evalPolish(DynArr* expr, String* res){
 		String* curr = &expr->data[i];
 		if (strIsDigit(curr)){
 			stackAdd(&st, strToInt(curr));
-			stackPrint(&st);
 		}
 		else{
 			char op = expr->data[i].str[0];
@@ -332,6 +340,8 @@ int evalPolish(DynArr* expr, String* res){
 			}
 		}
 	}
-	printf("RESULT> %d\n", stackPop(&st));
+	strIntToString(res, stackPop(&st));
+	stackFree(&st);
+
 	return 1;
 }

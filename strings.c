@@ -62,12 +62,15 @@ char* strChr(String* struct_prt, int ch){
 String* strCopy(String* dst, String* src){	
 	size_t dst_capacity = dst->capacity;
 	size_t src_len = src->len;
+
 	if(dst_capacity < src_len){
+
 		free(dst->str);
 		dst_capacity = src_len * 2;
 		dst->str = (char*) malloc(sizeof(char) * dst_capacity);
 		nullCheck(dst->str);
 	}
+
 	strcpy(dst->str, src->str);
 	dst->len = src->len;
 	dst->capacity = dst_capacity;
@@ -149,6 +152,8 @@ int strToInt(String* s){
 void strIntToString(String* dst, int x){
 	Stack num;
 	stackInit(&num);
+	if (x == 0)
+		strAdd(dst, '0');
 	if(x < 0){
 		strAdd(dst, '-');
 		x *= -1;
