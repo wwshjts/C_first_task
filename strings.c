@@ -59,12 +59,19 @@ char* strChr(String* struct_prt, int ch){
 	return NULL;
 }
 
-//assume that dst.len <= dst.src
-String* strCopy(String* struct_dst, String* struct_src){	
-	String* result = struct_dst;
-	struct_dst->str = strcpy(struct_dst->str, struct_src->str);
-	struct_dst->len = struct_src->len;
-	return result;
+String* strCopy(String* dst, String* src){	
+	size_t dst_capacity = dst->capacity;
+	size_t src_len = src->len;
+	if(dst_capacity < src_len){
+		free(dst->str);
+		dst_capacity = src_len * 2;
+		dst->str = (char*) malloc(sizeof(char) * dst_capacity);
+		nullCheck(dst->str);
+	}
+	strcpy(dst->str, src->str);
+	dst->len = src->len;
+	dst->capacity = dst_capacity;
+	return dst;
 }
 
 //assume that dst.len <= dst.src
@@ -100,11 +107,12 @@ int strIsDigit(String* s){
 	char* word = s->str;
 	int res = 1;
 	while(*word){
-		res = res && (isDigit(*word));
+		res = (res && (isDigit(*word)));
 		word++;
 	}
 	return res;
 }
+
 void strFree(String* s){
 	free(s->str);
 }
@@ -128,11 +136,49 @@ void strWith(String* s, const char* src){
 int strToInt(String* s){
 	char* word = s->str;
 	int res = 0;	
-	while(*word){	
+	while(isDigit(*word)){	
 		res += *word - '0';
 		res *= 10;
 		word++;
 	}
 	res /= 10;
 	return res;
+}
+
+
+void strIntToString(String* dst, int x){
+	Stack num;
+	stackInit(&num);
+	if(x < 0){
+		strAdd(dst, '-');
+		x *= -1;
+	}
+	while (x > 0){
+		stackAdd(&num, x % 10);
+		x /= 10; 
+	}
+	while (num.size > 0){
+		strAdd(dst, stackPop(&num) + '0');
+	}
+}
+
+
+void strFloatToString(String* res, float temp){
+	int x = (int) (temp * 10);
+	Stack num;
+	stackInit(&num);
+	if(x < 0){
+		strAdd(res, '-');
+		x *= -1;
+	}
+	while (x > 0){
+		stackAdd(&num, x % 10);
+		x /= 10; 
+	}
+	while (num.size > 1){
+		strAdd(res, stackPop(&num) + '0');
+	}
+	strAdd(res, '.');
+	strAdd(res, stackPop(&num) + '0');
+	stackFree(&num);
 }

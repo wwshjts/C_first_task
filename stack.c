@@ -59,3 +59,9 @@ void stackShrink(Stack* st){
 	st->capacity = capacity;
 }
 
+void stackPrint(Stack* st){
+	printf("st\n");
+	for(size_t i = 0; i < st->size; i++)
+		printf("%d ", st->data[i]);
+	printf("\n");
+}

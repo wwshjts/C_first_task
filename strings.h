@@ -17,7 +17,10 @@ int strCmp(String* a, String* b);
 void strResise(String* struct_prt);
 void strFree(String* s);
 void strResize(String* struct_ptr);
+
 int strToInt(String* struct_prt); 
+void strFloatToString(String* dst, float x);
+void strIntToString(String* dst, int x);
 
 int strIsDel(String* s);
 int strIsWord(String* s);
