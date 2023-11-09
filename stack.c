@@ -42,9 +42,9 @@ int stackSeek(Stack* st){
 }
 
 int stackPop(Stack* st){	
-	stackShrink(st);
 	int res = stackSeek(st);
 	st->size--;
+	stackShrink(st);
 	return res;
 }
 

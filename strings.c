@@ -5,7 +5,6 @@
 #include<string.h>
 #include"strings.h"
 #include"support.h"
-#include"charIs.h"
 #include"stack.h"
 
 void strInit(String* struct_ptr){
@@ -38,12 +37,8 @@ void strAdd(String* struct_ptr, int ch){
 	str[struct_ptr->len] = '\0';
 	strResize(struct_ptr);
 }
-//TODO прозод по строке не нужен просто добавь return str->len 
 size_t strLen(String* struct_ptr){
-	char* str = struct_ptr->str;
-	size_t result = 0;
-	while(*str++) result++;
-	return result;
+	return struct_ptr->len;
 }
 
 char* strChr(String* struct_prt, int ch){
@@ -59,7 +54,6 @@ char* strChr(String* struct_prt, int ch){
 String* strCopy(String* dst, String* src){	
 	size_t dst_capacity = dst->capacity;
 	size_t src_len = src->len;
-    //TODO воткнуть resize
 	if(dst_capacity < src_len){
 		free(dst->str);
 		dst_capacity = src_len * 2;
@@ -114,7 +108,6 @@ int strIsDigit(String* s){
 int strIsSpace(String*s){
 	char* word = s->str;
 	int res = 0;
-    //TODO можно упростить цикл
 	while(*word){
 		res = (*word == ' ');
 		word++;
@@ -125,7 +118,6 @@ int strIsSpace(String*s){
 int strIsLf(String* s){
 	char* word = s->str;
 	int res = 0;
-    //TODO можно упростить цикл
 	while(*word){
 		res = (*word == LF);
 		word++;

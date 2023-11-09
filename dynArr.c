@@ -34,7 +34,6 @@ void arrAdd(DynArr* arr, String* item){
 	}
 	else{
 		//copy content of item(ptr)
-        //TODO подумать
 		strInit(&data[arr->size]);
 		strCopy(&data[arr->size++], item);
 	}
@@ -56,10 +55,9 @@ String* arrSeek(DynArr* arr){
 }
 
 String* arrPop(DynArr* arr){	
-    //TODO перенести shrink
-	arrShrink(arr);
 	String* res = arrSeek(arr);
 	arr->size--;
+	arrShrink(arr);
 	return res;
 }
 

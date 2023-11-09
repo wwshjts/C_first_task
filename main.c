@@ -5,7 +5,6 @@
 #include"strings.h"
 #include"support.h"
 #include"dynArr.h"
-#include"charIs.h"
 #include"stack.h"
 
 int isPal(String* str);
@@ -43,7 +42,6 @@ int main(int argc, char** argv){
 		ch = getc(fin);
 
     //fill array
-    //TODO может добавление как-то можно упростить
 	arrAdd(&arr, NULL);
 	strAdd(arrSeek(&arr), ch);	
 	while ( ( (ch = getc(fin)) != EOF) ){
@@ -76,7 +74,6 @@ int main(int argc, char** argv){
 	size_t expr_start = 0;
 	for(size_t i = 0; i < arr.size; i++){
 		String s = arr.data[i];
-		//TODO поправить костыль
 		if(isExpression(&s) && (s.str[0] != LF) ){
 			if(!strIsDel(&s)){
 				arrAdd(&expr, &s);
@@ -98,16 +95,18 @@ int main(int argc, char** argv){
 					expr_flag = 0;
 				}
 			}
-            
 			arrFree(&res);
 			initEmptyDyn(&res);
 			strFree(&ans);
 			strInit(&ans);
 			arrFree(&expr); 
 			initEmptyDyn(&expr);
-
 		}
+
 	}
+    arrFree(&expr);
+    arrFree(&res);
+    strFree(&ans);
 	//procesing text
 	int ruleFlag = 1;
 	while(ruleFlag){
@@ -123,7 +122,6 @@ int main(int argc, char** argv){
 				strWith(&arr.data[i], "PALINDROM");
 				ruleFlag = 1;
 			}
-            //TODO вынести обработку скобочек в отдельную функцию
 			if( (word[0] == '(') || strIsDel(&s)){
 				stackAdd(&brackets, word[0]);
 				stackAdd(&ind, i); 
@@ -192,6 +190,7 @@ int isPal(String* str){
 			stackPop(&st);
 		}
 	}
+    stackFree(&st);
 	return st.size == 0;
 }
 
@@ -228,6 +227,7 @@ void convertTemp(String* s){
 	strAdd(&res, 't');
 	strAdd(&res, 'C');
 	strCopy(s, &res);
+    strFree(&res);
 }
 
 int isMathSign(String* s){
@@ -328,7 +328,9 @@ int evalPolish(DynArr* expr, String* res){
 						   if (sc == 0){
 							   errFlag = 1;
 						   }
-                           else stackAdd(&st, fr / sc);
+                           else {
+                               stackAdd(&st, fr / sc);
+                           }
 				break;
 			}
 			if (errFlag){
