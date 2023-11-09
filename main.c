@@ -34,15 +34,16 @@ int main(int argc, char** argv){
 		exit(1);
 	}	
 
-	//allocate dynamic memory for DynArr
 	DynArr arr; 
 	initEmptyDyn(&arr);
-	
+
 	//skip delimiters
 	char ch = getc(fin);
 	while( (ch != EOF) && (isDel(ch)) )
 		ch = getc(fin);
 
+    //fill array
+    //TODO может добавление как-то можно упростить
 	arrAdd(&arr, NULL);
 	strAdd(arrSeek(&arr), ch);	
 	while ( ( (ch = getc(fin)) != EOF) ){
@@ -51,16 +52,19 @@ int main(int argc, char** argv){
 			strAdd(arrSeek(&arr), ch);
 		}
 		else if(isAlpha(ch) || (ch == '+') || (ch == '-')){
+            //make new word
 			if (!strIsWord(arrSeek(&arr))){
 				arrAdd(&arr, NULL);
 			}
 			strAdd(arrSeek(&arr), ch);
 		}
+        //add punctuation mark
 		else{
 			arrAdd(&arr, NULL);
 			strAdd(arrSeek(&arr), ch);
 		}
 	}		
+
 	//eval all expressions in the file
 	DynArr expr; 
 	initEmptyDyn(&expr);
@@ -85,15 +89,16 @@ int main(int argc, char** argv){
 		else {
 			int rs = convertToPolish(&expr, &res);
 			if (rs > 0){
-				//if expr is evaluated
+				//if expr is converted
 				if (evalPolish(&res, &ans)){
-					strCopy(&arr.data[expr_start], &ans);
-					for(size_t dl = expr_start + 1; dl < i; dl++){
+					strCopy(&arr.data[i-1], &ans);
+					for(size_t dl = expr_start; dl < i-1; dl++){
 						strWith(&arr.data[dl], " ");				
 					}
 					expr_flag = 0;
 				}
 			}
+            
 			arrFree(&res);
 			initEmptyDyn(&res);
 			strFree(&ans);
@@ -103,7 +108,6 @@ int main(int argc, char** argv){
 
 		}
 	}
-
 	//procesing text
 	int ruleFlag = 1;
 	while(ruleFlag){
@@ -119,6 +123,7 @@ int main(int argc, char** argv){
 				strWith(&arr.data[i], "PALINDROM");
 				ruleFlag = 1;
 			}
+            //TODO вынести обработку скобочек в отдельную функцию
 			if( (word[0] == '(') || strIsDel(&s)){
 				stackAdd(&brackets, word[0]);
 				stackAdd(&ind, i); 
@@ -146,12 +151,14 @@ int main(int argc, char** argv){
 		stackFree(&brackets);
 		stackFree(&ind);
 	}
-	
-
-	for(size_t i = 0; i < arr.size; i++){
+    
+    size_t start = 0;
+    while(strIsDel(&arr.data[start])){
+        start++;
+    }
+    //delete spaces
+	for(size_t i = start; i < arr.size; i++){
 		String s = arr.data[i];
-		/*if(strIsDel(&arr.data[i]))
-			fprintf(fout, "<%d>", arr.data[i].str[0]); */
 		if (strIsSpace(&s) && ((i > 0) && strIsSpace(&arr.data[i - 1])))
 			continue;
 		if (strIsLf(&s) && ( (i > 1) && strIsLf(&arr.data[i - 1]) && \
@@ -222,6 +229,7 @@ void convertTemp(String* s){
 	strAdd(&res, 'C');
 	strCopy(s, &res);
 }
+
 int isMathSign(String* s){
 	char* word = s->str;
 	if (strcmp(word, "+") == 0)
@@ -265,7 +273,7 @@ int convertToPolish(DynArr* arr, DynArr* res){
 			arrAdd(res, &curr);
 		}
 		else if(strcmp(curr.str, ")") == 0){
-			while((strcmp(arrSeek(&st)->str, "(") != 0) && (st.size > 0)){
+			while((st.size > 0) && (strcmp(arrSeek(&st)->str, "(") != 0) ){
 				arrAdd(res, arrPop(&st));
 			}
 			if(st.size > 0){
@@ -279,16 +287,20 @@ int convertToPolish(DynArr* arr, DynArr* res){
 	if(res -> size == 0)
 		return 0;
 	while(st.size > 0){
-		if(!isMathSign(arrSeek(&st)))
+		if(!isMathSign(arrSeek(&st))){
+            arrFree(&st);
 			return 0;
+        }
 		arrAdd(res, arrPop(&st));
 	}
+    arrFree(&st);
 	return 1;
 }
 
 int evalPolish(DynArr* expr, String* res){
 	Stack st;
 	stackInit(&st);
+	int errFlag = 0;
 	for(size_t i = 0; i < expr->size; i++){
 
 		String* curr = &expr->data[i];
@@ -297,7 +309,6 @@ int evalPolish(DynArr* expr, String* res){
 		}
 		else{
 			char op = expr->data[i].str[0];
-			int errFlag = 0;
 			int fr;
 			int sc;
 			switch(op){
@@ -316,18 +327,19 @@ int evalPolish(DynArr* expr, String* res){
 						   fr = stackPop(&st);
 						   if (sc == 0){
 							   errFlag = 1;
-							   break;
 						   }
-						   stackAdd(&st, fr / sc);
+                           else stackAdd(&st, fr / sc);
 				break;
 			}
 			if (errFlag){
 				strWith(res, "ERROR");
-				return 0;
-			}
+                break;
+		    }
 		}
 	}
-	strIntToString(res, stackPop(&st));
+    if(!errFlag){
+	    strIntToString(res, stackPop(&st));
+    }
 	stackFree(&st);
 
 	return 1;

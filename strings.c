@@ -29,19 +29,16 @@ void strResize(String* struct_ptr){
 	}
 	struct_ptr->len = len;
 	struct_ptr->capacity = capacity;
-
 }
 
 void strAdd(String* struct_ptr, int ch){
 	char* str = struct_ptr->str;
 	assert(struct_ptr->len <= struct_ptr->capacity);
-	
 	str[struct_ptr->len++] = ch;
 	str[struct_ptr->len] = '\0';
-
 	strResize(struct_ptr);
 }
-
+//TODO прозод по строке не нужен просто добавь return str->len 
 size_t strLen(String* struct_ptr){
 	char* str = struct_ptr->str;
 	size_t result = 0;
@@ -62,15 +59,13 @@ char* strChr(String* struct_prt, int ch){
 String* strCopy(String* dst, String* src){	
 	size_t dst_capacity = dst->capacity;
 	size_t src_len = src->len;
-
+    //TODO воткнуть resize
 	if(dst_capacity < src_len){
-
 		free(dst->str);
 		dst_capacity = src_len * 2;
 		dst->str = (char*) malloc(sizeof(char) * dst_capacity);
 		nullCheck(dst->str);
 	}
-
 	strcpy(dst->str, src->str);
 	dst->len = src->len;
 	dst->capacity = dst_capacity;
@@ -119,6 +114,7 @@ int strIsDigit(String* s){
 int strIsSpace(String*s){
 	char* word = s->str;
 	int res = 0;
+    //TODO можно упростить цикл
 	while(*word){
 		res = (*word == ' ');
 		word++;
@@ -129,6 +125,7 @@ int strIsSpace(String*s){
 int strIsLf(String* s){
 	char* word = s->str;
 	int res = 0;
+    //TODO можно упростить цикл
 	while(*word){
 		res = (*word == LF);
 		word++;

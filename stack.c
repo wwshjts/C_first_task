@@ -37,7 +37,7 @@ void stackFree(Stack* st){
 }
 
 int stackSeek(Stack* st){
-	size_t size =  (st->size - 1> 0) ? (st->size - 1) : 0;
+	size_t size = (st->size - 1> 0) ? (st->size - 1) : 0;
 	return st->data[size];
 }
 
