@@ -11,9 +11,7 @@ void initEmptyDyn(allocator* a, DynArr* arr){
 	arr->capacity = BASE_ARR_CAPACITY;
 	arr->data = (String*) list_malloc(a, sizeof(String) * BASE_ARR_CAPACITY);
     arr->alloc = a;
-    printf("check\n");
 	nullCheck(arr->data);
-    printf("check\n");
 }
 
 void arrResize(DynArr* arr){
@@ -60,7 +58,7 @@ String* arrSeek(DynArr* arr){
 String* arrPop(DynArr* arr){	
 	String* res = arrSeek(arr);
 	arr->size--;
-	//arrShrink(arr);
+	arrShrink(arr);
 	return res;
 }
 

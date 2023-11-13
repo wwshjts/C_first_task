@@ -93,7 +93,6 @@ pointer list_malloc(allocator* a, size_t size){
         //if the block is full, then delete it from available blocks
         if(block_size - size < sizeof(ptrList_node)){        
             //alloc all block memory
-            printf("alloc all block memory %zu - %zu\n", block_size, size);
             a->memory_used = a->memory_used - size + block_size;
             size = block_size;
             ptrList_delete(a->list, mem_block);
@@ -120,8 +119,8 @@ pointer list_realloc(allocator* a, pointer mem, size_t size){
     size_t block_size = *((size_t* )(mem - sizeof(size_t)));
     pointer new_mem = list_malloc(a, size); 
     if(!new_mem) return NULL;
-    for(size_t i = 0; i < block_size; i++){
-        *((byte*)(new_mem + i)) = *((byte*)mem+i);
+    for(size_t i = 0; i < size; i++){
+        *((byte*)(new_mem + i)) = *((byte*)(mem+i));
     }
     list_free(a, mem);
     return new_mem;
