@@ -6,6 +6,7 @@
 #include"support.h"
 #include"dynArr.h"
 #include"stack.h"
+#include"allocator/list_allocator.h"
 
 int isPal(String* str);
 int isTemperature(String* s);

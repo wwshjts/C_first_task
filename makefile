@@ -1,6 +1,7 @@
 .PHONY : all clean
 
 objects = strings.o support.o stack.o dynArr.o
+alloc_src = allocator/
 
 IN = $(wildcard test/*-input.txt)
 PASS = $(IN:-input.txt=.passed)
@@ -21,6 +22,9 @@ dynArr.o : dynArr.c dynArr.h
 
 stack.o : stack.c support.o
 	gcc -c stack.c
+
+list_allocator.o : $(addprefix $(alloc_src), ptrList.o list_allocator.c list_allocator.h)
+	gcc -c allocator/list_allocator.c
 
 clean : 
 	rm -f $(objects)
