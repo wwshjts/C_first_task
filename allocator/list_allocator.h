@@ -1,5 +1,5 @@
 #include"ptrList.h"
-
+#define CUSTOM_ALLOC
 typedef struct{
     ptrList* list;
     pointer mem;

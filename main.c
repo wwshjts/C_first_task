@@ -71,7 +71,7 @@ int main(int argc, char** argv){
 	initEmptyDyn(my_alloc, &res);
     printf("here\n");
 	String ans;
-	strInit(&ans);
+	strInit(my_alloc,&ans);
 	int expr_flag = 0;
 	size_t expr_start = 0;
 	for(size_t i = 0; i < arr.size; i++){
@@ -100,7 +100,7 @@ int main(int argc, char** argv){
 			arrFree(&res);
 			initEmptyDyn(my_alloc, &res);
 			strFree(&ans);
-			strInit(&ans);
+			strInit(my_alloc,&ans);
 			arrFree(&expr); 
 			initEmptyDyn(my_alloc, &expr);
 		}
@@ -137,9 +137,9 @@ int main(int argc, char** argv){
 				}
 				int tmp = stackPop(&ind);
 				if(i - dels - tmp - 1 == 1){
-					strInit(&arr.data[i]);
+					strInit(my_alloc,&arr.data[i]);
 					strWith(&arr.data[i]," ");
-					strInit(&arr.data[tmp]);
+					strInit(my_alloc,&arr.data[tmp]);
 					strWith(&arr.data[tmp]," ");
 					ruleFlag = 1;
 				}
@@ -214,7 +214,7 @@ void convertTemp(String* s){
 	char* str = s->str; 
 	char sign = *str++;
 	String res;
-	strInit(&res);
+	strInit(s->alloc, &res);
 	float temp = 0;
 	while(*str != 't'){
 	 	temp += *str - '0';

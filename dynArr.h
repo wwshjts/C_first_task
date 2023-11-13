@@ -1,4 +1,7 @@
+#ifndef CUSTOM_ALLOC
 #include"allocator/list_allocator.h"
+#endif
+
 #define BASE_ARR_CAPACITY 10
 
 typedef struct {

@@ -7,12 +7,13 @@
 #include"support.h"
 #include"stack.h"
 
-void strInit(String* struct_ptr){
+void strInit(allocator* a, String* struct_ptr){
 	struct_ptr->len = 0;
 	struct_ptr->capacity = BASE_String_CAPACITY;
 	char* str = (char*) malloc(sizeof(char) * BASE_String_CAPACITY);
 	nullCheck(str);
 	struct_ptr->str = str;
+    struct_ptr->alloc = a;
 }
 
 void strResize(String* struct_ptr){

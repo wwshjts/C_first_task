@@ -31,11 +31,11 @@ void arrAdd(DynArr* arr, String* item){
 
 	//if the argument is NULL then add an empty string
 	if(item == NULL){
-		strInit(&data[arr->size++]);
+		strInit(arr->alloc, &data[arr->size++]);
 	}
 	else{
 		//copy content of item(ptr)
-		strInit(&data[arr->size]);
+		strInit(arr->alloc, &data[arr->size]);
 		strCopy(&data[arr->size++], item);
 	}
 	arrResize(arr);

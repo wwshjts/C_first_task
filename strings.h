@@ -1,13 +1,17 @@
+#ifndef CUSTOM_ALLOC
+#include"allocator/list_allocator.h"
+#endif
 #define BASE_String_CAPACITY 10
 
 typedef struct{
 	char* str;
 	size_t len;
 	size_t capacity;
+    allocator* alloc;
 } String;
 
 //initialize an empty string
-void strInit(String* struct_ptr);
+void strInit(allocator* a, String* struct_ptr);
 
 //initialize dynamic string with string
 //if s.len < strlen(src) then strWith allocates memory
