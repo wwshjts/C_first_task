@@ -71,15 +71,20 @@ void NAME##_delete(NAME * list, NAME##_node * node){\
     NAME##_node* prev = node->prev;\
     NAME##_node* next = node->next;\
     list->size--;\
-    if(next){\
-        next->prev = prev;\
-    }\
-    else{\
+    if(!prev && !next){\
+        list->head = NULL;\
         list->tail = NULL;\
     }\
-    if(prev){\
+    if(prev && next){\
+        next->prev = prev;\
         prev->next = next;\
-    }else{\
-        list->head = NULL;\
+    }\
+    if(prev && !next){\
+        prev->next = NULL;\
+        list->tail = prev;\
+    }\
+    if(!prev && next){\
+        next->prev = NULL;\
+        list->head = next;\
     }\
 }

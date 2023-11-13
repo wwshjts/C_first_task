@@ -2,8 +2,8 @@
 #include<stdio.h>
 
 void nullCheck(void* ptr){
-	if(ptr == NULL){
-		printf("ERROR: out of memory\n");
+	if(ptr == NULL){ 
+        printf("out of memory\n");
 		exit(0);
 	}
 } 

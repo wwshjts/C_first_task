@@ -1,6 +1,6 @@
 .PHONY : all clean
 
-objects = strings.o support.o stack.o dynArr.o
+objects = strings.o support.o stack.o dynArr.o list_allocator.o
 alloc_src = allocator/
 
 IN = $(wildcard test/*-input.txt)
@@ -8,8 +8,8 @@ PASS = $(IN:-input.txt=.passed)
 
 all : main
 
-main : main.c strings.o support.o stack.o dynArr.o  
-	gcc main.c strings.o support.o dynArr.o stack.o -o bin/main -Wall
+main : main.c strings.o support.o stack.o dynArr.o  list_allocator.o
+	gcc main.c list_allocator.o strings.o support.o dynArr.o stack.o -o bin/main allocator/ptrList.o -Wall
 
 strings.o : strings.c support.o stack.o strings.h
 	gcc -c strings.c -Wall
@@ -17,14 +17,17 @@ strings.o : strings.c support.o stack.o strings.h
 support.o : support.c support.h
 	gcc -c support.c -Wall
 
-dynArr.o : dynArr.c dynArr.h
+dynArr.o : dynArr.c list_allocator.o dynArr.h
 	gcc -c dynArr.c  -Wall
 
 stack.o : stack.c support.o
 	gcc -c stack.c
 
 list_allocator.o : $(addprefix $(alloc_src), ptrList.o list_allocator.c list_allocator.h)
-	gcc -c allocator/list_allocator.c
+	gcc -c allocator/list_allocator.c 
+
+allocator/ptrList.o : $(addprefix $(alloc_src), ptrList.c linked_list_generate_code.h linked_list_generate_header.h ptrList.h)
+	gcc -c allocator/ptrList.c -o allocator/ptrList.o
 
 clean : 
 	rm -f $(objects)

@@ -1,13 +1,16 @@
 #include<stdlib.h>
 #include<stdio.h>
+#include<stdint.h>
 #include"list_allocator.h"
-void checkmem(pointer ptr){
+#define DEBUG
+typedef uint8_t byte;
+//store node to begining of the memory block
+void nullcheck(pointer ptr){
     if(!ptr){
-        printf("Out of memory");
+        printf("in allocation: Out of memory");
         exit(1);
     }
 }
-//store node to begining of the memory block
 ptrList_node* ptrList_node_init(pointer mem, size_t size){
     ptrList_node* node = (ptrList_node*)mem;
     node->val = mem;
@@ -20,10 +23,10 @@ ptrList_node* ptrList_node_init(pointer mem, size_t size){
 allocator* start_allocate(size_t max_size){
     //allocate memory
     pointer mem = malloc(max_size);
-    checkmem(mem);
+    nullcheck(mem);
 
     ptrList* list = (ptrList*)(malloc(sizeof(ptrList)));
-    checkmem(list);
+    nullcheck(list);
     ptrList_init(list);
     
     //first node points to all memory, and store in the same block
@@ -31,7 +34,7 @@ allocator* start_allocate(size_t max_size){
     ptrList_add_to_head(list, start);
     
     allocator* a = (allocator*)(malloc(sizeof(allocator)));
-    checkmem(a);
+    nullcheck(a);
 
     a->list = list;
     a->mem = mem;
@@ -76,8 +79,8 @@ pointer list_malloc(allocator* a, size_t size){
     size = size + sizeof(size_t);
     size = (size > sizeof(ptrList_node)) ? size : sizeof(ptrList_node);
     #ifdef DEBUG
-    printf("actual allocation size: %zu, all memory: %zu\n", 
-             size, a->max_size - a->memory_used);
+    printf("\nactual allocation size: %zu, all memory: %zu, list is %d\n", 
+             size, a->max_size - a->memory_used, a->list->size);
     #endif
     if(a->max_size < size){
         return NULL;
@@ -88,8 +91,9 @@ pointer list_malloc(allocator* a, size_t size){
         pointer block_ptr = mem_block->val;
         a->memory_used += size;
         //if the block is full, then delete it from available blocks
-        if(a->max_size - a->memory_used < sizeof(ptrList_node)){        
-            //alloc all memory
+        if(block_size - size < sizeof(ptrList_node)){        
+            //alloc all block memory
+            printf("alloc all block memory %zu - %zu\n", block_size, size);
             a->memory_used = a->memory_used - size + block_size;
             size = block_size;
             ptrList_delete(a->list, mem_block);
@@ -102,14 +106,27 @@ pointer list_malloc(allocator* a, size_t size){
             #endif
         }
         //make header for block
+        #ifdef DEBUG
+            printf("allocation %zu bytes\n", size);
+        #endif
         size_t* header = (size_t*)block_ptr;
         *header = size;
         return block_ptr + sizeof(size_t);
     }
     return NULL;
 }
+//dumb realloc
+pointer list_realloc(allocator* a, pointer mem, size_t size){
+    size_t block_size = *((size_t* )(mem - sizeof(size_t)));
+    pointer new_mem = list_malloc(a, size); 
+    if(!new_mem) return NULL;
+    for(size_t i = 0; i < block_size; i++){
+        *((byte*)(new_mem + i)) = *((byte*)mem+i);
+    }
+    list_free(a, mem);
+    return new_mem;
+}
 void list_free(allocator* a, pointer mem){
-    //TODO что делать если мне подсунули не тот адресс
     size_t block_size = *((size_t* )(mem - sizeof(size_t)));
     ptrList_node* node = ptrList_node_init(mem - sizeof(size_t), block_size);
     a->memory_used -= block_size;
@@ -140,6 +157,10 @@ void list_free(allocator* a, pointer mem){
         ptrList_delete(a->list, curr->next);
         curr = curr->prev;
     }
+    #ifdef DEBUG
+        printf("freed %zu bytes\n", block_size);
+        printf("now: mem_used %zu, all mem %zu\n", a->memory_used, a->max_size);
+    #endif
 }
 void stop_allocate(allocator* a){
     free(a->mem);

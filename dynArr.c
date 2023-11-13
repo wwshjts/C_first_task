@@ -6,18 +6,21 @@
 #include"support.h"
 
 
-void initEmptyDyn(DynArr* arr){
+void initEmptyDyn(allocator* a, DynArr* arr){
 	arr->size = 0;
 	arr->capacity = BASE_ARR_CAPACITY;
-	arr->data = (String*) malloc(sizeof(String) * BASE_ARR_CAPACITY);
+	arr->data = (String*) list_malloc(a, sizeof(String) * BASE_ARR_CAPACITY);
+    arr->alloc = a;
+    printf("check\n");
 	nullCheck(arr->data);
+    printf("check\n");
 }
 
 void arrResize(DynArr* arr){
 	size_t capacity = arr->capacity;
 	if(capacity == arr->size){
 		capacity = capacity * 2; 
-		arr->data = (String*) realloc(arr->data, capacity * sizeof(String));
+		arr->data = (String*) list_realloc(arr->alloc, arr->data, capacity * sizeof(String));
 		nullCheck(arr->data);
 	}
 	arr->capacity = capacity;
@@ -46,7 +49,7 @@ void arrFree(DynArr* arr){
 	for(size_t i = 0; i < size; i++){
 		strFree(&data[i]);
 	}
-	free(data);
+	list_free(arr->alloc, data);
 }
 
 String* arrSeek(DynArr* arr){
@@ -57,7 +60,7 @@ String* arrSeek(DynArr* arr){
 String* arrPop(DynArr* arr){	
 	String* res = arrSeek(arr);
 	arr->size--;
-	arrShrink(arr);
+	//arrShrink(arr);
 	return res;
 }
 
@@ -66,7 +69,7 @@ void arrShrink(DynArr* arr){
 	size_t capacity = arr->capacity;
 	if(size < capacity/4){
 		capacity = capacity/4;
-		arr->data = (String*) realloc(arr->data, capacity * sizeof(String));
+		arr->data = (String*) list_realloc(arr->alloc, arr->data, capacity * sizeof(String));
 		nullCheck(arr->data);
 	}
 	arr->capacity = capacity;

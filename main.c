@@ -6,8 +6,8 @@
 #include"support.h"
 #include"dynArr.h"
 #include"stack.h"
-#include"allocator/list_allocator.h"
 
+#define MAX_SIZE 104857600
 int isPal(String* str);
 int isTemperature(String* s);
 int isBracket(String* s);
@@ -33,14 +33,14 @@ int main(int argc, char** argv){
 		printf("ERROR: cant open %s\n", argv[2]);
 		exit(1);
 	}	
-
+    allocator* my_alloc = start_allocate(MAX_SIZE);
 	DynArr arr; 
-	initEmptyDyn(&arr);
-
+	initEmptyDyn(my_alloc, &arr);
 	//skip delimiters
 	char ch = getc(fin);
 	while( (ch != EOF) && (isDel(ch)) )
 		ch = getc(fin);
+
 
     //fill array
 	arrAdd(&arr, NULL);
@@ -66,9 +66,10 @@ int main(int argc, char** argv){
 
 	//eval all expressions in the file
 	DynArr expr; 
-	initEmptyDyn(&expr);
+	initEmptyDyn(my_alloc, &expr);
 	DynArr res;
-	initEmptyDyn(&res);
+	initEmptyDyn(my_alloc, &res);
+    printf("here\n");
 	String ans;
 	strInit(&ans);
 	int expr_flag = 0;
@@ -97,11 +98,11 @@ int main(int argc, char** argv){
 				}
 			}
 			arrFree(&res);
-			initEmptyDyn(&res);
+			initEmptyDyn(my_alloc, &res);
 			strFree(&ans);
 			strInit(&ans);
 			arrFree(&expr); 
-			initEmptyDyn(&expr);
+			initEmptyDyn(my_alloc, &expr);
 		}
 
 	}
@@ -267,7 +268,7 @@ int isExpression(String* s){
 
 int convertToPolish(DynArr* arr, DynArr* res){
 	DynArr st;
-	initEmptyDyn(&st);
+	initEmptyDyn(arr->alloc, &st);
 	for(size_t i = 0; i < arr->size; i++){
 		String curr = arr->data[i];
 		if(strIsDigit(&curr)){
