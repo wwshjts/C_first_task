@@ -33,14 +33,13 @@ int main(int argc, char** argv){
 		printf("ERROR: cant open %s\n", argv[2]);
 		exit(1);
 	}	
-    allocator* my_alloc = start_allocate(MAX_SIZE);
+    allocator* my_alloc = start_allocate(10000, 1024);
 	DynArr arr; 
 	initEmptyDyn(my_alloc, &arr);
 	//skip delimiters
 	char ch = getc(fin);
 	while( (ch != EOF) && (isDel(ch)) )
 		ch = getc(fin);
-
 
     //fill array
 	arrAdd(&arr, NULL);
@@ -63,13 +62,11 @@ int main(int argc, char** argv){
 			strAdd(arrSeek(&arr), ch);
 		}
 	}		
-
 	//eval all expressions in the file
 	DynArr expr; 
 	initEmptyDyn(my_alloc, &expr);
 	DynArr res;
 	initEmptyDyn(my_alloc, &res);
-    printf("here\n");
 	String ans;
 	strInit(my_alloc,&ans);
 	int expr_flag = 0;
@@ -92,7 +89,7 @@ int main(int argc, char** argv){
 				if (evalPolish(&res, &ans)){
 					strCopy(&arr.data[i-1], &ans);
 					for(size_t dl = expr_start; dl < i-1; dl++){
-						strWith(&arr.data[dl], " ");				
+						strWith(&arr.data[dl], " \0");				
 					}
 					expr_flag = 0;
 				}
@@ -104,7 +101,6 @@ int main(int argc, char** argv){
 			arrFree(&expr); 
 			initEmptyDyn(my_alloc, &expr);
 		}
-
 	}
     arrFree(&expr);
     arrFree(&res);
@@ -151,7 +147,6 @@ int main(int argc, char** argv){
 		stackFree(&brackets);
 		stackFree(&ind);
 	}
-    
     size_t start = 0;
     while(strIsDel(&arr.data[start])){
         start++;

@@ -6,11 +6,10 @@
 #include"strings.h"
 #include"support.h"
 #include"stack.h"
-
 void strInit(allocator* a, String* struct_ptr){
 	struct_ptr->len = 0;
 	struct_ptr->capacity = BASE_String_CAPACITY;
-	char* str = (char*) malloc(sizeof(char) * BASE_String_CAPACITY);
+	char* str = (char*) list_malloc(a);
 	nullCheck(str);
 	struct_ptr->str = str;
     struct_ptr->alloc = a;
@@ -23,7 +22,7 @@ void strResize(String* struct_ptr){
 
 	if(capacity - 1 == len){
 		capacity = capacity * 2; 
-		str = (char *) realloc(str, capacity * sizeof(char));
+		str = (char *) list_realloc(struct_ptr->alloc, str);
 		nullCheck(str);
 		struct_ptr->str = str;
 	}
@@ -56,9 +55,9 @@ String* strCopy(String* dst, String* src){
 	size_t dst_capacity = dst->capacity;
 	size_t src_len = src->len;
 	if(dst_capacity < src_len){
-		free(dst->str);
+		list_free(dst->alloc, dst->str);
 		dst_capacity = src_len * 2;
-		dst->str = (char*) malloc(sizeof(char) * dst_capacity);
+		dst->str = (char*) list_malloc(dst->alloc);
 		nullCheck(dst->str);
 	}
 	strcpy(dst->str, src->str);
@@ -126,7 +125,7 @@ int strIsLf(String* s){
 	return res;
 }
 void strFree(String* s){
-	free(s->str);
+	list_free(s->alloc, s->str);
 }
 
 void strWith(String* s, const char* src){
@@ -134,8 +133,8 @@ void strWith(String* s, const char* src){
 	size_t capacity = s->capacity;
 	size_t src_len = strlen(src);
 	if(s->len < src_len){
-		free(dst);
-		dst = (char*) malloc(sizeof(char) * src_len * 2);
+		list_free(s->alloc, dst);
+		dst = (char*) list_malloc(s->alloc);
 		nullCheck(dst);
 		capacity = src_len * 2;
 	}

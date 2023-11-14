@@ -9,7 +9,7 @@
 void initEmptyDyn(allocator* a, DynArr* arr){
 	arr->size = 0;
 	arr->capacity = BASE_ARR_CAPACITY;
-	arr->data = (String*) list_malloc(a, sizeof(String) * BASE_ARR_CAPACITY);
+	arr->data = (String*) list_malloc(a);
     arr->alloc = a;
 	nullCheck(arr->data);
 }
@@ -18,7 +18,7 @@ void arrResize(DynArr* arr){
 	size_t capacity = arr->capacity;
 	if(capacity == arr->size){
 		capacity = capacity * 2; 
-		arr->data = (String*) list_realloc(arr->alloc, arr->data, capacity * sizeof(String));
+		arr->data = (String*) list_realloc(arr->alloc, arr->data);
 		nullCheck(arr->data);
 	}
 	arr->capacity = capacity;
@@ -67,7 +67,7 @@ void arrShrink(DynArr* arr){
 	size_t capacity = arr->capacity;
 	if(size < capacity/4){
 		capacity = capacity/4;
-		arr->data = (String*) list_realloc(arr->alloc, arr->data, capacity * sizeof(String));
+		arr->data = (String*) list_realloc(arr->alloc, arr->data);
 		nullCheck(arr->data);
 	}
 	arr->capacity = capacity;
