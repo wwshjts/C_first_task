@@ -7,8 +7,8 @@ PASS = $(IN:-input.txt=.passed)
 
 all : main
 
-main : main.c strings.o support.o stack.o dynArr.o  
-	gcc main.c strings.o support.o dynArr.o stack.o -o bin/main -Wall
+main : main.c strings.o support.o stack.o strArr.o  
+	gcc main.c strings.o support.o strArr.o stack.o -o bin/main -Wall
 
 strings.o : strings.c support.o stack.o strings.h
 	gcc -c strings.c -Wall

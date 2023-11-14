@@ -2,9 +2,8 @@
 #include<stdlib.h>
 #include<string.h>
 
-#include"strings.h"
+#include"strArr.h"
 #include"support.h"
-#include"dynArr.h"
 #include"stack.h"
 
 int isPal(String* str);
@@ -13,8 +12,8 @@ int isBracket(String* s);
 int isMathSign(String* s);
 int isExpression(String* s);
 void convertTemp(String* s);
-int convertToPolish(DynArr*, DynArr*);
-int evalPolish(DynArr*, String*);
+int convertToPolish(strArr*, strArr*);
+int evalPolish(strArr*, String*);
 
 
 int main(int argc, char** argv){
@@ -33,8 +32,8 @@ int main(int argc, char** argv){
 		exit(1);
 	}	
 
-	DynArr arr; 
-	initEmptyDyn(&arr);
+	strArr arr; 
+	strArr_init(&arr);
 
 	//skip delimiters
 	char ch = getc(fin);
@@ -42,32 +41,32 @@ int main(int argc, char** argv){
 		ch = getc(fin);
 
     //fill array
-	arrAdd(&arr, NULL);
-	strAdd(arrSeek(&arr), ch);	
+	strArr_add(&arr, NULL);
+	strAdd(strArr_seek(&arr), ch);	
 	while ( ( (ch = getc(fin)) != EOF) ){
 		if (isDel(ch)){
-			arrAdd(&arr, NULL);
-			strAdd(arrSeek(&arr), ch);
+			strArr_add(&arr, NULL);
+			strAdd(strArr_seek(&arr), ch);
 		}
 		else if(isAlpha(ch) || (ch == '+') || (ch == '-')){
             //make new word
-			if (!strIsWord(arrSeek(&arr))){
-				arrAdd(&arr, NULL);
+			if (!strIsWord(strArr_seek(&arr))){
+				strArr_add(&arr, NULL);
 			}
-			strAdd(arrSeek(&arr), ch);
+			strAdd(strArr_seek(&arr), ch);
 		}
         //add punctuation mark
 		else{
-			arrAdd(&arr, NULL);
-			strAdd(arrSeek(&arr), ch);
+			strArr_add(&arr, NULL);
+			strAdd(strArr_seek(&arr), ch);
 		}
 	}		
 
 	//eval all expressions in the file
-	DynArr expr; 
-	initEmptyDyn(&expr);
-	DynArr res;
-	initEmptyDyn(&res);
+	strArr expr; 
+	strArr_init(&expr);
+	strArr res;
+	strArr_init(&res);
 	String ans;
 	strInit(&ans);
 	int expr_flag = 0;
@@ -76,7 +75,7 @@ int main(int argc, char** argv){
 		String s = arr.data[i];
 		if(isExpression(&s) && (s.str[0] != LF) ){
 			if(!strIsDel(&s)){
-				arrAdd(&expr, &s);
+				strArr_add(&expr, &s);
 				if (expr_flag == 0){
 					expr_start = i;
 					expr_flag = 1;
@@ -95,17 +94,17 @@ int main(int argc, char** argv){
 					expr_flag = 0;
 				}
 			}
-			arrFree(&res);
-			initEmptyDyn(&res);
+			strArr_free(&res);
+			strArr_init(&res);
 			strFree(&ans);
 			strInit(&ans);
-			arrFree(&expr); 
-			initEmptyDyn(&expr);
+			strArr_free(&expr); 
+			strArr_init(&expr);
 		}
 
 	}
-    arrFree(&expr);
-    arrFree(&res);
+    strArr_free(&expr);
+    strArr_free(&res);
     strFree(&ans);
 	//procesing text
 	int ruleFlag = 1;
@@ -164,7 +163,7 @@ int main(int argc, char** argv){
 			continue; 
 		fprintf(fout,"%s", arr.data[i].str);
 	}
-	arrFree(&arr);
+	strArr_free(&arr);
 	if(fclose(fin) != 0){
 		printf("ERROR: trouble in closing file%s\n", argv[1]);
 	}
@@ -264,40 +263,40 @@ int isExpression(String* s){
 	return 0;
 }
 
-int convertToPolish(DynArr* arr, DynArr* res){
-	DynArr st;
-	initEmptyDyn(&st);
+int convertToPolish(strArr* arr, strArr* res){
+	strArr st;
+	strArr_init(&st);
 	for(size_t i = 0; i < arr->size; i++){
 		String curr = arr->data[i];
 		if(strIsDigit(&curr)){
-			arrAdd(res, &curr);
+			strArr_add(res, &curr);
 		}
 		else if(strcmp(curr.str, ")") == 0){
-			while((st.size > 0) && (strcmp(arrSeek(&st)->str, "(") != 0) ){
-				arrAdd(res, arrPop(&st));
+			while((st.size > 0) && (strcmp(strArr_seek(&st)->str, "(") != 0) ){
+				strArr_add(res, strArr_pop(&st));
 			}
 			if(st.size > 0){
-				arrPop(&st);
+				strArr_pop(&st);
 			}
 		}
 		else{
-			arrAdd(&st, &curr);
+			strArr_add(&st, &curr);
 		}
 	}
 	if(res -> size == 0)
 		return 0;
 	while(st.size > 0){
-		if(!isMathSign(arrSeek(&st))){
-            arrFree(&st);
+		if(!isMathSign(strArr_seek(&st))){
+            strArr_free(&st);
 			return 0;
         }
-		arrAdd(res, arrPop(&st));
+		strArr_add(res, strArr_pop(&st));
 	}
-    arrFree(&st);
+    strArr_free(&st);
 	return 1;
 }
 
-int evalPolish(DynArr* expr, String* res){
+int evalPolish(strArr* expr, String* res){
 	Stack st;
 	stackInit(&st);
 	int errFlag = 0;
