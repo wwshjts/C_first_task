@@ -6,7 +6,7 @@ typedef struct {\
 	size_t capacity;\
 } NAME;\
 void NAME##_init(NAME* arr);\
-String* NAME##_seek(NAME* arr);\
-String* NAME##_pop(NAME* arr);\
+T * NAME##_seek(NAME* arr);\
+T * NAME##_pop(NAME* arr);\
 void NAME##_shrink(NAME* arr);\
 void NAME##_resize(NAME* arr);

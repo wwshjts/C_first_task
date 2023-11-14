@@ -6,14 +6,14 @@
 #include"support.h"
 #include"stack.h"
 
-int isPal(String* str);
-int isTemperature(String* s);
-int isBracket(String* s);
-int isMathSign(String* s);
-int isExpression(String* s);
-void convertTemp(String* s);
+int isPal(string* str);
+int isTemperature(string* s);
+int isBracket(string* s);
+int isMathSign(string* s);
+int isExpression(string* s);
+void convertTemp(string* s);
 int convertToPolish(strArr*, strArr*);
-int evalPolish(strArr*, String*);
+int evalPolish(strArr*, string*);
 
 
 int main(int argc, char** argv){
@@ -67,13 +67,13 @@ int main(int argc, char** argv){
 	strArr_init(&expr);
 	strArr res;
 	strArr_init(&res);
-	String ans;
-	strInit(&ans);
+	string ans;
+	string_init(&ans);
 	int expr_flag = 0;
 	size_t expr_start = 0;
 	for(size_t i = 0; i < arr.size; i++){
-		String s = arr.data[i];
-		if(isExpression(&s) && (s.str[0] != LF) ){
+		string s = arr.data[i];
+		if(isExpression(&s) && (s.data[0] != LF) ){
 			if(!strIsDel(&s)){
 				strArr_add(&expr, &s);
 				if (expr_flag == 0){
@@ -97,7 +97,7 @@ int main(int argc, char** argv){
 			strArr_free(&res);
 			strArr_init(&res);
 			strFree(&ans);
-			strInit(&ans);
+			string_init(&ans);
 			strArr_free(&expr); 
 			strArr_init(&expr);
 		}
@@ -115,8 +115,8 @@ int main(int argc, char** argv){
 		stackInit(&brackets);
 		stackInit(&ind);
 		for(size_t i = 0; i < arr.size; i++){
-			String s = arr.data[i];
-			char* word = s.str;
+			string s = arr.data[i];
+			char* word = s.data;
 			if(isPal(&arr.data[i])){
 				strWith(&arr.data[i], "PALINDROM");
 				ruleFlag = 1;
@@ -134,9 +134,9 @@ int main(int argc, char** argv){
 				}
 				int tmp = stackPop(&ind);
 				if(i - dels - tmp - 1 == 1){
-					strInit(&arr.data[i]);
+					string_init(&arr.data[i]);
 					strWith(&arr.data[i]," ");
-					strInit(&arr.data[tmp]);
+					string_init(&arr.data[tmp]);
 					strWith(&arr.data[tmp]," ");
 					ruleFlag = 1;
 				}
@@ -155,13 +155,13 @@ int main(int argc, char** argv){
     }
     //delete spaces
 	for(size_t i = start; i < arr.size; i++){
-		String s = arr.data[i];
+		string s = arr.data[i];
 		if (strIsSpace(&s) && ((i > 0) && strIsSpace(&arr.data[i - 1])))
 			continue;
 		if (strIsLf(&s) && ( (i > 1) && strIsLf(&arr.data[i - 1]) && \
 										strIsLf(&arr.data[i - 2])))
 			continue; 
-		fprintf(fout,"%s", arr.data[i].str);
+		fprintf(fout,"%s", arr.data[i].data);
 	}
 	strArr_free(&arr);
 	if(fclose(fin) != 0){
@@ -173,9 +173,9 @@ int main(int argc, char** argv){
 	return 0; 
 }
 
-int isPal(String* str){
-	char* s = str->str;
-	size_t size = str->len;
+int isPal(string* str){
+	char* s = str->data;
+	size_t size = str->size;
 	if(size < 2)
 		return 0;
 	Stack st;
@@ -193,8 +193,8 @@ int isPal(String* str){
 	return st.size == 0;
 }
 
-int isTemperature(String* s){
-	char* str = s->str;
+int isTemperature(string* s){
+	char* str = s->data;
 	if( (str[0] != '+') && (str[0] != '-' ))
 		return 0;
 	str++;	
@@ -207,11 +207,11 @@ int isTemperature(String* s){
 	return suffix && digitFlag;
 }
 
-void convertTemp(String* s){
-	char* str = s->str; 
+void convertTemp(string* s){
+	char* str = s->data; 
 	char sign = *str++;
-	String res;
-	strInit(&res);
+	string res;
+	string_init(&res);
 	float temp = 0;
 	while(*str != 't'){
 	 	temp += *str - '0';
@@ -229,8 +229,8 @@ void convertTemp(String* s){
     strFree(&res);
 }
 
-int isMathSign(String* s){
-	char* word = s->str;
+int isMathSign(string* s){
+	char* word = s->data;
 	if (strcmp(word, "+") == 0)
 		return 1;
 	if (strcmp(word, "-") == 0)
@@ -242,8 +242,8 @@ int isMathSign(String* s){
 	return 0;
 }
 
-int isBracket(String* s){
-	char* word = s->str;
+int isBracket(string* s){
+	char* word = s->data;
 	if (strcmp(word, "(") == 0)
 		return 1;
 	if (strcmp(word, ")") == 0)
@@ -251,7 +251,7 @@ int isBracket(String* s){
 	return 0;
 }
 
-int isExpression(String* s){
+int isExpression(string* s){
 	if (strIsDigit(s))
 		return 1;
 	if (strIsDel(s))
@@ -267,12 +267,12 @@ int convertToPolish(strArr* arr, strArr* res){
 	strArr st;
 	strArr_init(&st);
 	for(size_t i = 0; i < arr->size; i++){
-		String curr = arr->data[i];
+		string curr = arr->data[i];
 		if(strIsDigit(&curr)){
 			strArr_add(res, &curr);
 		}
-		else if(strcmp(curr.str, ")") == 0){
-			while((st.size > 0) && (strcmp(strArr_seek(&st)->str, "(") != 0) ){
+		else if(strcmp(curr.data, ")") == 0){
+			while((st.size > 0) && (strcmp(strArr_seek(&st)->data, "(") != 0) ){
 				strArr_add(res, strArr_pop(&st));
 			}
 			if(st.size > 0){
@@ -296,18 +296,18 @@ int convertToPolish(strArr* arr, strArr* res){
 	return 1;
 }
 
-int evalPolish(strArr* expr, String* res){
+int evalPolish(strArr* expr, string* res){
 	Stack st;
 	stackInit(&st);
 	int errFlag = 0;
 	for(size_t i = 0; i < expr->size; i++){
 
-		String* curr = &expr->data[i];
+		string* curr = &expr->data[i];
 		if (strIsDigit(curr)){
 			stackAdd(&st, strToInt(curr));
 		}
 		else{
-			char op = expr->data[i].str[0];
+			char op = expr->data[i].data[0];
 			int fr;
 			int sc;
 			switch(op){

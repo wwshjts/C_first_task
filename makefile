@@ -7,8 +7,8 @@ PASS = $(IN:-input.txt=.passed)
 
 all : main
 
-main : main.c strings.o support.o stack.o strArr.o  
-	gcc main.c strings.o support.o strArr.o stack.o -o bin/main -Wall
+main : main.c support.o stack.o strArr.o dynamicString.o 
+	gcc main.c dynamicString.o support.o strArr.o stack.o -o bin/main -Wall
 
 strings.o : strings.c support.o stack.o strings.h
 	gcc -c strings.c -Wall
@@ -24,7 +24,8 @@ stack.o : stack.c support.o
 
 strArr.o : strArr.c support.o dynamic_arr_generate_code.h dynamic_arr_generate_header.h 
 	gcc -c -Wall strArr.c 
-
+dynamicString.o : dynamicString.c dynamic_arr_generate_code.h dynamic_arr_generate_header.h
+	gcc -c -Wall dynamicString.c
 clean : 
 	rm -f $(objects)
 
