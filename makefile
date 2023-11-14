@@ -1,0 +1,39 @@
+.PHONY : all clean
+
+objects = strings.o support.o stack.o dynArr.o
+
+IN = $(wildcard test/*-input.txt)
+PASS = $(IN:-input.txt=.passed)
+
+all : main
+
+main : main.c support.o stack.o strArr.o dynamicString.o 
+	gcc main.c dynamicString.o support.o strArr.o stack.o -o bin/main -Wall
+
+strings.o : strings.c support.o stack.o strings.h
+	gcc -c strings.c -Wall
+
+support.o : support.c support.h
+	gcc -c support.c -Wall
+
+dynArr.o : dynArr.c dynArr.h
+	gcc -c dynArr.c  -Wall
+
+stack.o : stack.c support.o
+	gcc -c stack.c
+
+strArr.o : strArr.c support.o dynamic_arr_generate_code.h dynamic_arr_generate_header.h 
+	gcc -c -Wall strArr.c 
+dynamicString.o : dynamicString.c dynamic_arr_generate_code.h dynamic_arr_generate_header.h
+	gcc -c -Wall dynamicString.c
+clean : 
+	rm -f $(objects)
+
+test : main $(PASS) 
+
+$(PASS) : %.passed: %-input.txt %-expected.txt bin/main
+	echo "Running test $*..."
+	rm -f $@
+	bin/main $*-input.txt $*-actual.txt
+	diff $*-expected.txt $*-actual.txt
+	touch $@
