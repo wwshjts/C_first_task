@@ -22,6 +22,9 @@ dynArr.o : dynArr.c dynArr.h
 stack.o : stack.c support.o
 	gcc -c stack.c
 
+strArr.o : strArr.c support.o dynamic_arr_generate_code.h dynamic_arr_generate_header.h 
+	gcc -c -Wall strArr.c 
+
 clean : 
 	rm -f $(objects)
 

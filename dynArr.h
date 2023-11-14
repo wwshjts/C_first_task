@@ -1,5 +1,8 @@
-#define BASE_ARR_CAPACITY 10
+#include<stdio.h>
+#include<stdlib.h>
+#include<assert.h>
 
+#define BASE_ARR_CAPACITY 10
 typedef struct {
 	String* data;
 	size_t size;

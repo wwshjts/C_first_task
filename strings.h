@@ -1,3 +1,9 @@
+#include<stddef.h>
+#include<stdio.h> 
+#include<assert.h>
+#include<stdlib.h>
+#include<string.h>
+
 #define BASE_String_CAPACITY 10
 
 typedef struct{

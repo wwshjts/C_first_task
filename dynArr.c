@@ -1,9 +1,6 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<assert.h>
 #include"strings.h"
-#include"dynArr.h"
 #include"support.h"
+#include"dynArr.h"
 
 
 void initEmptyDyn(DynArr* arr){

@@ -1,8 +1,3 @@
-#include<stddef.h>
-#include<stdio.h> 
-#include<assert.h>
-#include<stdlib.h>
-#include<string.h>
 #include"strings.h"
 #include"support.h"
 #include"stack.h"
@@ -37,6 +32,7 @@ void strAdd(String* struct_ptr, int ch){
 	str[struct_ptr->len] = '\0';
 	strResize(struct_ptr);
 }
+
 size_t strLen(String* struct_ptr){
 	return struct_ptr->len;
 }
