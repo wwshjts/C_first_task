@@ -49,12 +49,17 @@ void arrFree(DynArr* arr) {
     free(data);
 }
 
+int arrIsEmpty(DynArr* arr){
+    return arr->size > 0;
+}
+
 String* arrSeek(DynArr* arr) {
-    size_t size =  (arr->size - 1> 0) ? (arr->size - 1) : 0;
-    return &(arr->data[size]);
+    size_t size =  (arr->size - 1 > 0) ? (arr->size - 1) : 0;
+    return &arr->data[size];
 }
 
 String* arrPop(DynArr* arr) {    
+    assert(arr->size > 0);
     String* res = arrSeek(arr);
     arr->size--;
     arrShrink(arr);
@@ -62,14 +67,11 @@ String* arrPop(DynArr* arr) {
 }
 
 void arrShrink(DynArr* arr) {
-    size_t size = arr->size;
-    size_t capacity = arr->capacity;
-    if (size < capacity/4) {
-        capacity = capacity/4;
-        arr->data = (String*) realloc(arr->data, capacity * sizeof(String));
+    if (arr->size < arr->capacity/4) {
+        arr->capacity /= 4;
+        arr->data = (String*) realloc(arr->data, arr->capacity * sizeof(String));
         nullCheck(arr->data);
     }
-    arr->capacity = capacity;
 }
 
 void arrPrint(DynArr* arr) {
@@ -78,3 +80,4 @@ void arrPrint(DynArr* arr) {
         printf("<%s> ", arr->data[i].str);
     printf("\n");
 }
+

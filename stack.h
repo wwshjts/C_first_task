@@ -9,6 +9,7 @@ typedef struct {
 void stackInit(Stack* st);
 void stackFree(Stack* st);
 void stackAdd(Stack* st, int item);
+int stackIsEmpty(Stack* st); 
 int stackSeek(Stack* st);
 int stackPop(Stack*  st);
 void stackShrink(Stack* st);

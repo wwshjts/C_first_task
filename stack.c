@@ -23,7 +23,7 @@ void stackResize(Stack* st) {
 void stackAdd(Stack* st, int item) {
     int* data = st->data;
 
-    assert(st->size <= st->capacity);
+    assert(st->size < st->capacity);
 
     data[st->size++] = item;
     stackResize(st);
@@ -34,11 +34,16 @@ void stackFree(Stack* st) {
 }
 
 int stackSeek(Stack* st) {
-    size_t size = (st->size - 1> 0) ? (st->size - 1) : 0;
+    size_t size = (st->size - 1 > 0) ? (st->size - 1) : 0;
     return st->data[size];
 }
 
+int stackIsEmpty(Stack* st) {
+    return st->size > 0;
+}
+
 int stackPop(Stack* st) {    
+    assert(st->size > 0);
     int res = stackSeek(st);
     st->size--;
     stackShrink(st);
@@ -46,14 +51,11 @@ int stackPop(Stack* st) {
 }
 
 void stackShrink(Stack* st) {
-    size_t size = st->size;
-    size_t capacity = st->capacity;
-    if (size < capacity/4) {
-        capacity = capacity/4;
-        st->data = (int*) realloc(st->data, capacity * sizeof(int));
+    if (st->size < st->capacity/4) {
+        st->capacity /= 4;
+        st->data = (int*) realloc(st->data, st->capacity * sizeof(int));
         nullCheck(st->data);
     }
-    st->capacity = capacity;
 }
 
 void stackPrint(Stack* st) {

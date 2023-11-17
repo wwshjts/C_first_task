@@ -31,7 +31,7 @@ void strResize(String* struct_ptr) {
 
 void strAdd(String* struct_ptr, int ch) {
     char* str = struct_ptr->str;
-    assert(struct_ptr->len <= struct_ptr->capacity);
+    assert(struct_ptr->len < struct_ptr->capacity);
     str[struct_ptr->len++] = ch;
     str[struct_ptr->len] = '\0';
     strResize(struct_ptr);
@@ -58,11 +58,11 @@ String* strCopy(String* dst, String* src) {
         free(dst->str);
         dst_capacity = src_len * 2;
         dst->str = (char*) malloc(sizeof(char) * dst_capacity);
+        dst->capacity = dst_capacity;
+        dst->len = src->len;
         nullCheck(dst->str);
     }
     strcpy(dst->str, src->str);
-    dst->len = src->len;
-    dst->capacity = dst_capacity;
     return dst;
 }
 
