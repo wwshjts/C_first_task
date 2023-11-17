@@ -1,9 +1,9 @@
 #define BASE_ARR_CAPACITY 10
 
 typedef struct {
-	String* data;
-	size_t size;
-	size_t capacity;
+    String* data;
+    size_t size;
+    size_t capacity;
 } DynArr;
 
 void initEmptyDyn(DynArr* arr);

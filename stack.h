@@ -1,9 +1,9 @@
 #define BASE_STACK_CAPACITY 10
 
 typedef struct {
-	int* data;
-	size_t size;
-	size_t capacity;
+    int* data;
+    size_t size;
+    size_t capacity;
 } Stack;
 
 void stackInit(Stack* st);
