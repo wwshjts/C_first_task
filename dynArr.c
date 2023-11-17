@@ -5,29 +5,28 @@
 #include "dynArr.h"
 #include "support.h"
 
-
-void initEmptyDyn(DynArr* arr){
+void initEmptyDyn(DynArr* arr) {
     arr->size = 0;
     arr->capacity = BASE_ARR_CAPACITY;
     arr->data = (String*) malloc(sizeof(String) * BASE_ARR_CAPACITY);
     nullCheck(arr->data);
 }
 
-void arrResize(DynArr* arr){
-    if(capacity == arr->size){
+void arrResize(DynArr* arr) {
+    if (arr->capacity == arr->size) {
         arr->capacity *= 2; 
         arr->data = (String*) realloc(arr->data, arr->capacity * sizeof(String));
         nullCheck(arr->data);
     }
 }
 
-void arrAdd(DynArr* arr, String* item){
+void arrAdd(DynArr* arr, String* item) {
     String* data = arr->data;
 
     assert(arr->size <= arr->capacity);
 
     //if the argument is NULL then add an empty string
-    if(item == NULL){
+    if (item == NULL) {
         strInit(&data[arr->size++]);
     }
     else{
@@ -38,31 +37,31 @@ void arrAdd(DynArr* arr, String* item){
     arrResize(arr);
 } 
 
-void arrFree(DynArr* arr){
+void arrFree(DynArr* arr) {
     String* data = arr->data;
     size_t size = arr->size;
-    for(size_t i = 0; i < size; i++){
+    for (size_t i = 0; i < size; i++) {
         strFree(&data[i]);
     }
     free(data);
 }
 
-String* arrSeek(DynArr* arr){
+String* arrSeek(DynArr* arr) {
     size_t size =  (arr->size - 1> 0) ? (arr->size - 1) : 0;
     return &(arr->data[size]);
 }
 
-String* arrPop(DynArr* arr){    
+String* arrPop(DynArr* arr) {    
     String* res = arrSeek(arr);
     arr->size--;
     arrShrink(arr);
     return res;
 }
 
-void arrShrink(DynArr* arr){
+void arrShrink(DynArr* arr) {
     size_t size = arr->size;
     size_t capacity = arr->capacity;
-    if(size < capacity/4){
+    if (size < capacity/4) {
         capacity = capacity/4;
         arr->data = (String*) realloc(arr->data, capacity * sizeof(String));
         nullCheck(arr->data);
@@ -70,9 +69,9 @@ void arrShrink(DynArr* arr){
     arr->capacity = capacity;
 }
 
-void arrPrint(DynArr* arr){
+void arrPrint(DynArr* arr) {
     printf("size %zu capacity %zu\n", arr->size, arr->capacity);
-    for(size_t i = 0; i < arr->size; i++)
+    for (size_t i = 0; i < arr->size; i++)
         printf("<%s> ", arr->data[i].str);
     printf("\n");
 }
