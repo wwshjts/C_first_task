@@ -19,7 +19,6 @@ void strResize(String* struct_ptr) {
     char* str = struct_ptr->str;
     size_t len = struct_ptr->len;
     size_t capacity = struct_ptr->capacity;
-
     if (capacity - 1 == len) {
         capacity = capacity * 2; 
         str = (char *) realloc(str, capacity * sizeof(char));
@@ -37,6 +36,7 @@ void strAdd(String* struct_ptr, int ch) {
     str[struct_ptr->len] = '\0';
     strResize(struct_ptr);
 }
+
 size_t strLen(String* struct_ptr) {
     return struct_ptr->len;
 }

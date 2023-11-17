@@ -42,23 +42,23 @@ int main (int argc, char** argv) {
         ch = getc(fin);
 
     //fill array
-    arrAdd(&arr, NULL);
+    arrAddEmpty(&arr);
     strAdd(arrSeek(&arr), ch);    
     while ( ( (ch = getc(fin)) != EOF) ) {
         if (isDel(ch)) {
-            arrAdd(&arr, NULL);
+            arrAddEmpty(&arr);
             strAdd(arrSeek(&arr), ch);
         }
         else if (isAlpha(ch) || (ch == '+') || (ch == '-')) {
             //make new word
             if (!strIsWord(arrSeek(&arr))) {
-                arrAdd(&arr, NULL);
+                arrAddEmpty(&arr);
             }
             strAdd(arrSeek(&arr), ch);
         }
         //add punctuation mark
         else {
-            arrAdd(&arr, NULL);
+            arrAddEmpty(&arr);
             strAdd(arrSeek(&arr), ch);
         }
     }        

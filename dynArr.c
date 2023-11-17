@@ -23,19 +23,22 @@ void arrResize(DynArr* arr) {
 void arrAdd(DynArr* arr, String* item) {
     String* data = arr->data;
 
-    assert(arr->size <= arr->capacity);
+    assert(arr->size < arr->capacity);
 
-    //if the argument is NULL then add an empty string
-    if (item == NULL) {
-        strInit(&data[arr->size++]);
-    }
-    else{
-        //copy content of item(ptr)
-        strInit(&data[arr->size]);
-        strCopy(&data[arr->size++], item);
-    }
+    //copy content of item(ptr)
+    strInit(&data[arr->size]);
+    strCopy(&data[arr->size++], item);
     arrResize(arr);
 } 
+
+void arrAddEmpty(DynArr* arr){
+    String* data = arr->data;
+
+    assert(arr->size < arr->capacity);
+
+    strInit(&data[arr->size++]);
+    arrResize(arr);
+}
 
 void arrFree(DynArr* arr) {
     String* data = arr->data;

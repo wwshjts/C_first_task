@@ -13,14 +13,11 @@ void stackInit(Stack* st) {
 }
 
 void stackResize(Stack* st) {
-    size_t capacity = st->capacity;
-
-    if (capacity == st->size) {
-        capacity = capacity * 2; 
-        st->data = (int*) realloc(st->data, capacity * sizeof(int));
+    if (st->capacity == st->size) {
+        st->capacity *= 2; 
+        st->data = (int*) realloc(st->data, st->capacity * sizeof(int));
         nullCheck(st->data);
     }
-    st->capacity = capacity;
 }
 
 void stackAdd(Stack* st, int item) {
