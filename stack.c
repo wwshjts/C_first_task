@@ -17,7 +17,7 @@ size_t stackSize(Stack* st) {
 }
 
 void stackResize(Stack* st) {
-    if (st->capacity == stackSize(st)) {
+    if (st->capacity == st->size) {
         st->capacity *= 2; 
         st->data = (int*) realloc(st->data, st->capacity * sizeof(int));
         nullCheck(st->data);

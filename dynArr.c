@@ -16,7 +16,7 @@ size_t arrSize(DynArr* arr) {
     return arr->size;
 }
 void arrResize(DynArr* arr) {
-    if (arr->capacity == arrSize(arr)) {
+    if (arr->capacity == arr->size) {
         arr->capacity *= 2; 
         arr->data = (String*) realloc(arr->data, arr->capacity * sizeof(String));
         nullCheck(arr->data);

@@ -114,7 +114,6 @@ int main (int argc, char** argv) {
         Stack ind;
         stackInit(&brackets);
         stackInit(&ind);
-        size_t words = 0;
         for (size_t i = 0; i < arr.size; i++) {
             String* s = &arr.data[i];
             char* word = s->str;

@@ -16,7 +16,7 @@ void strInit(String* struct_ptr) {
 }
 
 void strResize(String* arr) {
-    if (arr->capacity == strLen(arr)) {
+    if (arr->capacity == arr->len) {
         arr->capacity *= 2; 
         arr->str = (char *) realloc(arr->str, arr->capacity * sizeof(char));
         nullCheck(arr->str);
@@ -146,7 +146,6 @@ void strWith(String* s, const char* src) {
 }
 
 int strToInt(String* s) {
-    char* word = s->str;
     int res = 0;    
     for (size_t i = 0; i < s->len; i++) {
         res += s->str[i] - '0';
