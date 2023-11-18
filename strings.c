@@ -85,8 +85,8 @@ int strCmpConst(String* arr, const char* b){
     char* a = arr->str;
     size_t a_len = arr->len;
     size_t b_len = strlen(b);
-    if(a_len != b_len) return 0;
-    for(size_t i = 0; i < a_len; i++){
+    if (a_len != b_len) return 0;
+    for (size_t i = 0; i < a_len; i++) { 
         if(a[i] != b[i]) return 0;
     }
     return 1;
@@ -94,9 +94,9 @@ int strCmpConst(String* arr, const char* b){
 
 int strEndsWith(String* arr, const char* postfix){
     size_t postfix_len = strlen(postfix);
-    if(arr->len < postfix_len) return 0;
-    for(size_t i = arr->len - postfix_len; i < arr->len; i++){
-        if(arr->str[i] != postfix[i - arr->len + postfix_len]) return 0;
+    if (arr->len < postfix_len) return 0;
+    for (size_t i = arr->len - postfix_len; i < arr->len; i++) {
+        if (arr->str[i] != postfix[i - arr->len + postfix_len]) return 0;
     }
     return 1;
 }
@@ -118,34 +118,13 @@ int strIsWord(String* s) {
 }
 
 int strIsDigit(String* s) {
-    char* word = s->str;
     int res = 1;
-    while(*word) {
-        res = (res && (isDigit(*word)));
-        word++;
+    for (size_t i = 0; i < s->len; i++){
+        res = (res && (isDigit(s->str[i])));
     }
     return res;
 }
 
-int strIsSpace(String*s) {
-    char* word = s->str;
-    int res = 0;
-    while(*word) {
-        res = (*word == ' ');
-        word++;
-    }
-    return res; 
-}
-
-int strIsLf(String* s) {
-    char* word = s->str;
-    int res = 0;
-    while(*word) {
-        res = (*word == LF);
-        word++;
-    }
-    return res;
-}
 void strFree(String* s) {
     free(s->str);
 }

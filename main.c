@@ -157,10 +157,10 @@ int main (int argc, char** argv) {
     //delete spaces
     for (size_t i = start; i < arr.size; i++) {
         String* s = &arr.data[i];
-        if (strIsSpace(s) && ((i > 0) && strIsSpace(&arr.data[i - 1])))
+        if (strCmpConst(s, " ") && ((i > 0) && strCmpConst(&arr.data[i - 1], " ")))
             continue;
-        if (strIsLf(s) && ( (i > 1) && strIsLf(&arr.data[i - 1]) && \
-                                        strIsLf(&arr.data[i - 2])))
+        if (strCmpConst(s, "\10") && ( (i > 1) && strCmpConst(&arr.data[i - 1], "\10") && \
+                                        strCmpConst(&arr.data[i - 2], "\10")))
             continue; 
         fprintString(fout, &arr.data[i]);
         //fprintf(stdout,"%s", arr.data[i].str);

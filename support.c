@@ -22,3 +22,4 @@ int isAlpha(char ch) {
 int isDigit(char ch) {
     return ('0' <= ch) && (ch <= '9');
 }
+
