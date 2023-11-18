@@ -37,7 +37,8 @@ void stackFree(Stack* st) {
     free(st->data);
 }
 
-int stackSeek(Stack* st) {
+int stackPeek(Stack* st) {
+    assert(st->size > 0);
     size_t size = (stackSize(st) - 1 > 0) ? (stackSize(st) - 1) : 0;
     return st->data[size];
 }
@@ -48,7 +49,7 @@ int stackIsEmpty(Stack* st) {
 
 int stackPop(Stack* st) {    
     assert(stackSize(st) > 0);
-    int res = stackSeek(st);
+    int res = stackPeek(st);
     st->size--;
     stackShrink(st);
     return res;

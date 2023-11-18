@@ -10,7 +10,7 @@ void stackInit(Stack* st);
 void stackFree(Stack* st);
 void stackAdd(Stack* st, int item);
 int stackIsEmpty(Stack* st); 
-int stackSeek(Stack* st);
+int stackPeek(Stack* st);
 int stackPop(Stack*  st);
 void stackShrink(Stack* st);
 void stackPrint(Stack* st);

@@ -12,7 +12,7 @@ void arrAdd(DynArr* arr, String* item);
 void arrAddEmpty(DynArr* arr);
 
 int arrIsEmpty(DynArr* arr);
-String* arrSeek(DynArr* arr);
+String* arrPeek(DynArr* arr);
 String* arrPop(DynArr* arr);
 void arrShrink(DynArr* arr);
 

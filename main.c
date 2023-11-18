@@ -43,23 +43,23 @@ int main (int argc, char** argv) {
 
     //fill array
     arrAddEmpty(&arr);
-    strAdd(arrSeek(&arr), ch);    
+    strAdd(arrPeek(&arr), ch);    
     while ( ( (ch = getc(fin)) != EOF) ) {
         if (isDel(ch)) {
             arrAddEmpty(&arr);
-            strAdd(arrSeek(&arr), ch);
+            strAdd(arrPeek(&arr), ch);
         }
-        else if (isAlpha(ch) || (ch == '+') || (ch == '-')) {
+        else if (isWordSymbol(ch) || (ch == '+') || (ch == '-')) {
             //make new word
-            if (!strIsWord(arrSeek(&arr))) {
+            if (!strIsWord(arrPeek(&arr))) {
                 arrAddEmpty(&arr);
             }
-            strAdd(arrSeek(&arr), ch);
+            strAdd(arrPeek(&arr), ch);
         }
         //add punctuation mark
         else {
             arrAddEmpty(&arr);
-            strAdd(arrSeek(&arr), ch);
+            strAdd(arrPeek(&arr), ch);
         }
     }        
     //eval all expressions in the file
@@ -114,8 +114,8 @@ int main (int argc, char** argv) {
         Stack ind;
         stackInit(&brackets);
         stackInit(&ind);
+        size_t words = 0;
         for (size_t i = 0; i < arr.size; i++) {
-            //тупо две разные структуры
             String* s = &arr.data[i];
             char* word = s->str;
             if (isPal(&arr.data[i])) {
@@ -123,22 +123,25 @@ int main (int argc, char** argv) {
                 ruleFlag = 1;
             }
             if ( (strCmpConst(s, "(")) || strIsDel(s)) {
+                //if we in this if len(word) > 0
                 stackAdd(&brackets, word[0]);
                 stackAdd(&ind, i); 
             }
             if (strCmpConst(s, ")") ) {
                 int dels = 0;
-                while(isDel(stackSeek(&brackets))) {
+                while(isDel(stackPeek(&brackets))) {
                     dels++;
                     stackPop(&brackets);
                     stackPop(&ind);
                 }
-                int tmp = stackPop(&ind);
-                if (i - dels - tmp - 1 == 1) {
+                int first_bracket = stackPop(&ind);
+                //if we see the first bracket
+                //and we dont have delimiters in ( ... )
+                if (i - dels - first_bracket - 1 == 1) {
                     strInit(&arr.data[i]);
                     strWith(&arr.data[i]," ");
-                    strInit(&arr.data[tmp]);
-                    strWith(&arr.data[tmp]," ");
+                    strInit(&arr.data[first_bracket]);
+                    strWith(&arr.data[first_bracket]," ");
                     ruleFlag = 1;
                 }
             }
@@ -159,8 +162,8 @@ int main (int argc, char** argv) {
         String* s = &arr.data[i];
         if (strCmpConst(s, " ") && ((i > 0) && strCmpConst(&arr.data[i - 1], " ")))
             continue;
-        if (strCmpConst(s, "\10") && ( (i > 1) && strCmpConst(&arr.data[i - 1], "\10") && \
-                                        strCmpConst(&arr.data[i - 2], "\10")))
+        if (strCmpConst(s, "\n") && ( (i > 1) && strCmpConst(&arr.data[i - 1], "\n") && 
+                                        strCmpConst(&arr.data[i - 2], "\n")))
             continue; 
         fprintString(fout, &arr.data[i]);
         //fprintf(stdout,"%s", arr.data[i].str);
@@ -187,7 +190,7 @@ int isPal(String* str) {
     }
 
     for (size_t i = size/2 + (size%2) ; i < size; i++) {
-        if (stackSeek(&st) == s[i]) {
+        if (stackPeek(&st) == s[i]) {
             stackPop(&st);
         }
     }
@@ -274,11 +277,13 @@ int convertToPolish(DynArr* arr, DynArr* res) {
             arrAdd(res, &curr);
         }
         else if (strCmpConst(&curr, ")")) {
-            while((st.size > 0) && (!strCmpConst(arrSeek(&st), "(")) ) {
-                arrAdd(res, arrPop(&st));
+            while((st.size > 0) && (!strCmpConst(arrPeek(&st), "(")) ) {
+                String* tmp = arrPop(&st);
+                arrAdd(res, tmp);
+                strFree(tmp);
             }
             if (st.size > 0) {
-                arrPop(&st);
+                strFree(arrPop(&st));
             }
         }
         else{
@@ -288,11 +293,13 @@ int convertToPolish(DynArr* arr, DynArr* res) {
     if (res -> size == 0)
         return 0;
     while (st.size > 0) {
-        if (!isMathSign(arrSeek(&st))) {
+        if (!isMathSign(arrPeek(&st))) {
             arrFree(&st);
             return 0;
         }
-        arrAdd(res, arrPop(&st));
+        String* tmp = arrPop(&st);
+        arrAdd(res, tmp);
+        strFree(tmp);
     }
     arrFree(&st);
     return 1;

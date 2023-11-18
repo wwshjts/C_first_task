@@ -112,7 +112,7 @@ int strIsWord(String* s) {
     int res = 1;
     for(size_t i = 0; i < s->len; i++) {
         char ch = s->str[i];
-        res = res && (isAlpha(ch) || (ch == '+') || (ch == '-'));
+        res = res && (isWordSymbol(ch) || (ch == '+') || (ch == '-'));
     }
     return res;
 }
@@ -148,10 +148,9 @@ void strWith(String* s, const char* src) {
 int strToInt(String* s) {
     char* word = s->str;
     int res = 0;    
-    while(isDigit(*word)) {    
-        res += *word - '0';
+    for (size_t i = 0; i < s->len; i++) {
+        res += s->str[i] - '0';
         res *= 10;
-        word++;
     }
     res /= 10;
     return res;
