@@ -126,7 +126,7 @@ int main (int argc, char** argv) {
                 stackAdd(&brackets, word[0]);
                 stackAdd(&ind, i); 
             }
-            if (strCmpConst(s, ")")) {
+            if (strCmpConst(s, ")") ) {
                 int dels = 0;
                 while(isDel(stackSeek(&brackets))) {
                     dels++;
@@ -205,7 +205,7 @@ int isTemperature(String* s) {
         digitFlag = 1;
         str++;
     }
-    int suffix = (strCmpConst(s, "tF") == 0);
+    int suffix = (strEndsWith(s, "tF"));
     return suffix && digitFlag;
 }
 
@@ -234,23 +234,21 @@ void convertTemp(String* s) {
 }
 
 int isMathSign(String* s) {
-    char* word = s->str;
-    if (strcmp(word, "+") == 0)
+    if (strCmpConst(s, "+"))
         return 1;
-    if (strcmp(word, "-") == 0)
+    if (strCmpConst(s, "-"))
         return 1;
-    if (strcmp(word, "*") == 0)
+    if (strCmpConst(s, "*"))
         return 1;
-    if (strcmp(word, "/") == 0)
+    if (strCmpConst(s, "/"))
         return 1;
     return 0;
 }
 
 int isBracket(String* s) {
-    char* word = s->str;
-    if (strcmp(word, "(") == 0)
+    if (strCmpConst(s, "("))
         return 1;
-    if (strcmp(word, ")") == 0)
+    if (strCmpConst(s, ")"))
         return 1;
     return 0;
 }
@@ -275,8 +273,8 @@ int convertToPolish(DynArr* arr, DynArr* res) {
         if (strIsDigit(&curr)) {
             arrAdd(res, &curr);
         }
-        else if (strcmp(curr.str, ")") == 0) {
-            while((st.size > 0) && (strcmp(arrSeek(&st)->str, "(") != 0) ) {
+        else if (strCmpConst(&curr, ")")) {
+            while((st.size > 0) && (!strCmpConst(arrSeek(&st), "(")) ) {
                 arrAdd(res, arrPop(&st));
             }
             if (st.size > 0) {

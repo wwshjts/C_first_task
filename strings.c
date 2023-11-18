@@ -90,7 +90,15 @@ int strCmpConst(String* arr, const char* b){
         if(a[i] != b[i]) return 0;
     }
     return 1;
+}
 
+int strEndsWith(String* arr, const char* postfix){
+    size_t postfix_len = strlen(postfix);
+    if(arr->len < postfix_len) return 0;
+    for(size_t i = arr->len - postfix_len; i < arr->len; i++){
+        if(arr->str[i] != postfix[i - arr->len + postfix_len]) return 0;
+    }
+    return 1;
 }
 int strIsDel(String* s) {
     int res = 1;

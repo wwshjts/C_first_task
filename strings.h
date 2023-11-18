@@ -20,6 +20,7 @@ void strCopy(String* struct_dst, String* struct_src);
 void strCat(String* struct_dst, String* struct_src);
 int strCmp(String* a, String* b);
 int strCmpConst(String* arr, const char* b);
+int strEndsWith(String* arr, const char* postfix);
 
 void strResise(String* struct_prt);
 void strFree(String* s);
