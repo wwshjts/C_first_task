@@ -16,9 +16,10 @@ void strAdd(String* struct_ptr, int ch);
 size_t strLen(String* struct_ptr);
 //find first occurrence of ch in string, return pointer on it
 char* strChr(String* struct_prt, int ch);
-String* strCopy(String* struct_dst, String* struct_src);
-String* strCat(String* struct_dst, String* struct_src);
+void strCopy(String* struct_dst, String* struct_src);
+void strCat(String* struct_dst, String* struct_src);
 int strCmp(String* a, String* b);
+int strCmpConst(String* arr, const char* b);
 
 void strResise(String* struct_prt);
 void strFree(String* s);
@@ -33,3 +34,5 @@ int strIsWord(String* s);
 int strIsDigit(String* s);
 int strIsLf(String* s);
 int strIsSpace(String*s);
+
+void fprintString(FILE* fl, String* arr);

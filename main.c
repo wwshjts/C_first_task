@@ -62,7 +62,6 @@ int main (int argc, char** argv) {
             strAdd(arrSeek(&arr), ch);
         }
     }        
-
     //eval all expressions in the file
     DynArr expr; 
     initEmptyDyn(&expr);
@@ -116,17 +115,18 @@ int main (int argc, char** argv) {
         stackInit(&brackets);
         stackInit(&ind);
         for (size_t i = 0; i < arr.size; i++) {
-            String s = arr.data[i];
-            char* word = s.str;
+            //тупо две разные структуры
+            String* s = &arr.data[i];
+            char* word = s->str;
             if (isPal(&arr.data[i])) {
                 strWith(&arr.data[i], "PALINDROM");
                 ruleFlag = 1;
             }
-            if ( (word[0] == '(') || strIsDel(&s)) {
+            if ( (strCmpConst(s, "(")) || strIsDel(s)) {
                 stackAdd(&brackets, word[0]);
                 stackAdd(&ind, i); 
             }
-            if (word[0] == ')') {
+            if (strCmpConst(s, ")")) {
                 int dels = 0;
                 while(isDel(stackSeek(&brackets))) {
                     dels++;
@@ -142,8 +142,8 @@ int main (int argc, char** argv) {
                     ruleFlag = 1;
                 }
             }
-            if (isTemperature(&s)) {
-                convertTemp(&s);
+            if (isTemperature(s)) {
+                convertTemp(s);
             }    
         }
         stackFree(&brackets);
@@ -156,13 +156,14 @@ int main (int argc, char** argv) {
     }
     //delete spaces
     for (size_t i = start; i < arr.size; i++) {
-        String s = arr.data[i];
-        if (strIsSpace(&s) && ((i > 0) && strIsSpace(&arr.data[i - 1])))
+        String* s = &arr.data[i];
+        if (strIsSpace(s) && ((i > 0) && strIsSpace(&arr.data[i - 1])))
             continue;
-        if (strIsLf(&s) && ( (i > 1) && strIsLf(&arr.data[i - 1]) && \
+        if (strIsLf(s) && ( (i > 1) && strIsLf(&arr.data[i - 1]) && \
                                         strIsLf(&arr.data[i - 2])))
             continue; 
-        fprintf(fout,"%s", arr.data[i].str);
+        fprintString(fout, &arr.data[i]);
+        //fprintf(stdout,"%s", arr.data[i].str);
     }
     arrFree(&arr);
     if (fclose(fin) != 0) {
@@ -204,7 +205,7 @@ int isTemperature(String* s) {
         digitFlag = 1;
         str++;
     }
-    int suffix = (strcmp(str, "tF") == 0);
+    int suffix = (strCmpConst(s, "tF") == 0);
     return suffix && digitFlag;
 }
 
@@ -227,6 +228,8 @@ void convertTemp(String* s) {
     strAdd(&res, 't');
     strAdd(&res, 'C');
     strCopy(s, &res);
+    fprintString(stdout, s);
+    printf("%zu \n", s->len);
     strFree(&res);
 }
 

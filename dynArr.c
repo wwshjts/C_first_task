@@ -12,8 +12,11 @@ void initEmptyDyn(DynArr* arr) {
     nullCheck(arr->data);
 }
 
+size_t arrSize(DynArr* arr) {
+    return arr->size;
+}
 void arrResize(DynArr* arr) {
-    if (arr->capacity == arr->size) {
+    if (arr->capacity == arrSize(arr)) {
         arr->capacity *= 2; 
         arr->data = (String*) realloc(arr->data, arr->capacity * sizeof(String));
         nullCheck(arr->data);
