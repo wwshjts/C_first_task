@@ -8,12 +8,10 @@
 #include "stack.h"
 
 int isPal(String* str);
-int isTemperature(String* s);
 int isBracket(String* s);
 int isMathSign(String* s);
 int isExpression(String* s);
-void convertTemp(String* s);
-int convertToPolish(DynArr*, DynArr*);
+int convertToPolish(DynArr* arr, DynArr* res);
 int evalPolish(DynArr*, String*);
 
 
@@ -144,9 +142,6 @@ int main (int argc, char** argv) {
                     ruleFlag = 1;
                 }
             }
-            if (isTemperature(s)) {
-                convertTemp(s);
-            }    
         }
         stackFree(&brackets);
         stackFree(&ind);
@@ -195,44 +190,6 @@ int isPal(String* str) {
     }
     stackFree(&st);
     return st.size == 0;
-}
-
-int isTemperature(String* s) {
-    char* str = s->str;
-    if ( (str[0] != '+') && (str[0] != '-' ))
-        return 0;
-    str++;    
-    int digitFlag = 0;
-    while (isDigit(*str)) {    
-        digitFlag = 1;
-        str++;
-    }
-    int suffix = (strEndsWith(s, "tF"));
-    return suffix && digitFlag;
-}
-
-void convertTemp(String* s) {
-    char* str = s->str; 
-    char sign = *str++;
-    String res;
-    strInit(&res);
-    float temp = 0;
-    while (*str != 't') {
-         temp += *str - '0';
-        temp *= 10;
-        str++;
-    }
-    temp /= 10;
-    if (sign == '-')
-        temp *= -1;
-    temp = (temp - 32) * (5.0 / 9);
-    strFloatToString(&res, temp);
-    strAdd(&res, 't');
-    strAdd(&res, 'C');
-    strCopy(s, &res);
-    fprintString(stdout, s);
-    printf("%zu \n", s->len);
-    strFree(&res);
 }
 
 int isMathSign(String* s) {
