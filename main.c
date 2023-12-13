@@ -15,6 +15,7 @@ int convertToPolish(DynArr* arr, DynArr* res);
 int evalPolish(DynArr*, String*);
 void evalAllExpr(DynArr* arr); 
 void subPals(DynArr* arr); 
+void removeBrackets(DynArr* arr); 
 
 int main (int argc, char** argv) {
     FILE* fin;
@@ -62,60 +63,22 @@ int main (int argc, char** argv) {
         }
     }        
 
-    //eval all expressions in the file
-    
-
+    //procesing text
     subPals(&arr);
     evalAllExpr(&arr);
     removeBrackets(&arr);
 
-    //procesing text
-    /*
-    int ruleFlag = 1;
-    while (ruleFlag) {
-        ruleFlag = 0;
-        Stack brackets;
-        Stack ind;
-        stackInit(&brackets);
-        stackInit(&ind);
-        for (size_t i = 0; i < arr.size; i++) {
-            String* s = &arr.data[i];
-            char* word = s->str;
-            if ( (strCmpConst(s, "(")) || strIsDel(s)) {
-                //if we in this if len(word) > 0
-                stackAdd(&brackets, word[0]);
-                stackAdd(&ind, i); 
-            }
-            if (strCmpConst(s, ")") ) {
-                int dels = 0;
-                while(isDel(stackPeek(&brackets))) {
-                    dels++;
-                    stackPop(&brackets);
-                    stackPop(&ind);
-                }
-                int first_bracket = stackPop(&ind);
-                //if we see the first bracket
-                //and we dont have delimiters in ( ... )
-                if (i - dels - first_bracket - 1 == 1) {
-                    strInit(&arr.data[i]);
-                    strWith(&arr.data[i]," ");
-                    strInit(&arr.data[first_bracket]);
-                    strWith(&arr.data[first_bracket]," ");
-                    ruleFlag = 1;
-                }
-            }
-        }
-        stackFree(&brackets);
-        stackFree(&ind);
-    }
-    */
-    
     size_t start = 0;
-    while (strIsDel(&arr.data[start])) {
+    while ((start < arrSize(&arr)) && strIsDel(arrGet(&arr, start))) {
         start++;
     }
+    size_t stop = arrSize(&arr) - 1;
+    while ((stop >= 0) && strIsDel(arrGet(&arr, stop))) {
+        stop--;
+    }
+
     //delete spaces
-    for (size_t i = start; i < arr.size; i++) {
+    for (size_t i = start; i <= stop; i++) {
         String* s = &arr.data[i];
         if (strCmpConst(s, " ") && ((i > 0) && strCmpConst(&arr.data[i - 1], " "))) {
             continue;
@@ -127,6 +90,7 @@ int main (int argc, char** argv) {
         fprintString(fout, &arr.data[i]);
         //fprintf(stdout,"%s", arr.data[i].str);
     }
+    fprintf(fout, "%c", LF);
     arrFree(&arr);
     if (fclose(fin) != 0) {
         printf("ERROR: trouble in closing file%s\n", argv[1]);
@@ -248,8 +212,10 @@ int isPal(String* str) {
         stackAdd(&st, s[i]);
     }
     
-    //case a1a > 0) ? arr->size - 1 : 0
+    //case a1a
+    printf("size %zu\n", size);
     if ((size % 2 != 0) && (!isLetter(s[size/2]))) {
+        printf("hfksdjf");
         return 0;
     }
 

@@ -31,7 +31,7 @@ void strAdd(String* struct_ptr, int ch) {
 }
 
 size_t strLen(String* struct_ptr) {
-    return  (struct_ptr->len > 0) ? struct_ptr->len - 1 : 0;
+    return  struct_ptr->len;
 }
 
 char* strChr(String* arr, int ch) {
@@ -102,7 +102,8 @@ int strEndsWith(String* arr, const char* postfix){
 }
 int strIsDel(String* s) {
     int res = 1;
-    for(size_t i = 0; i < s->len; i++) {
+    for(size_t i = 0; i < strLen(s); i++) {
+
         res = res && isDel(s->str[i]);
     }
     return res;
