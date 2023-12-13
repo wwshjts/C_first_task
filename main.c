@@ -13,7 +13,8 @@ int isMathSign(String* s);
 int isExpression(String* s);
 int convertToPolish(DynArr* arr, DynArr* res);
 int evalPolish(DynArr*, String*);
-
+void evalAllExpr(DynArr* arr); 
+void subPals(DynArr* arr); 
 
 int main (int argc, char** argv) {
     FILE* fin;
@@ -62,50 +63,11 @@ int main (int argc, char** argv) {
     }        
 
     //eval all expressions in the file
-    DynArr expr; 
-    initEmptyDyn(&expr);
-    DynArr res;
-    initEmptyDyn(&res);
-    String ans;
-    strInit(&ans);
-    int expr_flag = 0;
-    size_t expr_start = 0;
-    for (size_t i = 0; i < arr.size; i++) {
-        String s = arr.data[i];
-        if (isExpression(&s) && (s.str[0] != LF) ) {
-            if (!strIsDel(&s)) {
-                arrAdd(&expr, &s);
-                if (expr_flag == 0) {
-                    expr_start = i;
-                    expr_flag = 1;
-                }
-            }
-        }
-        else {
-            int rs = convertToPolish(&expr, &res);
-            if (rs > 0) {
-                //if expr is converted
-                if (evalPolish(&res, &ans)) {
-                    strCopy(&arr.data[i-1], &ans);
-                    for (size_t dl = expr_start; dl < i-1; dl++) {
-                        strWith(&arr.data[dl], " ");                
-                    }
-                    expr_flag = 0;
-                }
-            }
-            arrFree(&res);
-            initEmptyDyn(&res);
-            strFree(&ans);
-            strInit(&ans);
-            arrFree(&expr); 
-            initEmptyDyn(&expr);
-        }
+    
 
-    }
+    subPals(&arr);
+    evalAllExpr(&arr);
 
-    arrFree(&expr);
-    arrFree(&res);
-    strFree(&ans);
     //procesing text
     int ruleFlag = 1;
     while (ruleFlag) {
@@ -117,10 +79,6 @@ int main (int argc, char** argv) {
         for (size_t i = 0; i < arr.size; i++) {
             String* s = &arr.data[i];
             char* word = s->str;
-            if (isPal(&arr.data[i])) {
-                strWith(&arr.data[i], "PALINDROM");
-                ruleFlag = 1;
-            }
             if ( (strCmpConst(s, "(")) || strIsDel(s)) {
                 //if we in this if len(word) > 0
                 stackAdd(&brackets, word[0]);
@@ -156,11 +114,13 @@ int main (int argc, char** argv) {
     //delete spaces
     for (size_t i = start; i < arr.size; i++) {
         String* s = &arr.data[i];
-        if (strCmpConst(s, " ") && ((i > 0) && strCmpConst(&arr.data[i - 1], " ")))
+        if (strCmpConst(s, " ") && ((i > 0) && strCmpConst(&arr.data[i - 1], " "))) {
             continue;
+        }
         if (strCmpConst(s, "\n") && ( (i > 1) && strCmpConst(&arr.data[i - 1], "\n") && 
-                                        strCmpConst(&arr.data[i - 2], "\n")))
+                                        strCmpConst(&arr.data[i - 2], "\n"))) {
             continue; 
+        }
         fprintString(fout, &arr.data[i]);
         //fprintf(stdout,"%s", arr.data[i].str);
     }
@@ -172,6 +132,65 @@ int main (int argc, char** argv) {
         printf("ERROR: trouble in closing file%s\n", argv[2]);
     }
     return 0; 
+}
+
+//substitute all brackets
+
+//eval all expessions
+void evalAllExpr(DynArr* arr) {
+    DynArr expr; 
+    initEmptyDyn(&expr);
+    DynArr res;
+    initEmptyDyn(&res);
+    String ans;
+    strInit(&ans);
+    int expr_flag = 0;
+    size_t expr_start = 0;
+    for (size_t i = 0; i < arrSize(arr); i++) {
+        String s = arr->data[i];
+        if (isExpression(&s) && (s.str[0] != LF) ) {
+            if (!strIsDel(&s)) {
+                arrAdd(&expr, &s);
+                if (expr_flag == 0) {
+                    expr_start = i;
+                    expr_flag = 1;
+                }
+            }
+        }
+        else {
+            int rs = convertToPolish(&expr, &res);
+            if (rs > 0) {
+                //if expr is converted
+                if (evalPolish(&res, &ans)) {
+                    strCopy(&arr->data[i-1], &ans);
+                    for (size_t dl = expr_start; dl < i-1; dl++) {
+                        strWith(&arr->data[dl], " ");                
+                    }
+                    expr_flag = 0;
+                }
+            }
+            arrFree(&res);
+            initEmptyDyn(&res);
+            strFree(&ans);
+            strInit(&ans);
+            arrFree(&expr); 
+            initEmptyDyn(&expr);
+        }
+    }
+    arrFree(&expr);
+    arrFree(&res);
+    strFree(&ans);
+
+}
+
+//substitute all palindroms
+void subPals(DynArr* arr){ 
+    for (size_t i = 0; i < arrSize(arr); i++) {
+        String* str =  arrGet(arr, i); 
+        if(isPal(str)) {
+            strWith(str,"PALINDROM");
+        }
+    }
 }
 
 int isPal(String* str) {

@@ -34,6 +34,11 @@ void arrAdd(DynArr* arr, String* item) {
     arrResize(arr);
 } 
 
+String* arrGet(DynArr* arr, int i) {
+    assert(i < arr->size);
+    return &arr->data[i];
+}
+
 void arrAddEmpty(DynArr* arr){
     String* data = arr->data;
 
