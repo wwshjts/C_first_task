@@ -15,6 +15,7 @@ void initEmptyDyn(DynArr* arr) {
 size_t arrSize(DynArr* arr) {
     return arr->size;
 }
+
 void arrResize(DynArr* arr) {
     if (arr->capacity == arr->size) {
         arr->capacity *= 2; 
@@ -90,3 +91,10 @@ void arrPrint(DynArr* arr) {
     printf("\n");
 }
 
+void arrDelete(DynArr* arr, size_t index) {
+    assert(index < arr->size);
+    for (size_t i = index + 1; i < arrSize(arr); i++){
+        *arrGet(arr, i - 1) = *arrGet(arr, i);
+    }
+    arr->size--;
+}

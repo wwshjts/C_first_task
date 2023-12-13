@@ -56,7 +56,7 @@ int stackPop(Stack* st) {
 }
 
 void stackShrink(Stack* st) {
-    if (stackSize(st) < st->capacity/4) {
+    if (stackSize(st) < st->capacity / 4) {
         st->capacity /= 4;
         st->data = (int*) realloc(st->data, st->capacity * sizeof(int));
         nullCheck(st->data);

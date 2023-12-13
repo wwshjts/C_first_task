@@ -67,8 +67,10 @@ int main (int argc, char** argv) {
 
     subPals(&arr);
     evalAllExpr(&arr);
+    removeBrackets(&arr);
 
     //procesing text
+    /*
     int ruleFlag = 1;
     while (ruleFlag) {
         ruleFlag = 0;
@@ -106,6 +108,7 @@ int main (int argc, char** argv) {
         stackFree(&brackets);
         stackFree(&ind);
     }
+    */
     
     size_t start = 0;
     while (strIsDel(&arr.data[start])) {
@@ -135,6 +138,45 @@ int main (int argc, char** argv) {
 }
 
 //substitute all brackets
+void removeBrackets(DynArr* arr) {
+    Stack toDelete;
+    Stack brackets;
+    Stack ind;
+    stackInit(&brackets);
+    stackInit(&ind);
+    stackInit(&toDelete);
+    for (size_t i = 0; i < arrSize(arr); i++) {
+        String* s = arrGet(arr, i);
+        char* word = s->str;
+        if ( (strCmpConst(s, "(")) || strIsDel(s)) {
+            //if we in this if len(word) > 0
+            stackAdd(&brackets, word[0]);
+            stackAdd(&ind, i); 
+        }
+        if (strCmpConst(s, ")") ) {
+            int dels = 0;
+            while(isDel(stackPeek(&brackets))) {
+                dels++;
+                stackPop(&brackets);
+                stackPop(&ind);
+            }
+            int first_bracket = stackPop(&ind);
+            //if we see the first bracket
+            //and we dont have delimiters in ( ... )
+            if (i - dels - first_bracket - 1 == 1) {
+                stackAdd(&toDelete, first_bracket);
+                stackAdd(&toDelete, i);
+            }
+        }
+    }
+    stackFree(&brackets);
+    stackFree(&ind);
+    arrPrint(arr);
+    while (stackSize(&toDelete) > 0) {
+        arrDelete(arr, stackPop(&toDelete));
+    }
+    stackFree(&toDelete);
+}
 
 //eval all expessions
 void evalAllExpr(DynArr* arr) {
