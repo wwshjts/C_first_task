@@ -31,7 +31,7 @@ void strAdd(String* struct_ptr, int ch) {
 }
 
 size_t strLen(String* struct_ptr) {
-    return struct_ptr->len;
+    return  (struct_ptr->len > 0) ? struct_ptr->len - 1 : 0;
 }
 
 char* strChr(String* arr, int ch) {

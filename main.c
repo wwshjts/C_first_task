@@ -60,6 +60,7 @@ int main (int argc, char** argv) {
             strAdd(arrPeek(&arr), ch);
         }
     }        
+
     //eval all expressions in the file
     DynArr expr; 
     initEmptyDyn(&expr);
@@ -101,6 +102,7 @@ int main (int argc, char** argv) {
         }
 
     }
+
     arrFree(&expr);
     arrFree(&res);
     strFree(&ans);
@@ -174,13 +176,20 @@ int main (int argc, char** argv) {
 
 int isPal(String* str) {
     char* s = str->str;
-    size_t size = str->len;
+    size_t size = strLen(str);
     if (size < 2)
         return 0;
+
     Stack st;
     stackInit(&st);
+
     for (size_t i = 0; i < size/2; i++) {
         stackAdd(&st, s[i]);
+    }
+    
+    //case a1a > 0) ? arr->size - 1 : 0
+    if ((size % 2 != 0) && (!isLetter(s[size/2]))) {
+        return 0;
     }
 
     for (size_t i = size/2 + (size%2) ; i < size; i++) {
@@ -227,7 +236,7 @@ int isExpression(String* s) {
 int convertToPolish(DynArr* arr, DynArr* res) {
     DynArr st;
     initEmptyDyn(&st);
-    for (size_t i = 0; i < arr->size; i++) {
+    for (size_t i = 0; i < arrSize(arr); i++) {
         String curr = arr->data[i];
         if (strIsDigit(&curr)) {
             arrAdd(res, &curr);
