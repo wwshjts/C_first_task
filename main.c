@@ -17,7 +17,7 @@ void evalAllExpr(DynArr* arr);
 void subPals(DynArr* arr);
 void removeBrackets(DynArr* arr);
 
-int main (int argc, char** argv) {
+int main(int argc, char** argv) {
     FILE* fin;
     FILE* fout;
     if (argc != 3) {
@@ -38,26 +38,24 @@ int main (int argc, char** argv) {
 
     //skip delimiters
     char ch = getc(fin);
-    while( (ch != EOF) && (isDel(ch)) )
+    while ( (ch != EOF) && (isDel(ch)) )
         ch = getc(fin);
 
     //fill array
     arrAddEmpty(&arr);
     strAdd(arrPeek(&arr), ch);
-    while ( ( (ch = getc(fin)) != EOF) ) {
+    while (((ch = getc(fin)) != EOF)) {
         if (isDel(ch)) {
             arrAddEmpty(&arr);
             strAdd(arrPeek(&arr), ch);
-        }
-        else if (isWordSymbol(ch) || (ch == '+') || (ch == '-')) {
+        } else if (isWordSymbol(ch) || (ch == '+') || (ch == '-')) {
             //make new word
             if (!strIsWord(arrPeek(&arr))) {
                 arrAddEmpty(&arr);
             }
             strAdd(arrPeek(&arr), ch);
-        }
         //add punctuation mark
-        else {
+        } else {
             arrAddEmpty(&arr);
             strAdd(arrPeek(&arr), ch);
         }
@@ -142,8 +140,6 @@ void removeBrackets(DynArr* arr) {
     stackFree(&toDelete);
 }
 
-
-
 //substitute all palindroms
 void subPals(DynArr* arr){
     for (size_t i = 0; i < arrSize(arr); i++) {
@@ -218,8 +214,7 @@ int convertToPolish(DynArr* arr, DynArr* res) {
         String curr = arr->data[i];
         if (strIsDigit(&curr)) {
             arrAdd(res, &curr);
-        }
-        else if (strCmpConst(&curr, ")")) {
+        } else if (strCmpConst(&curr, ")")) {
             while((st.size > 0) && (!strCmpConst(arrPeek(&st), "(")) ) {
                 String* tmp = arrPop(&st);
                 arrAdd(res, tmp);
@@ -228,8 +223,7 @@ int convertToPolish(DynArr* arr, DynArr* res) {
             if (st.size > 0) {
                 strFree(arrPop(&st));
             }
-        }
-        else {
+        } else {
             arrAdd(&st, &curr);
         }
     }
@@ -256,8 +250,7 @@ int evalPolish(DynArr* expr, String* res) {
         String* curr = &expr->data[i];
         if (strIsDigit(curr)) {
             stackAdd(&st, strToInt(curr));
-        }
-        else {
+        } else {
             if (stackSize(&st) < 2) {
                 stackFree(&st);
                 return 0;
@@ -300,7 +293,6 @@ int evalPolish(DynArr* expr, String* res) {
     return 1;
 }
 
-
 //eval all expessions
 void evalAllExpr(DynArr* arr) {
     DynArr expr;
@@ -320,21 +312,17 @@ void evalAllExpr(DynArr* arr) {
             arrAdd(&expr, s);
             expr_start = i;
             expr_flag = 1;
-        }
-        else if (isExpression(s) || strCmpConst(s, " ")) {
+        } else if (isExpression(s) || strCmpConst(s, " ")) {
             if (!strIsDel(s)) {
                 arrAdd(&expr, s);
                 expr_end = i;
             }
-        }
-        else {
+        } else {
             int rs = convertToPolish(&expr, &res);
             if (rs > 0) {
-                arrPrint(arr);
                 //if expr is converted
                 if (evalPolish(&res, &ans)) {
                     strCopy(&arr->data[expr_start], &ans);
-                    arrPrint(arr);
                     for (size_t dl = expr_start + 1; dl <= expr_end; dl++) {
                         stackAdd(&toDelete, dl);
                     }

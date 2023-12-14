@@ -64,7 +64,7 @@ int arrIsEmpty(DynArr* arr){
 
 String* arrPeek(DynArr* arr) {
     assert(arr->size > 0);
-    size_t size =  (arr->size - 1 > 0) ? (arr->size - 1) : 0;
+    size_t size = (arr->size - 1 > 0) ? (arr->size - 1) : 0;
     return &arr->data[size];
 }
 
@@ -77,7 +77,7 @@ String* arrPop(DynArr* arr) {
 }
 
 void arrShrink(DynArr* arr) {
-    if (arr->size < arr->capacity/4) {
+    if (arr->size < arr->capacity / 4) {
         arr->capacity /= 4;
         arr->data = (String*) realloc(arr->data, arr->capacity * sizeof(String));
         nullCheck(arr->data);

@@ -42,7 +42,7 @@ size_t strLen(String* struct_ptr) {
 char* strChr(String* arr, int ch) {
     char* s = arr->str;
     for (size_t i = 0; i < arr->len; i++) {
-        if(s[i] == ch){
+        if(s[i] == ch) {
             //pointer to first accurance of ch
             return s + i;
         }
@@ -69,19 +69,19 @@ void strCopy(String* dst, String* src) {
     dst->len = src->len;
 }
 
-void strCat(String* dst, String* src) {
+void strCat(String* dst, String* src){
     if(dst->len < src->len){
         strAlloc(dst, dst->len + src->len);
     }
-    for(size_t i = dst->len; i < dst->len + src->len; i++){
+    for(size_t i = dst->len; i < dst->len + src->len; i++) {
         dst->str[i] = src->str[i];
     }
     dst->len = dst->len + src->len;
 }
 
-int strCmp(String* a, String* b) {
+int strCmp(String* a, String* b){
     if(a->len != b->len) return 0;
-    for(size_t i = 0; i < a->len; i++){
+    for(size_t i = 0; i < a->len; i++) {
         if(a->str[i] != b->str[i]) return 0;
     }
     return 1;
@@ -160,12 +160,12 @@ int strToInt(String* s) {
     return res;
 }
 
-
 void strIntToString(String* dst, int x) {
     Stack num;
     stackInit(&num);
-    if (x == 0)
+    if (x == 0) {
         strAdd(dst, '0');
+    }
     if (x < 0) {
         strAdd(dst, '-');
         x *= -1;
@@ -180,12 +180,12 @@ void strIntToString(String* dst, int x) {
 }
 
 void fprintString(FILE* fl, String* arr){
-    for(size_t i = 0; i < arr->len; i++){
+    for(size_t i = 0; i < arr->len; i++) {
         putc(arr->str[i], fl);
     }
 }
 
-void strFloatToString(String* res, float temp) {
+void strFloatToString(String* res, float temp){
     int x = (int) (temp * 10);
     Stack num;
     stackInit(&num);
