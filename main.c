@@ -77,6 +77,7 @@ int main (int argc, char** argv) {
         stop--;
     }
 
+
     //delete spaces
     for (size_t i = start; i <= stop; i++) {
         String* s = &arr.data[i];
@@ -135,7 +136,6 @@ void removeBrackets(DynArr* arr) {
     }
     stackFree(&brackets);
     stackFree(&ind);
-    arrPrint(arr);
     while (stackSize(&toDelete) > 0) {
         arrDelete(arr, stackPop(&toDelete));
     }
@@ -168,7 +168,6 @@ int isPal(String* str) {
     }
     
     //case a1a
-    printf("size %zu\n", size);
     if ((size % 2 != 0) && (!isLetter(s[size/2]))) {
         printf("hfksdjf");
         return 0;
@@ -205,8 +204,6 @@ int isBracket(String* s) {
 
 int isExpression(String* s) {
     if (strIsDigit(s))
-        return 1;
-    if (strIsDel(s))
         return 1;
     if (isBracket(s))
         return 1;
@@ -305,9 +302,6 @@ int evalPolish(DynArr* expr, String* res) {
 }
 
 
-void evallAllExpr(DynArr* arr) {
-
-}
 //eval all expessions
 void evalAllExpr(DynArr* arr) {
     DynArr expr; 
@@ -316,33 +310,34 @@ void evalAllExpr(DynArr* arr) {
     initEmptyDyn(&res);
     String ans;
     strInit(&ans);
+    Stack toDelete;
+    stackInit(&toDelete);
     int expr_flag = 0;
     size_t expr_start = 0;
+    size_t expr_end = 0;
     for (size_t i = 0; i < arrSize(arr); i++) {
         String* s = arrGet(arr, i);
-        if (isExpression(s) && (s->str[0] != LF) ) {
+        if (isExpression(s) && expr_flag == 0) { 
+            arrAdd(&expr, s);
+            expr_start = i;
+            expr_flag = 1;
+        }
+        else if (isExpression(s) || strCmpConst(s, " ")) {
             if (!strIsDel(s)) {
                 arrAdd(&expr, s);
-                if (expr_flag == 0) {
-                    expr_start = i;
-                    expr_flag = 1;
-                }
+                expr_end = i;
             }
         }
         else {
-            arrPrint(&expr);
             int rs = convertToPolish(&expr, &res);
-            printf("rs %d \n", rs);
-            arrPrint(&res);
             if (rs > 0) {
+                arrPrint(arr);
                 //if expr is converted
                 if (evalPolish(&res, &ans)) {
-                    printf("ans: ");
-                    strPrint(&ans);
-                    strCopy(&arr->data[i-1], &ans);
-                    printf("expr start %zu \n", expr_start);
-                    for (size_t dl = expr_start; dl < i-1; dl++) {
-                        strWith(&arr->data[dl], " ");                
+                    strCopy(&arr->data[expr_start], &ans);
+                    arrPrint(arr);
+                    for (size_t dl = expr_start + 1; dl <= expr_end; dl++) {
+                        stackAdd(&toDelete, dl);
                     }
                 }
                 expr_flag = 0;
@@ -354,6 +349,9 @@ void evalAllExpr(DynArr* arr) {
             arrFree(&expr); 
             initEmptyDyn(&expr);
         }
+    }
+    while (stackSize(&toDelete) > 0) {
+        arrDelete(arr, stackPop(&toDelete));
     }
     arrFree(&expr);
     arrFree(&res);

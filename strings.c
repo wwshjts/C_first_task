@@ -209,5 +209,4 @@ void strPrint(String* str) {
     for (size_t i = 0; i < strLen(str); i++) {
         printf("%c", str->str[i]);
     }
-    printf("\n");
 }
