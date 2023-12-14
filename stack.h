@@ -14,3 +14,4 @@ int stackPeek(Stack* st);
 int stackPop(Stack*  st);
 void stackShrink(Stack* st);
 void stackPrint(Stack* st);
+size_t stackSize(Stack* st); 

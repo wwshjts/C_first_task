@@ -308,6 +308,10 @@ int evalPolish(DynArr* expr, String* res) {
             stackAdd(&st, strToInt(curr));
         }
         else {
+            if (stackSize(&st) < 2) {
+                stackFree(&st);
+                return 0;
+            }
             char op = expr->data[i].str[0];
             int fr;
             int sc;
