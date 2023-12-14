@@ -1,2 +1,4 @@
-?/src/*
-?/makefile
+bin/*
+*.o
+in
+out
