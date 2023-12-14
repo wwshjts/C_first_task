@@ -35,3 +35,4 @@ int strIsWord(String* s);
 int strIsDigit(String* s);
 
 void fprintString(FILE* fl, String* arr);
+void strPrint(String* str); 

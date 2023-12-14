@@ -87,7 +87,7 @@ void arrShrink(DynArr* arr) {
 void arrPrint(DynArr* arr) {
     printf("size %zu capacity %zu\n", arr->size, arr->capacity);
     for (size_t i = 0; i < arr->size; i++)
-        printf("<%s> ", arr->data[i].str);
+        strPrint(&arr->data[i]);
     printf("\n");
 }
 

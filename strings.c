@@ -30,8 +30,13 @@ void strAdd(String* struct_ptr, int ch) {
     strResize(struct_ptr);
 }
 
+char strGet(String* arr, int i) {
+    assert(i < arr->len);
+    return arr->str[i];
+}
+
 size_t strLen(String* struct_ptr) {
-    return  struct_ptr->len;
+    return struct_ptr->len;
 }
 
 char* strChr(String* arr, int ch) {
@@ -103,7 +108,6 @@ int strEndsWith(String* arr, const char* postfix){
 int strIsDel(String* s) {
     int res = 1;
     for(size_t i = 0; i < strLen(s); i++) {
-
         res = res && isDel(s->str[i]);
     }
     return res;
@@ -199,4 +203,11 @@ void strFloatToString(String* res, float temp) {
     strAdd(res, '.');
     strAdd(res, stackPop(&num) + '0');
     stackFree(&num);
+}
+
+void strPrint(String* str) {
+    for (size_t i = 0; i < strLen(str); i++) {
+        printf("%c", str->str[i]);
+    }
+    printf("\n");
 }
