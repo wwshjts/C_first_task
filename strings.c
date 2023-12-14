@@ -1,5 +1,5 @@
 #include <stddef.h>
-#include <stdio.h> 
+#include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +17,7 @@ void strInit(String* struct_ptr) {
 
 void strResize(String* arr) {
     if (arr->capacity == arr->len) {
-        arr->capacity *= 2; 
+        arr->capacity *= 2;
         arr->str = (char *) realloc(arr->str, arr->capacity * sizeof(char));
         nullCheck(arr->str);
     }
@@ -40,7 +40,7 @@ size_t strLen(String* struct_ptr) {
 }
 
 char* strChr(String* arr, int ch) {
-    char* s = arr->str; 
+    char* s = arr->str;
     for (size_t i = 0; i < arr->len; i++) {
         if(s[i] == ch){
             //pointer to first accurance of ch
@@ -57,7 +57,7 @@ void strAlloc(String* arr, size_t size){
     nullCheck(arr->str);
 }
 
-void strCopy(String* dst, String* src) {    
+void strCopy(String* dst, String* src) {
     size_t dst_capacity = dst->capacity;
     size_t src_len = src->len;
     if (dst_capacity < src_len) {
@@ -91,7 +91,7 @@ int strCmpConst(String* arr, const char* b){
     size_t a_len = arr->len;
     size_t b_len = strlen(b);
     if (a_len != b_len) return 0;
-    for (size_t i = 0; i < a_len; i++) { 
+    for (size_t i = 0; i < a_len; i++) {
         if(a[i] != b[i]) return 0;
     }
     return 1;
@@ -151,7 +151,7 @@ void strWith(String* s, const char* src) {
 }
 
 int strToInt(String* s) {
-    int res = 0;    
+    int res = 0;
     for (size_t i = 0; i < s->len; i++) {
         res += s->str[i] - '0';
         res *= 10;
@@ -172,7 +172,7 @@ void strIntToString(String* dst, int x) {
     }
     while (x > 0) {
         stackAdd(&num, x % 10);
-        x /= 10; 
+        x /= 10;
     }
     while (num.size > 0) {
         strAdd(dst, stackPop(&num) + '0');
@@ -195,7 +195,7 @@ void strFloatToString(String* res, float temp) {
     }
     while (x > 0) {
         stackAdd(&num, x % 10);
-        x /= 10; 
+        x /= 10;
     }
     while (num.size > 1) {
         strAdd(res, stackPop(&num) + '0');

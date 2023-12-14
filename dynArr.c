@@ -18,7 +18,7 @@ size_t arrSize(DynArr* arr) {
 
 void arrResize(DynArr* arr) {
     if (arr->capacity == arr->size) {
-        arr->capacity *= 2; 
+        arr->capacity *= 2;
         arr->data = (String*) realloc(arr->data, arr->capacity * sizeof(String));
         nullCheck(arr->data);
     }
@@ -33,7 +33,7 @@ void arrAdd(DynArr* arr, String* item) {
     strInit(&data[arr->size]);
     strCopy(&data[arr->size++], item);
     arrResize(arr);
-} 
+}
 
 String* arrGet(DynArr* arr, int i) {
     assert(i < arr->size);
@@ -68,7 +68,7 @@ String* arrPeek(DynArr* arr) {
     return &arr->data[size];
 }
 
-String* arrPop(DynArr* arr) {    
+String* arrPop(DynArr* arr) {
     assert(arr->size > 0);
     String* res = arrPeek(arr);
     arr->size--;

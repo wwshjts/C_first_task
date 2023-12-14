@@ -26,7 +26,7 @@ void strResise(String* struct_prt);
 void strFree(String* s);
 void strResize(String* struct_ptr);
 
-int strToInt(String* struct_prt); 
+int strToInt(String* struct_prt);
 void strFloatToString(String* dst, float x);
 void strIntToString(String* dst, int x);
 
@@ -35,4 +35,4 @@ int strIsWord(String* s);
 int strIsDigit(String* s);
 
 void fprintString(FILE* fl, String* arr);
-void strPrint(String* str); 
+void strPrint(String* str);

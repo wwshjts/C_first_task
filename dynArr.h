@@ -15,7 +15,7 @@ int arrIsEmpty(DynArr* arr);
 String* arrPeek(DynArr* arr);
 String* arrPop(DynArr* arr);
 String* arrGet(DynArr* arr, int i);
-void arrDelete(DynArr* arr, size_t index); 
+void arrDelete(DynArr* arr, size_t index);
 void arrShrink(DynArr* arr);
 size_t arrSize(DynArr* arr);
 

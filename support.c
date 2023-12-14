@@ -7,7 +7,7 @@ void nullCheck(void* ptr) {
         printf("ERROR: out of memory\n");
         exit(0);
     }
-} 
+}
 
 int isDel(char ch) {
     return ch == ' ' || ch == LF;

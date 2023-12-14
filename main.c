@@ -13,9 +13,9 @@ int isMathSign(String* s);
 int isExpression(String* s);
 int convertToPolish(DynArr* arr, DynArr* res);
 int evalPolish(DynArr*, String*);
-void evalAllExpr(DynArr* arr); 
-void subPals(DynArr* arr); 
-void removeBrackets(DynArr* arr); 
+void evalAllExpr(DynArr* arr);
+void subPals(DynArr* arr);
+void removeBrackets(DynArr* arr);
 
 int main (int argc, char** argv) {
     FILE* fin;
@@ -31,9 +31,9 @@ int main (int argc, char** argv) {
     if ((fout = fopen(argv[2], "w")) == NULL) {
         printf("ERROR: cant open %s\n", argv[2]);
         exit(1);
-    }    
+    }
 
-    DynArr arr; 
+    DynArr arr;
     initEmptyDyn(&arr);
 
     //skip delimiters
@@ -43,7 +43,7 @@ int main (int argc, char** argv) {
 
     //fill array
     arrAddEmpty(&arr);
-    strAdd(arrPeek(&arr), ch);    
+    strAdd(arrPeek(&arr), ch);
     while ( ( (ch = getc(fin)) != EOF) ) {
         if (isDel(ch)) {
             arrAddEmpty(&arr);
@@ -61,7 +61,7 @@ int main (int argc, char** argv) {
             arrAddEmpty(&arr);
             strAdd(arrPeek(&arr), ch);
         }
-    }        
+    }
 
     //procesing text
     subPals(&arr);
@@ -84,9 +84,9 @@ int main (int argc, char** argv) {
         if (strCmpConst(s, " ") && ((i > 0) && strCmpConst(&arr.data[i - 1], " "))) {
             continue;
         }
-        if (strCmpConst(s, "\n") && ( (i > 1) && strCmpConst(&arr.data[i - 1], "\n") && 
+        if (strCmpConst(s, "\n") && ( (i > 1) && strCmpConst(&arr.data[i - 1], "\n") &&
                                         strCmpConst(&arr.data[i - 2], "\n"))) {
-            continue; 
+            continue;
         }
         fprintString(fout, &arr.data[i]);
         //fprintf(stdout,"%s", arr.data[i].str);
@@ -99,7 +99,7 @@ int main (int argc, char** argv) {
     if (fclose(fout) != 0) {
         printf("ERROR: trouble in closing file%s\n", argv[2]);
     }
-    return 0; 
+    return 0;
 }
 
 //substitute all brackets
@@ -116,7 +116,7 @@ void removeBrackets(DynArr* arr) {
         if ( (strCmpConst(s, "(")) || strIsDel(s)) {
             //if we in this if len(word) > 0
             stackAdd(&brackets, word[0]);
-            stackAdd(&ind, i); 
+            stackAdd(&ind, i);
         }
         if (strCmpConst(s, ")") ) {
             int dels = 0;
@@ -145,9 +145,9 @@ void removeBrackets(DynArr* arr) {
 
 
 //substitute all palindroms
-void subPals(DynArr* arr){ 
+void subPals(DynArr* arr){
     for (size_t i = 0; i < arrSize(arr); i++) {
-        String* str =  arrGet(arr, i); 
+        String* str =  arrGet(arr, i);
         if(isPal(str)) {
             strWith(str,"PALINDROM");
         }
@@ -166,10 +166,9 @@ int isPal(String* str) {
     for (size_t i = 0; i < size/2; i++) {
         stackAdd(&st, s[i]);
     }
-    
+
     //case a1a
     if ((size % 2 != 0) && (!isLetter(s[size/2]))) {
-        printf("hfksdjf");
         return 0;
     }
 
@@ -277,7 +276,7 @@ int evalPolish(DynArr* expr, String* res) {
                 case '*' :
                            stackAdd(&st, stackPop(&st) * stackPop(&st));
                 break;
-                case '/' : 
+                case '/' :
                            sc = stackPop(&st);
                            fr = stackPop(&st);
                            if (sc == 0) {
@@ -304,7 +303,7 @@ int evalPolish(DynArr* expr, String* res) {
 
 //eval all expessions
 void evalAllExpr(DynArr* arr) {
-    DynArr expr; 
+    DynArr expr;
     initEmptyDyn(&expr);
     DynArr res;
     initEmptyDyn(&res);
@@ -317,7 +316,7 @@ void evalAllExpr(DynArr* arr) {
     size_t expr_end = 0;
     for (size_t i = 0; i < arrSize(arr); i++) {
         String* s = arrGet(arr, i);
-        if (isExpression(s) && expr_flag == 0) { 
+        if (isExpression(s) && expr_flag == 0) {
             arrAdd(&expr, s);
             expr_start = i;
             expr_flag = 1;
@@ -346,7 +345,7 @@ void evalAllExpr(DynArr* arr) {
             initEmptyDyn(&res);
             strFree(&ans);
             strInit(&ans);
-            arrFree(&expr); 
+            arrFree(&expr);
             initEmptyDyn(&expr);
         }
     }
