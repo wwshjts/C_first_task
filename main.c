@@ -120,38 +120,6 @@ int removeBracket(DynArr* arr) {
         }
     }
     return 0;
-    /*
-    for (size_t i = 0; i < arrSize(arr); i++) {
-        String* s = arrGet(arr, i);
-        char* word = s->str;
-        if ( (strCmpConst(s, "(")) || strIsDel(s)) {
-            //if we in this if len(word) > 0
-            stackAdd(&brackets, '(');
-            stackAdd(&ind, i);
-        }
-        if (strCmpConst(s, ")")) {
-            int dels = 0;
-            while(isDel(stackPeek(&brackets))) {
-                dels++;
-                stackPop(&brackets);
-                stackPop(&ind);
-            }
-            int first_bracket = stackPop(&ind);
-            //if we see the first bracket
-            //and we dont have delimiters in ( ... )
-            if (i - dels - first_bracket - 1 == 1) {
-                stackAdd(&toDelete, first_bracket);
-                stackAdd(&toDelete, i);
-            }
-        }
-    }
-    stackFree(&brackets);
-    stackFree(&ind);
-    while (stackSize(&toDelete) > 0) {
-        arrDelete(arr, stackPop(&toDelete));
-    }
-    stackFree(&toDelete);
-    */
 }
 
 //substitute all palindroms
