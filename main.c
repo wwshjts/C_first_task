@@ -15,7 +15,7 @@ int convertToPolish(DynArr* arr, DynArr* res);
 int evalPolish(DynArr*, String*);
 void evalAllExpr(DynArr* arr);
 void subPals(DynArr* arr);
-void removeBrackets(DynArr* arr);
+int removeBracket(DynArr* arr);
 
 int main(int argc, char** argv) {
     FILE* fin;
@@ -61,10 +61,10 @@ int main(int argc, char** argv) {
         }
     }
 
-    //procesing text
+    //processing text
     subPals(&arr);
     evalAllExpr(&arr);
-    removeBrackets(&arr);
+    while(removeBracket(&arr));
 
     size_t start = 0;
     while ((start < arrSize(&arr)) && strIsDel(arrGet(&arr, start))) {
@@ -100,23 +100,36 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-//substitute all brackets
-void removeBrackets(DynArr* arr) {
-    Stack toDelete;
-    Stack brackets;
-    Stack ind;
-    stackInit(&brackets);
-    stackInit(&ind);
-    stackInit(&toDelete);
+//remove first matching pair of brackets
+int removeBracket(DynArr* arr) {
+    int words = 0;
+    int bracket = 0;
+    size_t first_bracket = 0;
+    for (size_t i = 0; i < arrSize(arr); i++) {
+        String* s = arrGet(arr, i);
+        if (strCmpConst(s, "(")) {
+            first_bracket = i;
+            words = 0;
+            bracket = 1;
+        } else if (strCmpConst(s, ")") && (bracket == 1) && (words == 1)) { 
+            arrDelete(arr, i);
+            arrDelete(arr, first_bracket);
+            return 1;
+        } else if (strIsWord(s)) {
+            words++;
+        }
+    }
+    return 0;
+    /*
     for (size_t i = 0; i < arrSize(arr); i++) {
         String* s = arrGet(arr, i);
         char* word = s->str;
         if ( (strCmpConst(s, "(")) || strIsDel(s)) {
             //if we in this if len(word) > 0
-            stackAdd(&brackets, word[0]);
+            stackAdd(&brackets, '(');
             stackAdd(&ind, i);
         }
-        if (strCmpConst(s, ")") ) {
+        if (strCmpConst(s, ")")) {
             int dels = 0;
             while(isDel(stackPeek(&brackets))) {
                 dels++;
@@ -138,6 +151,7 @@ void removeBrackets(DynArr* arr) {
         arrDelete(arr, stackPop(&toDelete));
     }
     stackFree(&toDelete);
+    */
 }
 
 //substitute all palindroms
@@ -153,8 +167,6 @@ void subPals(DynArr* arr){
 int isPal(String* str) {
     char* s = str->str;
     size_t size = strLen(str);
-    if (size < 2)
-        return 0;
 
     Stack st;
     stackInit(&st);

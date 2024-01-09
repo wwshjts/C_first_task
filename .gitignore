@@ -2,3 +2,4 @@ bin/*
 *.o
 in
 out
+test/[0-9]*-actual.txt
