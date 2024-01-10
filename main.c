@@ -17,6 +17,7 @@ int evalPolish(DynArr*, String*);
 void evalExpr(DynArr* arr);
 void subPals(DynArr* arr);
 int removeBracket(DynArr* arr);
+void removeBrackets(DynArr* arr);
 
 int main(int argc, char** argv) {
     FILE* fin;
@@ -72,7 +73,7 @@ int main(int argc, char** argv) {
     evalExpr(&arr);
 
     //remove all brackets
-    while (removeBracket(&arr));
+    removeBrackets(&arr);
 
     size_t start = 0;
     while ((start < arrSize(&arr)) && strIsDel(arrGet(&arr, start))) {
@@ -106,6 +107,10 @@ int main(int argc, char** argv) {
         printf("ERROR: trouble in closing file%s\n", argv[2]);
     }
     return 0;
+}
+
+void removeBrackets(DynArr* arr) {
+    while (removeBracket(arr));
 }
 
 //remove first matching pair of brackets
@@ -160,7 +165,7 @@ int isPal(String* str) {
         return 0;
     }
 
-    for (size_t i = size / 2 + (size % 2); i < size; i++) {
+    for (size_t i = size / 2 + size % 2; i < size; i++) {
         if (stackPeek(&st) == s[i]) {
             stackPop(&st);
         }
@@ -344,5 +349,4 @@ void evalExpr(DynArr* arr) {
     arrFree(&res);
     stackFree(&toDelete);
     strFree(&ans);
-    
 }
