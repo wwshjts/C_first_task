@@ -14,7 +14,7 @@ int isMathSign(String* s);
 int isExpression(String* s);
 int convertToPolish(DynArr* arr, DynArr* res);
 int evalPolish(DynArr*, String*);
-int evalExpr(DynArr* arr);
+void evalExpr(DynArr* arr);
 void subPals(DynArr* arr);
 int removeBracket(DynArr* arr);
 
@@ -68,10 +68,11 @@ int main(int argc, char** argv) {
     //processing text
     subPals(&arr);
 
-    while(evalExpr(&arr));
+    //eval all expr
+    evalExpr(&arr);
 
     //remove all brackets
-    while(removeBracket(&arr));
+    while (removeBracket(&arr));
 
     size_t start = 0;
     while ((start < arrSize(&arr)) && strIsDel(arrGet(&arr, start))) {
@@ -130,7 +131,7 @@ int removeBracket(DynArr* arr) {
 }
 
 //substitute all palindromes
-void subPals(DynArr* arr){
+void subPals(DynArr* arr) {
     for (size_t i = 0; i < arrSize(arr); i++) {
         String* str =  arrGet(arr, i);
         if(isPal(str)) {
@@ -140,18 +141,22 @@ void subPals(DynArr* arr){
 }
 
 int isPal(String* str) {
+    if (!strIsWord(str)) {
+        return 0;
+    }
     char* s = str->str;
     size_t size = strLen(str);
 
     Stack st;
     stackInit(&st);
 
-    for (size_t i = 0; i < size/2; i++) {
+    for (size_t i = 0; i < size / 2; i++) {
         stackAdd(&st, s[i]);
     }
 
     //case a1a
     if ((size % 2 != 0) && (!isLetter(s[size / 2]))) {
+        stackFree(&st);
         return 0;
     }
 
@@ -200,7 +205,7 @@ int convertToPolish(DynArr* arr, DynArr* res) {
         if (strIsDigit(&curr)) {
             arrAdd(res, &curr);
         } else if (strCmpConst(&curr, ")")) {
-            while((st.size > 0) && (!strCmpConst(arrPeek(&st), "(")) ) {
+            while ((st.size > 0) && (!strCmpConst(arrPeek(&st), "(")) ) {
                 String* tmp = arrPop(&st);
                 arrAdd(res, tmp);
                 strFree(tmp);
@@ -212,8 +217,10 @@ int convertToPolish(DynArr* arr, DynArr* res) {
             arrAdd(&st, &curr);
         }
     }
-    if (res -> size == 0)
+    if (res -> size == 0) {
+        arrFree(&st);
         return 0;
+    }
     while (st.size > 0) {
         if (!isMathSign(arrPeek(&st))) {
             arrFree(&st);
@@ -235,7 +242,7 @@ int evalPolish(DynArr* expr, String* res) {
         String* curr = &expr->data[i];
         if (strIsDigit(curr)) {
             stackAdd(&st, strToInt(curr));
-        } else {
+        }  else {
             if (stackSize(&st) < 2) {
                 stackFree(&st);
                 return 0;
@@ -278,8 +285,8 @@ int evalPolish(DynArr* expr, String* res) {
     return 1;
 }
 
-//eval all expessions
-int evalExpr(DynArr* arr) {
+//eval all expressions
+void evalExpr(DynArr* arr) {
     DynArr expr;
     initEmptyDyn(&expr);
     DynArr res;
@@ -335,6 +342,7 @@ int evalExpr(DynArr* arr) {
     }
     arrFree(&expr);
     arrFree(&res);
+    stackFree(&toDelete);
     strFree(&ans);
-    return 0;
+    
 }

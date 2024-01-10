@@ -40,7 +40,7 @@ String* arrGet(DynArr* arr, int i) {
     return &arr->data[i];
 }
 
-void arrAddEmpty(DynArr* arr){
+void arrAddEmpty(DynArr* arr) {
     String* data = arr->data;
 
     assert(arr->size < arr->capacity);
@@ -58,7 +58,7 @@ void arrFree(DynArr* arr) {
     free(data);
 }
 
-int arrIsEmpty(DynArr* arr){
+int arrIsEmpty(DynArr* arr) {
     return arr->size > 0;
 }
 
@@ -96,8 +96,10 @@ void arrPrint(DynArr* arr) {
 
 void arrDelete(DynArr* arr, size_t index) {
     assert(index < arr->size);
-    for (size_t i = index + 1; i < arrSize(arr); i++){
+    for (size_t i = index + 1; i < arrSize(arr); i++) {
         *arrGet(arr, i - 1) = *arrGet(arr, i);
     }
+
     arr->size--;
+    arrShrink(arr);
 }
