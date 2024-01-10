@@ -62,6 +62,8 @@ int main(int argc, char** argv) {
         }
     }
 
+    arrPrint(&arr);
+
     //processing text
     subPals(&arr);
     evalAllExpr(&arr);
