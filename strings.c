@@ -125,6 +125,10 @@ int strIsWord(String* s) {
 }
 
 int strIsDigit(String* s) {
+    if (strLen(s) > 9) {
+        return 0;
+    }
+
     int res = 1;
     for (size_t i = 0; i < s->len; i++){
         res = (res && (isDigit(s->str[i])));

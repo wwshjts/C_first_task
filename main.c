@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,7 +14,7 @@ int isMathSign(String* s);
 int isExpression(String* s);
 int convertToPolish(DynArr* arr, DynArr* res);
 int evalPolish(DynArr*, String*);
-void evalAllExpr(DynArr* arr);
+int evalExpr(DynArr* arr);
 void subPals(DynArr* arr);
 int removeBracket(DynArr* arr);
 
@@ -62,11 +63,10 @@ int main(int argc, char** argv) {
         }
     }
 
-    arrPrint(&arr);
-
     //processing text
     subPals(&arr);
-    evalAllExpr(&arr);
+
+    while(evalExpr(&arr));
 
     //remove all brackets
     while(removeBracket(&arr));
@@ -125,7 +125,7 @@ int removeBracket(DynArr* arr) {
     return 0;
 }
 
-//substitute all palindroms
+//substitute all palindromes
 void subPals(DynArr* arr){
     for (size_t i = 0; i < arrSize(arr); i++) {
         String* str =  arrGet(arr, i);
@@ -277,7 +277,7 @@ int evalPolish(DynArr* expr, String* res) {
 }
 
 //eval all expessions
-void evalAllExpr(DynArr* arr) {
+int evalExpr(DynArr* arr) {
     DynArr expr;
     initEmptyDyn(&expr);
     DynArr res;
@@ -289,6 +289,40 @@ void evalAllExpr(DynArr* arr) {
     int expr_flag = 0;
     size_t expr_start = 0;
     size_t expr_end = 0;
+
+    /*
+    for (size_t i = 0; i < arrSize(arr); i++) {
+        String* s = arrGet(arr, i);
+        
+        if (strIsDel(s)) continue;
+
+        if (isExpression(s)) {
+            if (expr_flag == 0) {
+                expr_start = i;
+                expr_flag = 1;
+            }
+            arrAdd(&expr, s);
+        } else {
+            arrPrint(&expr);
+            if (convertToPolish(&expr, &res)) {
+                if (evalPolish(&expr, &ans)) {
+                    strCopy(arrGet(arr, expr_start), &ans);
+                    for (size_t j = expr_end; j > expr_start; j++) {
+                        arrDelete(arr, j);
+                    }
+                    return 1;
+                }
+            }
+            expr_flag = 0;
+            arrFree(&res);
+            initEmptyDyn(&res);
+            strFree(&ans);
+            strInit(&ans);
+            arrFree(&expr);
+            initEmptyDyn(&expr);
+        }
+    }
+    */
     for (size_t i = 0; i < arrSize(arr); i++) {
         String* s = arrGet(arr, i);
         if (isExpression(s) && expr_flag == 0) {
@@ -301,17 +335,23 @@ void evalAllExpr(DynArr* arr) {
                 expr_end = i;
             }
         } else {
-            int rs = convertToPolish(&expr, &res);
-            if (rs > 0) {
+            if (convertToPolish(&expr, &res)) {
                 //if expr is converted
                 if (evalPolish(&res, &ans)) {
+                    arrPrint(arr);
+                    printf("%zu, %zu\n", expr_start, expr_end);
                     strCopy(&arr->data[expr_start], &ans);
+                    printf("after");
+                    arrPrint(arr);
+
                     for (size_t dl = expr_start + 1; dl <= expr_end; dl++) {
                         stackAdd(&toDelete, dl);
                     }
                 }
-                expr_flag = 0;
             }
+            expr_flag = 0;
+            expr_start = 0;
+            expr_end = 0;
             arrFree(&res);
             initEmptyDyn(&res);
             strFree(&ans);
@@ -319,6 +359,7 @@ void evalAllExpr(DynArr* arr) {
             arrFree(&expr);
             initEmptyDyn(&expr);
         }
+
     }
     while (stackSize(&toDelete) > 0) {
         arrDelete(arr, stackPop(&toDelete));
@@ -326,4 +367,5 @@ void evalAllExpr(DynArr* arr) {
     arrFree(&expr);
     arrFree(&res);
     strFree(&ans);
+    return 0;
 }
