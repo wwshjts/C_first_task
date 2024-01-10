@@ -105,6 +105,7 @@ int strEndsWith(String* arr, const char* postfix){
     }
     return 1;
 }
+
 int strIsDel(String* s) {
     int res = 1;
     for(size_t i = 0; i < strLen(s); i++) {
@@ -114,10 +115,11 @@ int strIsDel(String* s) {
 }
 
 int strIsWord(String* s) {
-    int res = 1;
-    for(size_t i = 0; i < s->len; i++) {
+    assert(strLen(s) > 0);
+    int res = isWordSymbol(s->str[0]) || (s->str[0] == '+') || (s->str[0] == '-') ;
+    for(size_t i = 1; i < s->len; i++) {
         char ch = s->str[i];
-        res = res && (isWordSymbol(ch) || (ch == '+') || (ch == '-'));
+        res = res && (isWordSymbol(ch));
     }
     return res;
 }

@@ -48,7 +48,8 @@ int main(int argc, char** argv) {
         if (isDel(ch)) {
             arrAddEmpty(&arr);
             strAdd(arrPeek(&arr), ch);
-        } else if (isWordSymbol(ch) || (ch == '+') || (ch == '-')) {
+        
+        } else if (isWordSymbol(ch)) {
             //make new word
             if (!strIsWord(arrPeek(&arr))) {
                 arrAddEmpty(&arr);
@@ -64,6 +65,8 @@ int main(int argc, char** argv) {
     //processing text
     subPals(&arr);
     evalAllExpr(&arr);
+
+    //remove all brackets
     while(removeBracket(&arr));
 
     size_t start = 0;
@@ -75,11 +78,10 @@ int main(int argc, char** argv) {
         stop--;
     }
 
-
     //delete spaces
     for (size_t i = start; i <= stop; i++) {
         String* s = &arr.data[i];
-        if (strCmpConst(s, " ") && ((i > 0) && strCmpConst(&arr.data[i - 1], " "))) {
+        if (strCmpConst(s, " ") && ((i > 0) && strIsDel(&arr.data[i - 1]))) {
             continue;
         }
         if (strCmpConst(s, "\n") && ( (i > 1) && strCmpConst(&arr.data[i - 1], "\n") &&
@@ -87,7 +89,6 @@ int main(int argc, char** argv) {
             continue;
         }
         fprintString(fout, &arr.data[i]);
-        //fprintf(stdout,"%s", arr.data[i].str);
     }
     fprintf(fout, "%c", LF);
     arrFree(&arr);
@@ -144,11 +145,11 @@ int isPal(String* str) {
     }
 
     //case a1a
-    if ((size % 2 != 0) && (!isLetter(s[size/2]))) {
+    if ((size % 2 != 0) && (!isLetter(s[size / 2]))) {
         return 0;
     }
 
-    for (size_t i = size/2 + (size%2) ; i < size; i++) {
+    for (size_t i = size / 2 + (size % 2); i < size; i++) {
         if (stackPeek(&st) == s[i]) {
             stackPop(&st);
         }
