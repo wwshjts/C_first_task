@@ -157,7 +157,7 @@ void strWith(String* s, const char* src) {
 }
 
 int strToInt(String* s) {
-    int res = 0;
+    long res = 0;
     for (size_t i = 0; i < s->len; i++) {
         res += s->str[i] - '0';
         res *= 10;

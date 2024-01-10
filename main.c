@@ -43,6 +43,7 @@ int main(int argc, char** argv) {
         ch = getc(fin);
 
     //fill array
+    char lf = 'x';
     arrAddEmpty(&arr);
     strAdd(arrPeek(&arr), ch);
     while (((ch = getc(fin)) != EOF)) {
@@ -61,6 +62,7 @@ int main(int argc, char** argv) {
             arrAddEmpty(&arr);
             strAdd(arrPeek(&arr), ch);
         }
+        lf = ch;
     }
 
     //processing text
@@ -92,7 +94,9 @@ int main(int argc, char** argv) {
         }
         fprintString(fout, &arr.data[i]);
     }
-    fprintf(fout, "%c", LF);
+    if (lf == LF) { 
+        fprintf(fout, "%c", LF);
+    }
     arrFree(&arr);
     if (fclose(fin) != 0) {
         printf("ERROR: trouble in closing file%s\n", argv[1]);
@@ -184,8 +188,6 @@ int isExpression(String* s) {
     if (strIsDigit(s))
         return 1;
     if (isBracket(s))
-        return 1;
-    if (isMathSign(s))
         return 1;
     return 0;
 }
@@ -290,60 +292,27 @@ int evalExpr(DynArr* arr) {
     size_t expr_start = 0;
     size_t expr_end = 0;
 
-    /*
     for (size_t i = 0; i < arrSize(arr); i++) {
         String* s = arrGet(arr, i);
-        
-        if (strIsDel(s)) continue;
-
-        if (isExpression(s)) {
-            if (expr_flag == 0) {
-                expr_start = i;
-                expr_flag = 1;
-            }
-            arrAdd(&expr, s);
-        } else {
-            arrPrint(&expr);
-            if (convertToPolish(&expr, &res)) {
-                if (evalPolish(&expr, &ans)) {
-                    strCopy(arrGet(arr, expr_start), &ans);
-                    for (size_t j = expr_end; j > expr_start; j++) {
-                        arrDelete(arr, j);
-                    }
-                    return 1;
-                }
-            }
-            expr_flag = 0;
-            arrFree(&res);
-            initEmptyDyn(&res);
-            strFree(&ans);
-            strInit(&ans);
-            arrFree(&expr);
-            initEmptyDyn(&expr);
-        }
-    }
-    */
-    for (size_t i = 0; i < arrSize(arr); i++) {
-        String* s = arrGet(arr, i);
+        int nothing_happened = 1;
         if (isExpression(s) && expr_flag == 0) {
             arrAdd(&expr, s);
             expr_start = i;
             expr_flag = 1;
-        } else if (isExpression(s) || strCmpConst(s, " ")) {
+            nothing_happened = 0;
+        } else if (isExpression(s) || isMathSign(s) || strCmpConst(s, " ")) {
             if (!strIsDel(s)) {
                 arrAdd(&expr, s);
                 expr_end = i;
             }
-        } else {
+            nothing_happened = 0;
+        } 
+        
+        if (nothing_happened || (i == arrSize(arr) - 1)) {
             if (convertToPolish(&expr, &res)) {
                 //if expr is converted
                 if (evalPolish(&res, &ans)) {
-                    arrPrint(arr);
-                    printf("%zu, %zu\n", expr_start, expr_end);
                     strCopy(&arr->data[expr_start], &ans);
-                    printf("after");
-                    arrPrint(arr);
-
                     for (size_t dl = expr_start + 1; dl <= expr_end; dl++) {
                         stackAdd(&toDelete, dl);
                     }
