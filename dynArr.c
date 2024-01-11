@@ -97,9 +97,7 @@ void arrPrint(DynArr* arr) {
 void arrDelete(DynArr* arr, size_t index) {
     assert(index < arr->size);
     for (size_t i = index + 1; i < arrSize(arr); i++) {
-        *arrGet(arr, i - 1) = *arrGet(arr, i);
+        strCopy(arrGet(arr, i - 1), arrGet(arr, i));
     }
-
-    arr->size--;
-    arrShrink(arr);
+    strFree(arrPop(arr));
 }

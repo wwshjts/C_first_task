@@ -68,7 +68,6 @@ int main(int argc, char** argv) {
 
     //processing text
     subPals(&arr);
-
     //eval all expr
     evalExpr(&arr);
 
@@ -271,8 +270,7 @@ int evalPolish(DynArr* expr, String* res) {
                            fr = stackPop(&st);
                            if (sc == 0) {
                                errFlag = 1;
-                           }
-                           else {
+                           } else {
                                stackAdd(&st, fr / sc);
                            }
                 break;

@@ -3,3 +3,4 @@ bin/*
 in
 out
 test/[0-9]*-actual.txt
+test/[0-9]*\.passed
