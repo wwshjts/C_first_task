@@ -11,11 +11,11 @@ void strInit(String* struct_ptr);
 
 //initialize dynamic string with string
 //if s.len < strlen(src) then strWith allocates memory
-void strWith(String* s, const char* src);
+void strInitWith(String* s, const char* src);
+void strSet(String* s, int ch, size_t i);
 void strAdd(String* struct_ptr, int ch);
 size_t strLen(String* struct_ptr);
-//find first occurrence of ch in string, return pointer on it
-char* strChr(String* struct_prt, int ch);
+//index of first occurrence of ch
 void strCopy(String* struct_dst, String* struct_src);
 void strCat(String* struct_dst, String* struct_src);
 int strCmp(String* a, String* b);

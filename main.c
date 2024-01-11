@@ -98,6 +98,7 @@ int main(int argc, char** argv) {
     if (lf == LF) { 
         fprintf(fout, "%c", LF);
     }
+
     arrFree(&arr);
     if (fclose(fin) != 0) {
         printf("ERROR: trouble in closing file%s\n", argv[1]);
@@ -139,7 +140,10 @@ void subPals(DynArr* arr) {
     for (size_t i = 0; i < arrSize(arr); i++) {
         String* str =  arrGet(arr, i);
         if(isPal(str)) {
-            strWith(str,"PALINDROM");
+            String tmp;
+            strInitWith(&tmp,"PALINDROM");
+            strCopy(str, &tmp);
+            strFree(&tmp);
         }
     }
 }
@@ -276,7 +280,10 @@ int evalPolish(DynArr* expr, String* res) {
                 break;
             }
             if (errFlag) {
-                strWith(res, "ERROR");
+                String tmp;
+                strInitWith(&tmp, "ERROR");
+                strCopy(res,&tmp);
+                strFree(&tmp);
                 break;
             }
         }

@@ -35,8 +35,20 @@ void arrAdd(DynArr* arr, String* item) {
     arrResize(arr);
 }
 
+void arrSet(DynArr* arr, String* s, size_t i) {
+    assert(i< arrSize(arr));
+    
+}
+
 String* arrGet(DynArr* arr, int i) {
     assert(i < arr->size);
+
+    /*
+    String* s = malloc(sizeof(String));
+    strInit(s);
+    strCopy(s, &arr->data[i]); 
+    */
+
     return &arr->data[i];
 }
 
