@@ -9,10 +9,10 @@ all : main
 
 main : main.c strings.o support.o stack.o dynArr.o  
 	if ! [ -d bin ]; then mkdir bin; fi
-	gcc main.c strings.o support.o dynArr.o stack.o -o bin/main -Wall
+	gcc main.c strings.o support.o dynArr.o stack.o -o bin/main  -Wall 
 
 strings.o : strings.c support.o stack.o strings.h
-	gcc -c strings.c -Wall
+	gcc -c strings.c -Wall 
 
 support.o : support.c support.h
 	gcc -c support.c -Wall

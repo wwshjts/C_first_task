@@ -113,7 +113,7 @@ int strIsDel(String* s) {
 }
 
 int strIsWord(String* s) {
-    if (strLen(s) == 0) return 0;
+    if (strLen(s) == 0) return 1;
     int res = isWordSymbol(strGet(s, 0)) || (strGet(s, 0) == '+') || (strGet(s ,0) == '-') ;
     for (size_t i = 1; i < strLen(s); i++) {
         res = res && (isWordSymbol(strGet(s,  i)));

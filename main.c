@@ -43,28 +43,29 @@ int main(int argc, char** argv) {
         ch = getc(fin);
 
     //fill array
-    //fill array
     char lf = 'x';
-    arrAddEmpty(&arr);
-    strAdd(arrPeek(&arr), ch);
+    String in_word;
+    strInit(&in_word);
+    strAdd(&in_word, ch);
     while (((ch = getc(fin)) != EOF)) {
         if (isDel(ch)) {
-            arrAddEmpty(&arr);
-            strAdd(arrPeek(&arr), ch);
-        
+            arrAdd(&arr,&in_word);
+            strRestore(&in_word);
+            strAdd(&in_word, ch);
         } else if (isWordSymbol(ch)) {
-            //make new word
-            if (!strIsWord(arrPeek(&arr))) {
-                arrAddEmpty(&arr);
+            if (!strIsWord(&in_word)) {
+                arrAdd(&arr, &in_word);
+                strRestore(&in_word);
             }
-            strAdd(arrPeek(&arr), ch);
-        //add punctuation mark
+            strAdd(&in_word, ch);
         } else {
-            arrAddEmpty(&arr);
-            strAdd(arrPeek(&arr), ch);
+            arrAdd(&arr, &in_word);
+            strRestore(&in_word);
+            strAdd(&in_word, ch);
         }
         lf = ch;
     }
+    arrAdd(&arr, &in_word);
 
     //processing text
     subPals(&arr);
@@ -75,13 +76,28 @@ int main(int argc, char** argv) {
     removeBrackets(&arr);
 
     size_t start = 0;
-    while ((start < arrSize(&arr)) && strIsDel(arrGet(&arr, start))) {
+    String* word = arrGet(&arr, start);
+    while ((start < arrSize(&arr)) && strIsDel(word)) {
         start++;
+        strFree(word);
+        free(word);
+        word = arrGet(&arr, start);
     }
+
+    strFree(word);
+    free(word); 
+
     size_t stop = arrSize(&arr) - 1;
-    while ((stop >= 0) && strIsDel(arrGet(&arr, stop))) {
+    word = arrGet(&arr, stop);
+    while ((stop >= 0) && strIsDel(word)) {
         stop--;
+        strFree(word);
+        free(word);
+        word = arrGet(&arr, stop);
     }
+
+    strFree(word);
+    free(word);
 
     //delete spaces
     for (size_t i = start; i <= stop; i++) {
@@ -127,10 +143,14 @@ int removeBracket(DynArr* arr) {
         } else if (strCmpConst(s, ")") && (bracket == 1) && (words == 1)) { 
             arrDelete(arr, i);
             arrDelete(arr, first_bracket);
+            strFree(s);
+            free(s);
             return 1;
         } else if (strIsWord(s)) {
             words++;
         }
+        strFree(s);
+        free(s);
     }
     return 0;
 }
@@ -145,6 +165,8 @@ void subPals(DynArr* arr) {
             arrSet(arr, &tmp, i);
             strFree(&tmp);
         }
+        strFree(str);
+        free(str);
     }
 }
 
@@ -345,6 +367,8 @@ void evalExpr(DynArr* arr) {
             arrFree(&expr);
             initEmptyDyn(&expr);
         }
+        strFree(s);
+        free(s);
 
     }
     while (stackSize(&toDelete) > 0) {
