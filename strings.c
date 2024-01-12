@@ -178,6 +178,7 @@ void strIntToString(String* dst, int x) {
     while (num.size > 0) {
         strAdd(dst, stackPop(&num) + '0');
     }
+    stackFree(&num);
 }
 
 void fprintString(FILE* fl, String* arr) {

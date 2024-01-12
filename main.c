@@ -66,6 +66,7 @@ int main(int argc, char** argv) {
         lf = ch;
     }
     arrAdd(&arr, &in_word);
+    strFree(&in_word);
 
     //processing text
     subPals(&arr);
@@ -235,13 +236,22 @@ int convertToPolish(DynArr* arr, DynArr* res) {
         if (strIsDigit(&curr)) {
             arrAdd(res, &curr);
         } else if (strCmpConst(&curr, ")")) {
-            while ((st.size > 0) && (!strCmpConst(arrPeek(&st), "(")) ) {
-                String* tmp = arrPop(&st);
+            while (st.size > 0) {
+                String* tmp = arrPeek(&st);
+                if (strCmpConst(tmp, "(")) {
+                    strFree(tmp);
+                    free(tmp);
+                    break;
+                }
+                strFree(tmp);
+                free(tmp);
+                tmp = arrPop(&st);
                 arrAdd(res, tmp);
                 strFree(tmp);
+                free(tmp);
             }
             if (st.size > 0) {
-                strFree(arrPop(&st));
+                arrDelete(&st, arrSize(&st) - 1);
             }
         } else {
             arrAdd(&st, &curr);
@@ -252,13 +262,19 @@ int convertToPolish(DynArr* arr, DynArr* res) {
         return 0;
     }
     while (st.size > 0) {
-        if (!isMathSign(arrPeek(&st))) {
+        String* peeked = arrPeek(&st);
+        if (!isMathSign(peeked)) {
             arrFree(&st);
+            strFree(peeked);
+            free(peeked);
             return 0;
         }
         String* tmp = arrPop(&st);
         arrAdd(res, tmp);
         strFree(tmp);
+        free(tmp);
+        strFree(peeked);
+        free(peeked);
     }
     arrFree(&st);
     return 1;

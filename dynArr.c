@@ -77,14 +77,15 @@ int arrIsEmpty(DynArr* arr) {
 }
 
 String* arrPeek(DynArr* arr) {
-    assert(arr->size > 0);
-    size_t size = (arr->size - 1 > 0) ? (arr->size - 1) : 0;
+    assert(arrSize(arr) > 0);
+    size_t size = arr->size - 1;
     return arrGet(arr, size);
 }
 
 String* arrPop(DynArr* arr) {
     assert(arr->size > 0);
     String* res = arrPeek(arr);
+    strFree(&arr->data[(arr->size - 1 > 0) ? (arr->size - 1) : 0]);
     arr->size--;
     arrShrink(arr);
     return res;

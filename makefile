@@ -9,7 +9,7 @@ all : main
 
 main : main.c strings.o support.o stack.o dynArr.o  
 	if ! [ -d bin ]; then mkdir bin; fi
-	gcc main.c strings.o support.o dynArr.o stack.o -o bin/main  -Wall 
+	gcc main.c strings.o support.o dynArr.o stack.o -o bin/main -Wall -fsanitize=address 
 
 strings.o : strings.c support.o stack.o strings.h
 	gcc -c strings.c -Wall 
