@@ -7,6 +7,7 @@ typedef struct {
 } DynArr;
 
 void initEmptyDyn(DynArr* arr);
+void arrSet(DynArr* arr, String* s, size_t i);
 void arrFree(DynArr* arr);
 void arrAdd(DynArr* arr, String* item);
 void arrAddEmpty(DynArr* arr);

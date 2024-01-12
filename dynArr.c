@@ -36,20 +36,21 @@ void arrAdd(DynArr* arr, String* item) {
 }
 
 void arrSet(DynArr* arr, String* s, size_t i) {
-    assert(i< arrSize(arr));
-    
+    assert(i < arrSize(arr));
+
+    strFree(&arr->data[i]);
+    strInit(&arr->data[i]);
+    strCopy(&arr->data[i], s);
 }
 
 String* arrGet(DynArr* arr, int i) {
     assert(i < arr->size);
 
-    /*
-    String* s = malloc(sizeof(String));
-    strInit(s);
-    strCopy(s, &arr->data[i]); 
-    */
-
-    return &arr->data[i];
+    String* res = malloc(sizeof(String));
+    strInit(res);
+    
+    strCopy(res, &arr->data[i]);
+    return res;
 }
 
 void arrAddEmpty(DynArr* arr) {
@@ -109,7 +110,7 @@ void arrPrint(DynArr* arr) {
 void arrDelete(DynArr* arr, size_t index) {
     assert(index < arr->size);
     for (size_t i = index + 1; i < arrSize(arr); i++) {
-        strCopy(arrGet(arr, i - 1), arrGet(arr, i));
+        strCopy(&arr->data[i - 1], arrGet(arr, i));
     }
     strFree(arrPop(arr));
 }

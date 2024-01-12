@@ -34,7 +34,6 @@ int main(int argc, char** argv) {
         printf("ERROR: cant open %s\n", argv[2]);
         exit(1);
     }
-
     DynArr arr;
     initEmptyDyn(&arr);
 
@@ -43,6 +42,7 @@ int main(int argc, char** argv) {
     while ( (ch != EOF) && (isDel(ch)) )
         ch = getc(fin);
 
+    //fill array
     //fill array
     char lf = 'x';
     arrAddEmpty(&arr);
@@ -142,7 +142,7 @@ void subPals(DynArr* arr) {
         if(isPal(str)) {
             String tmp;
             strInitWith(&tmp,"PALINDROM");
-            strCopy(str, &tmp);
+            arrSet(arr, &tmp, i);
             strFree(&tmp);
         }
     }

@@ -23,20 +23,20 @@ void strResize(String* arr) {
     }
 }
 
-char strGet(String* arr, int i) {
+char strGet(String* arr, size_t i) {
     assert(i < arr->len);
     return arr->str[i];
 }
 
 void strSet(String* arr, int ch, size_t i) {
-    assert(i <= strLen(arr));
+    assert(i < strLen(arr));
     arr->str[i] = ch;
 }
 
 void strAdd(String* arr, int ch) {
     assert(strLen(arr) < arr->capacity);
-    strSet(arr, ch, strLen(arr));
     arr->len++;
+    strSet(arr, ch, strLen(arr) - 1);
     strResize(arr);
 }
 
@@ -52,6 +52,7 @@ void strAlloc(String* arr, size_t size) {
 }
 
 void strCopy(String* dst, String* src) {
+
     size_t dst_capacity = dst->capacity;
     size_t src_len = strLen(src);
 
@@ -112,7 +113,7 @@ int strIsDel(String* s) {
 }
 
 int strIsWord(String* s) {
-    assert(strLen(s) > 0);
+    if (strLen(s) == 0) return 0;
     int res = isWordSymbol(strGet(s, 0)) || (strGet(s, 0) == '+') || (strGet(s ,0) == '-') ;
     for (size_t i = 1; i < strLen(s); i++) {
         res = res && (isWordSymbol(strGet(s,  i)));
@@ -134,6 +135,11 @@ int strIsDigit(String* s) {
 
 void strFree(String* s) {
     free(s->str);
+}
+
+void strRestore(String* s) {
+    strFree(s);
+    strInit(s);
 }
 
 void strInitWith(String* s, const char* src) {
