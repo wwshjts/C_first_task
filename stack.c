@@ -38,8 +38,7 @@ void stackFree(Stack* st) {
 }
 
 int stackPeek(Stack* st) {
-    assert(st->size > 0);
-    size_t size = (stackSize(st) - 1 > 0) ? (stackSize(st) - 1) : 0;
+    size_t size = stackSize(st) - 1;
     return st->data[size];
 }
 
