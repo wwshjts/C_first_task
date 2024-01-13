@@ -77,28 +77,14 @@ int main(int argc, char** argv) {
     removeBrackets(&arr);
 
     size_t start = 0;
-    String* word = arrGet(&arr, start);
-    while ((start < arrSize(&arr)) && strIsDel(word)) {
-        start++;
-        strFree(word);
-        free(word);
-        word = arrGet(&arr, start);
+    while ((start < arrSize(&arr)) && strIsDel(arrGet(&arr, start))) {
+        start++; 
     }
-
-    strFree(word);
-    free(word); 
 
     size_t stop = arrSize(&arr) - 1;
-    word = arrGet(&arr, stop);
-    while ((stop >= 0) && strIsDel(word)) {
+    while ((stop >= 0) && strIsDel(arrGet(&arr, stop))) {
         stop--;
-        strFree(word);
-        free(word);
-        word = arrGet(&arr, stop);
     }
-
-    strFree(word);
-    free(word);
 
     //delete spaces
     for (size_t i = start; i <= stop; i++) {
@@ -144,14 +130,10 @@ int removeBracket(DynArr* arr) {
         } else if (strCmpConst(s, ")") && (bracket == 1) && (words == 1)) { 
             arrDelete(arr, i);
             arrDelete(arr, first_bracket);
-            strFree(s);
-            free(s);
             return 1;
         } else if (strIsWord(s)) {
             words++;
         }
-        strFree(s);
-        free(s);
     }
     return 0;
 }
@@ -166,8 +148,6 @@ void subPals(DynArr* arr) {
             arrSet(arr, &tmp, i);
             strFree(&tmp);
         }
-        strFree(str);
-        free(str);
     }
 }
 
@@ -236,19 +216,10 @@ int convertToPolish(DynArr* arr, DynArr* res) {
         if (strIsDigit(&curr)) {
             arrAdd(res, &curr);
         } else if (strCmpConst(&curr, ")")) {
-            while (st.size > 0) {
-                String* tmp = arrPeek(&st);
-                if (strCmpConst(tmp, "(")) {
-                    strFree(tmp);
-                    free(tmp);
-                    break;
-                }
-                strFree(tmp);
-                free(tmp);
-                tmp = arrPop(&st);
+            while ((st.size > 0) && (!strCmpConst(arrPeek(&st), "("))) {
+                String* tmp = arrPop(&st);
                 arrAdd(res, tmp);
                 strFree(tmp);
-                free(tmp);
             }
             if (st.size > 0) {
                 arrDelete(&st, arrSize(&st) - 1);
@@ -261,20 +232,10 @@ int convertToPolish(DynArr* arr, DynArr* res) {
         arrFree(&st);
         return 0;
     }
-    while (st.size > 0) {
-        String* peeked = arrPeek(&st);
-        if (!isMathSign(peeked)) {
-            arrFree(&st);
-            strFree(peeked);
-            free(peeked);
-            return 0;
-        }
+    while ((st.size > 0) && (isMathSign(arrPeek(&st)))) {
         String* tmp = arrPop(&st);
         arrAdd(res, tmp);
         strFree(tmp);
-        free(tmp);
-        strFree(peeked);
-        free(peeked);
     }
     arrFree(&st);
     return 1;
@@ -383,9 +344,6 @@ void evalExpr(DynArr* arr) {
             arrFree(&expr);
             initEmptyDyn(&expr);
         }
-        strFree(s);
-        free(s);
-
     }
     while (stackSize(&toDelete) > 0) {
         arrDelete(arr, stackPop(&toDelete));

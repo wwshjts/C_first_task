@@ -76,7 +76,6 @@ String* arrPeek(DynArr* arr) {
 String* arrPop(DynArr* arr) {
     assert(arr->size > 0);
     String* res = arrPeek(arr);
-    strFree(&arr->data[(arr->size - 1 > 0) ? (arr->size - 1) : 0]);
     arr->size--;
     return res;
 }
@@ -102,11 +101,7 @@ void arrPrint(DynArr* arr) {
 void arrDelete(DynArr* arr, size_t index) {
     assert(index < arr->size);
     for (size_t i = index + 1; i < arrSize(arr); i++) {
-        String* tmp = arrGet(arr, i);
-        strCopy(&arr->data[i - 1], tmp);
-        strFree(tmp);
-        free(tmp);
+        strCopy(&arr->data[i - 1], &arr->data[i]);
     }
-    strFree(&arr->data[arrSize(arr) - 1]);
-    arr->size--;
+    strFree(arrPop(arr));
 }
