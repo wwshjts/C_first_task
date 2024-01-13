@@ -37,21 +37,12 @@ void arrAdd(DynArr* arr, String* item) {
 
 void arrSet(DynArr* arr, String* s, size_t i) {
     assert(i < arrSize(arr));
-
-    strFree(&arr->data[i]);
-    strInit(&arr->data[i]);
     strCopy(&arr->data[i], s);
 }
 
 String* arrGet(DynArr* arr, int i) {
     assert(i < arr->size);
-
-    String* res = malloc(sizeof(String));
-    nullCheck(res);
-    strInit(res);
-    
-    strCopy(res, &arr->data[i]);
-    return res;
+    return &arr->data[i];
 }
 
 void arrAddEmpty(DynArr* arr) {
@@ -87,7 +78,6 @@ String* arrPop(DynArr* arr) {
     String* res = arrPeek(arr);
     strFree(&arr->data[(arr->size - 1 > 0) ? (arr->size - 1) : 0]);
     arr->size--;
-    arrShrink(arr);
     return res;
 }
 
