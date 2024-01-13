@@ -37,7 +37,7 @@ void arrAdd(DynArr* arr, String* item) {
 
 void arrSet(DynArr* arr, String* s, size_t i) {
     assert(i< arrSize(arr));
-    
+    strCopy(&arr->data[i], s);
 }
 
 String* arrGet(DynArr* arr, int i) {
