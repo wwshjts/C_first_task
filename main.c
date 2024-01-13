@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
         exit(1);
     }
     DynArr arr;
-    initEmptyDyn(&arr);
+    arrInit(&arr);
 
     //skip delimiters
     char ch = getc(fin);
@@ -210,7 +210,7 @@ int isExpression(String* s) {
 
 int convertToPolish(DynArr* arr, DynArr* res) {
     DynArr st;
-    initEmptyDyn(&st);
+    arrInit(&st);
     for (size_t i = 0; i < arrSize(arr); i++) {
         String curr = arr->data[i];
         if (strIsDigit(&curr)) {
@@ -297,9 +297,9 @@ int evalPolish(DynArr* expr, String* res) {
 //eval all expressions
 void evalExpr(DynArr* arr) {
     DynArr expr;
-    initEmptyDyn(&expr);
+    arrInit(&expr);
     DynArr res;
-    initEmptyDyn(&res);
+    arrInit(&res);
     String ans;
     strInit(&ans);
     Stack toDelete;
@@ -338,11 +338,11 @@ void evalExpr(DynArr* arr) {
             expr_start = 0;
             expr_end = 0;
             arrFree(&res);
-            initEmptyDyn(&res);
+            arrInit(&res);
             strFree(&ans);
             strInit(&ans);
             arrFree(&expr);
-            initEmptyDyn(&expr);
+            arrInit(&expr);
         }
     }
     while (stackSize(&toDelete) > 0) {

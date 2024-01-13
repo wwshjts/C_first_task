@@ -5,17 +5,15 @@
 #include "dynArr.h"
 #include "support.h"
 
-void initEmptyDyn(DynArr* arr) {
+//here is typical functions 
+void arrInit(DynArr* arr) {
     arr->size = 0;
     arr->capacity = BASE_ARR_CAPACITY;
     arr->data = (String*) malloc(sizeof(String) * BASE_ARR_CAPACITY);
     nullCheck(arr->data);
 }
 
-size_t arrSize(DynArr* arr) {
-    return arr->size;
-}
-
+//here is unique functions for this datatype
 void arrResize(DynArr* arr) {
     if (arr->capacity == arr->size) {
         arr->capacity *= 2;
@@ -24,20 +22,25 @@ void arrResize(DynArr* arr) {
     }
 }
 
-void arrAdd(DynArr* arr, String* item) {
-    String* data = arr->data;
-
-    assert(arr->size < arr->capacity);
-
-    //copy content of item(ptr)
-    strInit(&data[arr->size]);
-    strCopy(&data[arr->size++], item);
-    arrResize(arr);
+String* arrPeek(DynArr* arr) {
+    assert(arrSize(arr) > 0);
+    size_t size = arrSize(arr) - 1;
+    return arrGet(arr, size);
 }
 
-void arrSet(DynArr* arr, String* s, size_t i) {
-    assert(i < arrSize(arr));
-    strCopy(&arr->data[i], s);
+String* arrPop(DynArr* arr) {
+    assert(arrSize(arr) > 0);
+    String* res = arrPeek(arr);
+    arr->size--;
+    return res;
+}
+
+size_t arrSize(DynArr* arr) {
+    return arr->size;
+}
+
+int arrIsEmpty(DynArr* arr) {
+    return arr->size > 0;
 }
 
 String* arrGet(DynArr* arr, int i) {
@@ -45,12 +48,19 @@ String* arrGet(DynArr* arr, int i) {
     return &arr->data[i];
 }
 
-void arrAddEmpty(DynArr* arr) {
+void arrSet(DynArr* arr, String* s, size_t i) {
+    assert(i < arrSize(arr));
+    strCopy(&arr->data[i], s);
+}
+
+void arrAdd(DynArr* arr, String* item) {
     String* data = arr->data;
 
-    assert(arr->size < arr->capacity);
+    assert(arrSize(arr) < arr->capacity);
 
-    strInit(&data[arr->size++]);
+    //copy content of item(ptr)
+    strInit(&data[arr->size]);
+    strCopy(&data[arr->size++], item);
     arrResize(arr);
 }
 
@@ -61,23 +71,6 @@ void arrFree(DynArr* arr) {
         strFree(&data[i]);
     }
     free(data);
-}
-
-int arrIsEmpty(DynArr* arr) {
-    return arr->size > 0;
-}
-
-String* arrPeek(DynArr* arr) {
-    assert(arrSize(arr) > 0);
-    size_t size = arr->size - 1;
-    return arrGet(arr, size);
-}
-
-String* arrPop(DynArr* arr) {
-    assert(arr->size > 0);
-    String* res = arrPeek(arr);
-    arr->size--;
-    return res;
 }
 
 void arrShrink(DynArr* arr) {

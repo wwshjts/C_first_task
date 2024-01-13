@@ -7,12 +7,12 @@
 #include "support.h"
 #include "stack.h"
 
+//here is typical functions
 void strInit(String* struct_ptr) {
     struct_ptr->len = 0;
     struct_ptr->capacity = BASE_String_CAPACITY;
-    char* str = (char*) malloc(sizeof(char) * BASE_String_CAPACITY);
-    nullCheck(str);
-    struct_ptr->str = str;
+    struct_ptr->str = (char*) malloc(sizeof(char) * BASE_String_CAPACITY);
+    nullCheck(struct_ptr->str);
 }
 
 void strResize(String* arr) {
@@ -23,6 +23,28 @@ void strResize(String* arr) {
     }
 }
 
+char strPeek(String* arr) {
+    assert(strLen(arr) > 0);
+    size_t size = strLen(arr) - 1;
+    return strGet(arr, size);
+}
+
+char strPop(String* arr) {
+    assert(strLen(arr) > 0);
+    char res = strPeek(arr);
+    arr->len--;
+    return res;
+}
+
+size_t strLen(String* struct_ptr) {
+    return struct_ptr->len;
+}
+
+int strIsEmpty(String* arr) {
+    return arr->len > 0;
+}
+
+//here is unique functions for this datastructure 
 char strGet(String* arr, size_t i) {
     assert(i < arr->len);
     return arr->str[i];
@@ -40,8 +62,8 @@ void strAdd(String* arr, int ch) {
     strResize(arr);
 }
 
-size_t strLen(String* struct_ptr) {
-    return struct_ptr->len;
+void strFree(String* s) {
+    free(s->str);
 }
 
 void strAlloc(String* arr, size_t size) {
@@ -131,10 +153,6 @@ int strIsDigit(String* s) {
         res = (res && (isDigit(strGet(s, i))));
     }
     return res;
-}
-
-void strFree(String* s) {
-    free(s->str);
 }
 
 void strRestore(String* s) {
