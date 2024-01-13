@@ -42,13 +42,6 @@ void arrSet(DynArr* arr, String* s, size_t i) {
 
 String* arrGet(DynArr* arr, int i) {
     assert(i < arr->size);
-
-    /*
-    String* s = malloc(sizeof(String));
-    strInit(s);
-    strCopy(s, &arr->data[i]); 
-    */
-
     return &arr->data[i];
 }
 
@@ -77,14 +70,13 @@ int arrIsEmpty(DynArr* arr) {
 String* arrPeek(DynArr* arr) {
     assert(arr->size > 0);
     size_t size = (arr->size - 1 > 0) ? (arr->size - 1) : 0;
-    return &arr->data[size];
+    return arrGet(arr, size);
 }
 
 String* arrPop(DynArr* arr) {
     assert(arr->size > 0);
     String* res = arrPeek(arr);
     arr->size--;
-    arrShrink(arr);
     return res;
 }
 
