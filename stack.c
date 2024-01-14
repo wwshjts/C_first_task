@@ -4,16 +4,12 @@
 #include "stack.h"
 #include "support.h"
 
-
+//here is typical functions
 void stackInit(Stack* st) {
     st->size = 0;
     st->capacity = BASE_STACK_CAPACITY;
     st->data = (int*) malloc(sizeof(int) * BASE_STACK_CAPACITY);
     nullCheck(st->data);
-}
-
-size_t stackSize(Stack* st) {
-    return st->size;
 }
 
 void stackResize(Stack* st) {
@@ -24,42 +20,46 @@ void stackResize(Stack* st) {
     }
 }
 
-void stackAdd(Stack* st, int item) {
-    int* data = st->data;
-
-    assert(stackSize(st) < st->capacity);
-
-    data[st->size++] = item;
-    stackResize(st);
-}
-
-void stackFree(Stack* st) {
-    free(st->data);
-}
-
 int stackPeek(Stack* st) {
     size_t size = stackSize(st) - 1;
     return st->data[size];
-}
-
-int stackIsEmpty(Stack* st) {
-    return stackSize(st) > 0;
 }
 
 int stackPop(Stack* st) {
     assert(stackSize(st) > 0);
     int res = stackPeek(st);
     st->size--;
-    stackShrink(st);
     return res;
 }
 
-void stackShrink(Stack* st) {
-    if (stackSize(st) < st->capacity / 4) {
-        st->capacity /= 4;
-        st->data = (int*) realloc(st->data, st->capacity * sizeof(int));
-        nullCheck(st->data);
-    }
+size_t stackSize(Stack* st) {
+    return st->size;
+}
+
+int stackIsEmpty(Stack* st) {
+    return stackSize(st) > 0;
+}
+
+//here is unique functions for this datastructure 
+int stackGet(Stack* arr, size_t i) {
+    assert(i < stakSize(arr));
+    return arr->data[i];
+}
+
+void stackSet(Stack* arr, int item, size_t i) {
+    assert(i < strLen(arr));
+    arr->data[i] = item;
+}
+
+void stackAdd(Stack* st, int item) {
+    assert(stackSize(st) < st->capacity);
+    st->size++;
+    stackSet(st, item, stackLen(st) - 1);
+    stackResize(st);
+}
+
+void stackFree(Stack* st) {
+    free(st->data);
 }
 
 void stackPrint(Stack* st) {

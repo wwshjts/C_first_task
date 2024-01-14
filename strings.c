@@ -41,7 +41,7 @@ size_t strLen(String* struct_ptr) {
 }
 
 int strIsEmpty(String* arr) {
-    return arr->len > 0;
+    return strLen(arr) > 0;
 }
 
 //here is unique functions for this datastructure 

@@ -6,17 +6,19 @@ typedef struct{
     size_t capacity;
 } String;
 
-//initialize an empty string
+// typical functions
 void strInit(String* struct_ptr);
+void strResize(String* struct_ptr);
+char strPeek(String* s);
+char strPop(String*  s);
+size_t strLen(String* struct_ptr);
+int strIsEmpty(String* s)
 
-//initialize dynamic string with string
-//if s.len < strlen(src) then strWith allocates memory
+// unique functions for this data sturcture
 void strInitWith(String* s, const char* src);
 void strSet(String* s, int ch, size_t i);
 void strAdd(String* struct_ptr, int ch);
 char strGet(String* s, size_t i);
-size_t strLen(String* struct_ptr);
-//index of first occurrence of ch
 void strCopy(String* struct_dst, String* struct_src);
 void strCat(String* struct_dst, String* struct_src);
 int strCmp(String* a, String* b);
@@ -25,7 +27,6 @@ int strEndsWith(String* arr, const char* postfix);
 
 void strRestore(String* s);
 void strFree(String* s);
-void strResize(String* struct_ptr);
 
 int strToInt(String* struct_prt);
 void strFloatToString(String* dst, float x);
