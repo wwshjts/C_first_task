@@ -12,7 +12,7 @@ void strResize(String* struct_ptr);
 char strPeek(String* s);
 char strPop(String*  s);
 size_t strLen(String* struct_ptr);
-int strIsEmpty(String* s)
+int strIsEmpty(String* s);
 
 // unique functions for this data sturcture
 void strInitWith(String* s, const char* src);

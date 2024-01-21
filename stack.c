@@ -42,19 +42,19 @@ int stackIsEmpty(Stack* st) {
 
 //here is unique functions for this datastructure 
 int stackGet(Stack* arr, size_t i) {
-    assert(i < stakSize(arr));
+    assert(i < stackSize(arr));
     return arr->data[i];
 }
 
 void stackSet(Stack* arr, int item, size_t i) {
-    assert(i < strLen(arr));
+    assert(i < stackSize(arr));
     arr->data[i] = item;
 }
 
 void stackAdd(Stack* st, int item) {
     assert(stackSize(st) < st->capacity);
     st->size++;
-    stackSet(st, item, stackLen(st) - 1);
+    stackSet(st, item, stackSize(st) - 1);
     stackResize(st);
 }
 
