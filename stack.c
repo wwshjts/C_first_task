@@ -40,7 +40,7 @@ int stackIsEmpty(Stack* st) {
     return stackSize(st) > 0;
 }
 
-//here is unique functions for this datastructure 
+//here is unique functions for this datastructure
 int stackGet(Stack* arr, size_t i) {
     assert(i < stackSize(arr));
     return arr->data[i];

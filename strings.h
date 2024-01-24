@@ -10,7 +10,7 @@ typedef struct{
 void strInit(String* struct_ptr);
 void strResize(String* struct_ptr);
 char strPeek(String* s);
-char strPop(String*  s);
+char strPop(String* s);
 size_t strLen(String* struct_ptr);
 int strIsEmpty(String* s);
 

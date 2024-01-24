@@ -5,7 +5,7 @@
 #include "dynArr.h"
 #include "support.h"
 
-//here is typical functions 
+//here is typical functions
 void arrInit(DynArr* arr) {
     arr->size = 0;
     arr->capacity = BASE_ARR_CAPACITY;

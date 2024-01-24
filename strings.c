@@ -44,7 +44,7 @@ int strIsEmpty(String* arr) {
     return strLen(arr) > 0;
 }
 
-//here is unique functions for this datastructure 
+//here is unique functions for this datastructure
 char strGet(String* arr, size_t i) {
     assert(i < arr->len);
     return arr->str[i];
@@ -136,9 +136,9 @@ int strIsDel(String* s) {
 
 int strIsWord(String* s) {
     if (strLen(s) == 0) return 1;
-    int res = isWordSymbol(strGet(s, 0)) || (strGet(s, 0) == '+') || (strGet(s ,0) == '-') ;
+    int res = isWordSymbol(strGet(s, 0)) || (strGet(s, 0) == '+') || (strGet(s, 0) == '-');
     for (size_t i = 1; i < strLen(s); i++) {
-        res = res && (isWordSymbol(strGet(s,  i)));
+        res = res && (isWordSymbol(strGet(s, i)));
     }
     return res;
 }
@@ -162,7 +162,6 @@ void strRestore(String* s) {
 
 void strInitWith(String* s, const char* src) {
     strInit(s);
-
     while(*src) {
         strAdd(s, *src);
         src++;

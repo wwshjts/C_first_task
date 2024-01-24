@@ -10,7 +10,7 @@ typedef struct {
 void stackInit(Stack* st);
 void stackResize(Stack* st);
 int stackPeek(Stack* st);
-int stackPop(Stack*  st);
+int stackPop(Stack* st);
 size_t stackSize(Stack* st);
 int stackIsEmpty(Stack* st);
 

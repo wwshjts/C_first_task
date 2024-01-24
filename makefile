@@ -9,7 +9,13 @@ all : main
 
 main : main.c strings.o support.o stack.o dynArr.o  
 	if ! [ -d bin ]; then mkdir bin; fi
+	gcc main.c strings.o support.o dynArr.o stack.o -o bin/main -Wall 
+	make clean
+
+checked : main.c strings.o support.o stack.o dynArr.o  
+	if ! [ -d bin ]; then mkdir bin; fi
 	gcc main.c strings.o support.o dynArr.o stack.o -o bin/main -Wall -fsanitize=address 
+	make clean
 
 strings.o : strings.c support.o stack.o strings.h
 	gcc -c strings.c -Wall 
@@ -26,7 +32,7 @@ stack.o : stack.c support.o
 clean : 
 	rm -f $(objects)
 
-test : main $(PASS) 
+test : checked $(PASS) 
 
 $(PASS) : %.passed: %-input.txt %-expected.txt bin/main
 	echo "Running test $*..."

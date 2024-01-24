@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     arrInit(&arr);
 
     //skip delimiters
-    char ch = getc(fin);
+    int ch = getc(fin);
     while ( (ch != EOF) && (isDel(ch)) )
         ch = getc(fin);
 
@@ -72,13 +72,12 @@ int main(int argc, char** argv) {
     subPals(&arr);
     //eval all expr
     evalExpr(&arr);
-
     //remove all brackets
     removeBrackets(&arr);
 
     size_t start = 0;
     while ((start < arrSize(&arr)) && strIsDel(arrGet(&arr, start))) {
-        start++; 
+        start++;
     }
 
     size_t stop = arrSize(&arr) - 1;
@@ -98,7 +97,7 @@ int main(int argc, char** argv) {
         }
         fprintString(fout, &arr.data[i]);
     }
-    if (lf == LF) { 
+    if (lf == LF) {
         fprintf(fout, "%c", LF);
     }
 
@@ -127,7 +126,7 @@ int removeBracket(DynArr* arr) {
             first_bracket = i;
             words = 0;
             bracket = 1;
-        } else if (strCmpConst(s, ")") && (bracket == 1) && (words == 1)) { 
+        } else if (strCmpConst(s, ")") && (bracket == 1) && (words == 1)) {
             arrDelete(arr, i);
             arrDelete(arr, first_bracket);
             return 1;
@@ -141,7 +140,7 @@ int removeBracket(DynArr* arr) {
 //substitute all palindromes
 void subPals(DynArr* arr) {
     for (size_t i = 0; i < arrSize(arr); i++) {
-        String* str =  arrGet(arr, i);
+        String* str = arrGet(arr, i);
         if(isPal(str)) {
             String tmp;
             strInitWith(&tmp,"PALINDROM");
@@ -228,7 +227,7 @@ int convertToPolish(DynArr* arr, DynArr* res) {
             arrAdd(&st, &curr);
         }
     }
-    if (res -> size == 0) {
+    if (res->size == 0) {
         arrFree(&st);
         return 0;
     }
@@ -249,7 +248,7 @@ int evalPolish(DynArr* expr, String* res) {
         String* curr = &expr->data[i];
         if (strIsDigit(curr)) {
             stackAdd(&st, strToInt(curr));
-        }  else {
+        } else {
             if (stackSize(&st) < 2) {
                 stackFree(&st);
                 return 0;
@@ -258,24 +257,28 @@ int evalPolish(DynArr* expr, String* res) {
             int fr;
             int sc;
             switch(op) {
-                case '+' : stackAdd(&st, stackPop(&st) + stackPop(&st));
+                case '+' :
+                    stackAdd(&st, stackPop(&st) + stackPop(&st));
                 break;
+
                 case '-' :
-                           sc = stackPop(&st);
-                           fr = stackPop(&st);
-                           stackAdd(&st, fr - sc);
+                    sc = stackPop(&st);
+                    fr = stackPop(&st);
+                    stackAdd(&st, fr - sc);
                 break;
+
                 case '*' :
-                           stackAdd(&st, stackPop(&st) * stackPop(&st));
+                    stackAdd(&st, stackPop(&st) * stackPop(&st));
                 break;
+
                 case '/' :
-                           sc = stackPop(&st);
-                           fr = stackPop(&st);
-                           if (sc == 0) {
-                               errFlag = 1;
-                           } else {
-                               stackAdd(&st, fr / sc);
-                           }
+                    sc = stackPop(&st);
+                    fr = stackPop(&st);
+                    if (sc == 0) {
+                        errFlag = 1;
+                    } else {
+                        stackAdd(&st, fr / sc);
+                    }
                 break;
             }
             if (errFlag) {
@@ -322,13 +325,13 @@ void evalExpr(DynArr* arr) {
                 expr_end = i;
             }
             nothing_happened = 0;
-        } 
-        
+        }
+
         if (nothing_happened || (i == arrSize(arr) - 1)) {
             if (convertToPolish(&expr, &res)) {
                 //if expr is converted
                 if (evalPolish(&res, &ans)) {
-                    strCopy(&arr->data[expr_start], &ans);
+                    arrSet(arr, &ans, expr_start);
                     for (size_t dl = expr_start + 1; dl <= expr_end; dl++) {
                         stackAdd(&toDelete, dl);
                     }
