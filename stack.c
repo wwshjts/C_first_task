@@ -21,7 +21,7 @@ void stackResize(Stack* st) {
 }
 
 int stackPeek(Stack* st) {
-    assert(stackSize(st) > 0)
+    assert(stackSize(st) > 0);
     size_t size = stackSize(st) - 1;
     return st->data[size];
 }
