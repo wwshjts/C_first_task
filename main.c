@@ -141,7 +141,7 @@ int removeBracket(DynArr* arr) {
 void subPals(DynArr* arr) {
     for (size_t i = 0; i < arrSize(arr); i++) {
         String* str = arrGet(arr, i);
-        if(isPal(str)) {
+        if (isPal(str)) {
             String tmp;
             strInitWith(&tmp,"PALINDROM");
             arrSet(arr, &tmp, i);
@@ -254,26 +254,16 @@ int evalPolish(DynArr* expr, String* res) {
                 return 0;
             }
             char op = expr->data[i].str[0];
-            int fr;
-            int sc;
+            int sc = stackPop(&st);
+            int fr = stackPop(&st);
             switch(op) {
                 case '+' :
-                    stackAdd(&st, stackPop(&st) + stackPop(&st));
-                break;
-
+                    stackAdd(&st, fr + sc); break;
                 case '-' :
-                    sc = stackPop(&st);
-                    fr = stackPop(&st);
-                    stackAdd(&st, fr - sc);
-                break;
-
+                    stackAdd(&st, fr - sc); break;
                 case '*' :
-                    stackAdd(&st, stackPop(&st) * stackPop(&st));
-                break;
-
+                    stackAdd(&st, fr * sc); break;
                 case '/' :
-                    sc = stackPop(&st);
-                    fr = stackPop(&st);
                     if (sc == 0) {
                         errFlag = 1;
                     } else {

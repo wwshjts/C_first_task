@@ -162,7 +162,7 @@ void strRestore(String* s) {
 
 void strInitWith(String* s, const char* src) {
     strInit(s);
-    while(*src) {
+    while (*src) {
         strAdd(s, *src);
         src++;
     }
