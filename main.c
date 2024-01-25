@@ -258,11 +258,14 @@ int evalPolish(DynArr* expr, String* res) {
             int fr = stackPop(&st);
             switch(op) {
                 case '+' :
-                    stackAdd(&st, fr + sc); break;
+                    stackAdd(&st, fr + sc); 
+                break;
                 case '-' :
-                    stackAdd(&st, fr - sc); break;
+                    stackAdd(&st, fr - sc); 
+                break;
                 case '*' :
-                    stackAdd(&st, fr * sc); break;
+                    stackAdd(&st, fr * sc); 
+                break;
                 case '/' :
                     if (sc == 0) {
                         errFlag = 1;
