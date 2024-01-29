@@ -43,7 +43,7 @@ int arrIsEmpty(DynArr* arr) {
     return arr->size > 0;
 }
 
-String* arrGet(DynArr* arr, int i) {
+String* arrGet(DynArr* arr, size_t i) {
     assert(i < arr->size);
     return &arr->data[i];
 }

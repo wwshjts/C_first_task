@@ -16,7 +16,7 @@ int arrIsEmpty(DynArr* arr);
 //unique functions for this data type
 void arrAdd(DynArr* arr, String* item);
 void arrSet(DynArr* arr, String* s, size_t i);
-String* arrGet(DynArr* arr, int i);
+String* arrGet(DynArr* arr, size_t i);
 void arrFree(DynArr* arr);
 
 void arrDelete(DynArr* arr, size_t index);
