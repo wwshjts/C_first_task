@@ -13,7 +13,6 @@ void arrInit(DynArr* arr) {
     nullCheck(arr->data);
 }
 
-//here is unique functions for this datatype
 void arrResize(DynArr* arr) {
     if (arr->capacity == arr->size) {
         arr->capacity *= 2;
@@ -43,6 +42,7 @@ int arrIsEmpty(DynArr* arr) {
     return arr->size > 0;
 }
 
+//here is unique functions for this datatype
 String* arrGet(DynArr* arr, size_t i) {
     assert(i < arr->size);
     return &arr->data[i];

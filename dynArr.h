@@ -6,6 +6,7 @@ typedef struct {
     size_t capacity;
 } DynArr;
 
+// typical functions
 void arrInit(DynArr* arr);
 void arrResize(DynArr* arr);
 String* arrPeek(DynArr* arr);
