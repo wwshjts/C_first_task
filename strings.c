@@ -8,38 +8,38 @@
 #include "stack.h"
 #include "dynamicArray.h"
 
-DYNAMIC_ARR_GENERATE_CODE(string, str, char, )
+DYNAMIC_ARR_GENERATE_CODE(String, str, char, )
 
 //here is unique functions for this datastructure
-char strGet(string* arr, size_t i) {
+char strGet(String* arr, size_t i) {
     assert(i < strSize(arr));
     return arr->data[i];
 }
 
-void strSet(string* arr, int ch, size_t i) {
+void strSet(String* arr, int ch, size_t i) {
     assert(i < strSize(arr));
     arr->data[i] = ch;
 }
 
-void strAdd(string* arr, int ch) {
+void strAdd(String* arr, int ch) {
     assert(strSize(arr) < arr->capacity);
     arr->size++;
     strSet(arr, ch, strSize(arr) - 1);
     strResize(arr);
 }
 
-void strFree(string* s) {
+void strFree(String* s) {
     free(s->data);
 }
 
-void strAlloc(string* arr, size_t size) {
+void strAlloc(String* arr, size_t size) {
     size_t capacity = size * 2;
     arr->data = (char*) realloc(arr->data, sizeof(char) * capacity);
     arr->capacity = capacity;
     nullCheck(arr->data);
 }
 
-void strCopy(string* dst, string* src) {
+void strCopy(String* dst, String* src) {
 
     size_t dst_capacity = dst->capacity;
     size_t src_len = strSize(src);
@@ -54,7 +54,7 @@ void strCopy(string* dst, string* src) {
     dst->size = src_len;
 }
 
-void strCat(string* dst, string* src) {
+void strCat(String* dst, String* src) {
     if (strSize(dst) < strSize(dst)) {
         strAlloc(dst, strSize(dst) + strSize(src));
     }
@@ -64,7 +64,7 @@ void strCat(string* dst, string* src) {
     dst->size = strSize(dst) + strSize(src);
 }
 
-int strCmp(string* a, string* b) {
+int strCmp(String* a, String* b) {
     if (strSize(a) != strSize(b)) return 0;
     for (size_t i = 0; i < strSize(a); i++) {
         if (strGet(a, i) != strGet(b, i)) return 0;
@@ -72,7 +72,7 @@ int strCmp(string* a, string* b) {
     return 1;
 }
 
-int strCmpConst(string* arr, const char* b) {
+int strCmpConst(String* arr, const char* b) {
     char* a = arr->data;
     size_t a_len = strSize(arr);
     size_t b_len = strlen(b);
@@ -83,7 +83,7 @@ int strCmpConst(string* arr, const char* b) {
     return 1;
 }
 
-int strEndsWith(string* arr, const char* postfix) {
+int strEndsWith(String* arr, const char* postfix) {
     size_t postfix_len = strlen(postfix);
     if (strSize(arr) < postfix_len) return 0;
     for (size_t i = strSize(arr) - postfix_len; i < arr->size; i++) {
@@ -92,7 +92,7 @@ int strEndsWith(string* arr, const char* postfix) {
     return 1;
 }
 
-int strIsDel(string* s) {
+int strIsDel(String* s) {
     int res = 1;
     for (size_t i = 0; i < strSize(s); i++) {
         res = res && isDel(strGet(s, i));
@@ -100,7 +100,7 @@ int strIsDel(string* s) {
     return res;
 }
 
-int strIsWord(string* s) {
+int strIsWord(String* s) {
     if (strSize(s) == 0) return 1;
     int res = isWordSymbol(strGet(s, 0)) || (strGet(s, 0) == '+') || (strGet(s, 0) == '-');
     for (size_t i = 1; i < strSize(s); i++) {
@@ -109,7 +109,7 @@ int strIsWord(string* s) {
     return res;
 }
 
-int strIsDigit(string* s) {
+int strIsDigit(String* s) {
     if (strSize(s) > 9) {
         return 0;
     }
@@ -121,12 +121,12 @@ int strIsDigit(string* s) {
     return res;
 }
 
-void strRestore(string* s) {
+void strRestore(String* s) {
     strFree(s);
     strInit(s);
 }
 
-void strInitWith(string* s, const char* src) {
+void strInitWith(String* s, const char* src) {
     strInit(s);
     while (*src) {
         strAdd(s, *src);
@@ -134,7 +134,7 @@ void strInitWith(string* s, const char* src) {
     }
 }
 
-int strToInt(string* s) {
+int strToInt(String* s) {
     long res = 0;
     for (size_t i = 0; i < s->size; i++) {
         res += strGet(s, i) - '0';
@@ -144,7 +144,7 @@ int strToInt(string* s) {
     return res;
 }
 
-void strIntToString(string* dst, int x) {
+void strIntToString(String* dst, int x) {
     Stack num;
     stackInit(&num);
     if (x == 0) {
@@ -164,13 +164,13 @@ void strIntToString(string* dst, int x) {
     stackFree(&num);
 }
 
-void fprintString(FILE* fl, string* arr) {
+void fprintString(FILE* fl, String* arr) {
     for (size_t i = 0; i < strSize(arr); i++) {
         putc(strGet(arr, i), fl);
     }
 }
 
-void strFloatToString(string* res, float temp) {
+void strFloatToString(String* res, float temp) {
     int x = (int) (temp * 10);
     Stack num;
     stackInit(&num);
@@ -190,7 +190,7 @@ void strFloatToString(string* res, float temp) {
     stackFree(&num);
 }
 
-void strPrint(string* str) {
+void strPrint(String* str) {
     for (size_t i = 0; i < strSize(str); i++) {
         printf("%c", str->data[i]);
     }

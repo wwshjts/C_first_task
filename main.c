@@ -8,12 +8,12 @@
 #include "dynArr.h"
 #include "stack.h"
 
-int isPal(string* str);
-int isBracket(string* s);
-int isMathSign(string* s);
-int isExpression(string* s);
+int isPal(String* str);
+int isBracket(String* s);
+int isMathSign(String* s);
+int isExpression(String* s);
 int convertToPolish(DynArr* arr, DynArr* res);
-int evalPolish(DynArr*, string*);
+int evalPolish(DynArr*, String*);
 void evalExpr(DynArr* arr);
 void subPals(DynArr* arr);
 int removeBracket(DynArr* arr);
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 
     //fill array
     char lf = 'x';
-    string in_word;
+    String in_word;
     strInit(&in_word);
     strAdd(&in_word, ch);
     while (((ch = getc(fin)) != EOF)) {
@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
 
     //delete spaces
     for (size_t i = start; i <= stop; i++) {
-        string* s = &arr.data[i];
+        String* s = &arr.data[i];
         if (strCmpConst(s, " ") && ((i > 0) && strIsDel(&arr.data[i - 1]))) {
             continue;
         }
@@ -121,7 +121,7 @@ int removeBracket(DynArr* arr) {
     int bracket = 0;
     size_t first_bracket = 0;
     for (size_t i = 0; i < arrSize(arr); i++) {
-        string* s = arrGet(arr, i);
+        String* s = arrGet(arr, i);
         if (strCmpConst(s, "(")) {
             first_bracket = i;
             words = 0;
@@ -140,9 +140,9 @@ int removeBracket(DynArr* arr) {
 //substitute all palindromes
 void subPals(DynArr* arr) {
     for (size_t i = 0; i < arrSize(arr); i++) {
-        string* str = arrGet(arr, i);
+        String* str = arrGet(arr, i);
         if (isPal(str)) {
-            string tmp;
+            String tmp;
             strInitWith(&tmp,"PALINDROM");
             arrSet(arr, &tmp, i);
             strFree(&tmp);
@@ -150,7 +150,7 @@ void subPals(DynArr* arr) {
     }
 }
 
-int isPal(string* str) {
+int isPal(String* str) {
     if (!strIsWord(str)) {
         return 0;
     }
@@ -179,7 +179,7 @@ int isPal(string* str) {
     return st.size == 0;
 }
 
-int isMathSign(string* s) {
+int isMathSign(String* s) {
     if (strCmpConst(s, "+"))
         return 1;
     if (strCmpConst(s, "-"))
@@ -191,7 +191,7 @@ int isMathSign(string* s) {
     return 0;
 }
 
-int isBracket(string* s) {
+int isBracket(String* s) {
     if (strCmpConst(s, "("))
         return 1;
     if (strCmpConst(s, ")"))
@@ -199,7 +199,7 @@ int isBracket(string* s) {
     return 0;
 }
 
-int isExpression(string* s) {
+int isExpression(String* s) {
     if (strIsDigit(s))
         return 1;
     if (isBracket(s))
@@ -211,12 +211,12 @@ int convertToPolish(DynArr* arr, DynArr* res) {
     DynArr st;
     arrInit(&st);
     for (size_t i = 0; i < arrSize(arr); i++) {
-        string curr = arr->data[i];
+        String curr = arr->data[i];
         if (strIsDigit(&curr)) {
             arrAdd(res, &curr);
         } else if (strCmpConst(&curr, ")")) {
             while ((st.size > 0) && (!strCmpConst(arrPeek(&st), "("))) {
-                string* tmp = arrPop(&st);
+                String* tmp = arrPop(&st);
                 arrAdd(res, tmp);
                 strFree(tmp);
             }
@@ -232,7 +232,7 @@ int convertToPolish(DynArr* arr, DynArr* res) {
         return 0;
     }
     while ((st.size > 0) && (isMathSign(arrPeek(&st)))) {
-        string* tmp = arrPop(&st);
+        String* tmp = arrPop(&st);
         arrAdd(res, tmp);
         strFree(tmp);
     }
@@ -240,12 +240,12 @@ int convertToPolish(DynArr* arr, DynArr* res) {
     return 1;
 }
 
-int evalPolish(DynArr* expr, string* res) {
+int evalPolish(DynArr* expr, String* res) {
     Stack st;
     stackInit(&st);
     int errFlag = 0;
     for (size_t i = 0; i < expr->size; i++) {
-        string* curr = &expr->data[i];
+        String* curr = &expr->data[i];
         if (strIsDigit(curr)) {
             stackAdd(&st, strToInt(curr));
         } else {
@@ -275,7 +275,7 @@ int evalPolish(DynArr* expr, string* res) {
                 break;
             }
             if (errFlag) {
-                string tmp;
+                String tmp;
                 strInitWith(&tmp, "ERROR");
                 strCopy(res,&tmp);
                 strFree(&tmp);
@@ -296,7 +296,7 @@ void evalExpr(DynArr* arr) {
     arrInit(&expr);
     DynArr res;
     arrInit(&res);
-    string ans;
+    String ans;
     strInit(&ans);
     Stack toDelete;
     stackInit(&toDelete);
@@ -305,7 +305,7 @@ void evalExpr(DynArr* arr) {
     size_t expr_end = 0;
 
     for (size_t i = 0; i < arrSize(arr); i++) {
-        string* s = arrGet(arr, i);
+        String* s = arrGet(arr, i);
         int nothing_happened = 1;
         if (isExpression(s) && expr_flag == 0) {
             arrAdd(&expr, s);

@@ -1,27 +1,27 @@
 #include "dynamicArray.h"
 
-DYNAMIC_ARR_GENERATE_HERDER(string, str, char, )
+DYNAMIC_ARR_GENERATE_HERDER(String, str, char, )
 // unique functions for this data sturcture
-void strInitWith(string* s, const char* src);
-void strSet(string* s, int ch, size_t i);
-void strAdd(string* struct_ptr, int ch);
-char strGet(string* s, size_t i);
-void strCopy(string* struct_dst, string* struct_src);
-void strCat(string* struct_dst, string* struct_src);
-int strCmp(string* a, string* b);
-int strCmpConst(string* arr, const char* b);
-int strEndsWith(string* arr, const char* postfix);
+void strInitWith(String* s, const char* src);
+void strSet(String* s, int ch, size_t i);
+void strAdd(String* struct_ptr, int ch);
+char strGet(String* s, size_t i);
+void strCopy(String* struct_dst, String* struct_src);
+void strCat(String* struct_dst, String* struct_src);
+int strCmp(String* a, String* b);
+int strCmpConst(String* arr, const char* b);
+int strEndsWith(String* arr, const char* postfix);
 
-void strRestore(string* s);
-void strFree(string* s);
+void strRestore(String* s);
+void strFree(String* s);
 
-int strToInt(string* struct_prt);
-void strFloatToString(string* dst, float x);
-void strIntToString(string* dst, int x);
+int strToInt(String* struct_prt);
+void strFloatToString(String* dst, float x);
+void strIntToString(String* dst, int x);
 
-int strIsDel(string* s);
-int strIsWord(string* s);
-int strIsDigit(string* s);
+int strIsDel(String* s);
+int strIsWord(String* s);
+int strIsDigit(String* s);
 
-void fprintString(FILE* fl, string* arr);
-void strPrint(string* str);
+void fprintString(FILE* fl, String* arr);
+void strPrint(String* str);

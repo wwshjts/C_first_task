@@ -5,21 +5,21 @@
 #include "dynArr.h"
 #include "support.h"
 
-DYNAMIC_ARR_GENERATE_CODE(DynArr, arr, string, *)
+DYNAMIC_ARR_GENERATE_CODE(DynArr, arr, String, *)
 
 //here is unique functions for this datatype
-string* arrGet(DynArr* arr, size_t i) {
+String* arrGet(DynArr* arr, size_t i) {
     assert(i < arr->size);
     return &arr->data[i];
 }
 
-void arrSet(DynArr* arr, string* s, size_t i) {
+void arrSet(DynArr* arr, String* s, size_t i) {
     assert(i < arrSize(arr));
     strCopy(&arr->data[i], s);
 }
 
-void arrAdd(DynArr* arr, string* item) {
-    string* data = arr->data;
+void arrAdd(DynArr* arr, String* item) {
+    String* data = arr->data;
 
     assert(arrSize(arr) < arr->capacity);
 
@@ -30,7 +30,7 @@ void arrAdd(DynArr* arr, string* item) {
 }
 
 void arrFree(DynArr* arr) {
-    string* data = arr->data;
+    String* data = arr->data;
     size_t size = arr->size;
     for (size_t i = 0; i < size; i++) {
         strFree(&data[i]);
@@ -41,7 +41,7 @@ void arrFree(DynArr* arr) {
 void arrShrink(DynArr* arr) {
     if (arr->size < arr->capacity / 4) {
         arr->capacity /= 4;
-        arr->data = (string*) realloc(arr->data, arr->capacity * sizeof(string));
+        arr->data = (String*) realloc(arr->data, arr->capacity * sizeof(String));
         nullCheck(arr->data);
     }
 }
