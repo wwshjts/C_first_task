@@ -49,5 +49,5 @@ size_t PREFIX##Size(NAME * arr) {\
 }\
 \
 int PREFIX##IsEmpty(NAME* arr) {\
-    return PREFIX##Size(arr) > 0;\
+    return PREFIX##Size(arr) == 0;\
 }

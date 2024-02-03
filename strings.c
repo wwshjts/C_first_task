@@ -58,7 +58,7 @@ void strCat(String* dst, String* src) {
     if (strSize(dst) < strSize(dst)) {
         strAlloc(dst, strSize(dst) + strSize(src));
     }
-    for (size_t i = dst->size; i < strSize(dst) + strSize(src); i++) {
+    for (size_t i = strSize(dst); i < strSize(dst) + strSize(src); i++) {
         strSet(dst, strGet(src, i), i);
     }
     dst->size = strSize(dst) + strSize(src);
@@ -78,7 +78,7 @@ int strCmpConst(String* arr, const char* b) {
     size_t b_len = strlen(b);
     if (a_len != b_len) return 0;
     for (size_t i = 0; i < a_len; i++) {
-        if (a[i] != b[i]) return 0;
+        if (strGet(arr, i) != b[i]) return 0;
     }
     return 1;
 }
@@ -86,7 +86,7 @@ int strCmpConst(String* arr, const char* b) {
 int strEndsWith(String* arr, const char* postfix) {
     size_t postfix_len = strlen(postfix);
     if (strSize(arr) < postfix_len) return 0;
-    for (size_t i = strSize(arr) - postfix_len; i < arr->size; i++) {
+    for (size_t i = strSize(arr) - postfix_len; i < strSize(arr); i++) {
         if (strGet(arr, i) != postfix[i - strSize(arr) + postfix_len]) return 0;
     }
     return 1;
@@ -115,7 +115,7 @@ int strIsDigit(String* s) {
     }
 
     int res = 1;
-    for (size_t i = 0; i < s->size; i++) {
+    for (size_t i = 0; i < strSize(s); i++) {
         res = (res && (isDigit(strGet(s, i))));
     }
     return res;
@@ -136,7 +136,7 @@ void strInitWith(String* s, const char* src) {
 
 int strToInt(String* s) {
     long res = 0;
-    for (size_t i = 0; i < s->size; i++) {
+    for (size_t i = 0; i < strSize(s); i++) {
         res += strGet(s, i) - '0';
         res *= 10;
     }
