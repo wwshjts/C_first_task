@@ -73,7 +73,6 @@ int strCmp(String* a, String* b) {
 }
 
 int strCmpConst(String* arr, const char* b) {
-    char* a = arr->data;
     size_t a_len = strSize(arr);
     size_t b_len = strlen(b);
     if (a_len != b_len) return 0;

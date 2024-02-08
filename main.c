@@ -154,7 +154,6 @@ int isPal(String* str) {
     if (!strIsWord(str)) {
         return 0;
     }
-    char* s = str->data;
     size_t size = strSize(str);
 
     Stack st;

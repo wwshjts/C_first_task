@@ -39,7 +39,7 @@ T REFERENCE_TYPE PREFIX##Peek(NAME * arr) {\
 \
 T REFERENCE_TYPE PREFIX##Pop(NAME * arr) {\
     assert(PREFIX##Size(arr) > 0);\
-    T * res = PREFIX##Peek(arr);\
+    T REFERENCE_TYPE res = PREFIX##Peek(arr);\
     arr->size--;\
     return res;\
 }\
@@ -48,6 +48,6 @@ size_t PREFIX##Size(NAME * arr) {\
     return arr->size;\
 }\
 \
-int PREFIX##IsEmpty(NAME* arr) {\
+int PREFIX##IsEmpty(NAME * arr) {\
     return PREFIX##Size(arr) == 0;\
 }
