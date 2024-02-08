@@ -6,150 +6,115 @@
 #include "strings.h"
 #include "support.h"
 #include "stack.h"
+#include "dynamicArray.h"
 
-//here is typical functions
-void strInit(String* struct_ptr) {
-    struct_ptr->len = 0;
-    struct_ptr->capacity = BASE_String_CAPACITY;
-    struct_ptr->str = (char*) malloc(sizeof(char) * BASE_String_CAPACITY);
-    nullCheck(struct_ptr->str);
-}
-
-void strResize(String* arr) {
-    if (arr->capacity == arr->len) {
-        arr->capacity *= 2;
-        arr->str = (char *) realloc(arr->str, arr->capacity * sizeof(char));
-        nullCheck(arr->str);
-    }
-}
-
-char strPeek(String* arr) {
-    assert(strLen(arr) > 0);
-    size_t size = strLen(arr) - 1;
-    return strGet(arr, size);
-}
-
-char strPop(String* arr) {
-    assert(strLen(arr) > 0);
-    char res = strPeek(arr);
-    arr->len--;
-    return res;
-}
-
-size_t strLen(String* struct_ptr) {
-    return struct_ptr->len;
-}
-
-int strIsEmpty(String* arr) {
-    return strLen(arr) > 0;
-}
+DYNAMIC_ARR_GENERATE_CODE(String, str, char, )
 
 //here is unique functions for this datastructure
 char strGet(String* arr, size_t i) {
-    assert(i < arr->len);
-    return arr->str[i];
+    assert(i < strSize(arr));
+    return arr->data[i];
 }
 
 void strSet(String* arr, int ch, size_t i) {
-    assert(i < strLen(arr));
-    arr->str[i] = ch;
+    assert(i < strSize(arr));
+    arr->data[i] = ch;
 }
 
 void strAdd(String* arr, int ch) {
-    assert(strLen(arr) < arr->capacity);
-    arr->len++;
-    strSet(arr, ch, strLen(arr) - 1);
+    assert(strSize(arr) < arr->capacity);
+    arr->size++;
+    strSet(arr, ch, strSize(arr) - 1);
     strResize(arr);
 }
 
 void strFree(String* s) {
-    free(s->str);
+    free(s->data);
 }
 
 void strAlloc(String* arr, size_t size) {
     size_t capacity = size * 2;
-    arr->str = (char*) realloc(arr->str, sizeof(char) * capacity);
+    arr->data = (char*) realloc(arr->data, sizeof(char) * capacity);
     arr->capacity = capacity;
-    nullCheck(arr->str);
+    nullCheck(arr->data);
 }
 
 void strCopy(String* dst, String* src) {
 
     size_t dst_capacity = dst->capacity;
-    size_t src_len = strLen(src);
+    size_t src_len = strSize(src);
 
     if (dst_capacity < src_len) {
         strAlloc(dst, src_len);
     }
 
     for (size_t i = 0; i < src_len; i++) {
-        dst->str[i] = strGet(src, i);
+        dst->data[i] = strGet(src, i);
     }
-    dst->len = src->len;
+    dst->size = src_len;
 }
 
 void strCat(String* dst, String* src) {
-    if (strLen(dst) < strLen(dst)) {
-        strAlloc(dst, strLen(dst) + strLen(src));
+    if (strSize(dst) < strSize(dst)) {
+        strAlloc(dst, strSize(dst) + strSize(src));
     }
-    for (size_t i = dst->len; i < dst->len + src->len; i++) {
-        dst->str[i] = src->str[i];
+    for (size_t i = strSize(dst); i < strSize(dst) + strSize(src); i++) {
+        strSet(dst, strGet(src, i), i);
     }
-    dst->len = dst->len + src->len;
+    dst->size = strSize(dst) + strSize(src);
 }
 
 int strCmp(String* a, String* b) {
-    if (strLen(a) != strLen(b)) return 0;
-    for (size_t i = 0; i < strLen(a); i++) {
+    if (strSize(a) != strSize(b)) return 0;
+    for (size_t i = 0; i < strSize(a); i++) {
         if (strGet(a, i) != strGet(b, i)) return 0;
     }
     return 1;
 }
 
 int strCmpConst(String* arr, const char* b) {
-    char* a = arr->str;
-    size_t a_len = strLen(arr);
+    size_t a_len = strSize(arr);
     size_t b_len = strlen(b);
     if (a_len != b_len) return 0;
     for (size_t i = 0; i < a_len; i++) {
-        if (a[i] != b[i]) return 0;
+        if (strGet(arr, i) != b[i]) return 0;
     }
     return 1;
 }
 
 int strEndsWith(String* arr, const char* postfix) {
     size_t postfix_len = strlen(postfix);
-    if (strLen(arr) < postfix_len) return 0;
-    for (size_t i = strLen(arr) - postfix_len; i < arr->len; i++) {
-        if (strGet(arr, i) != postfix[i - strLen(arr) + postfix_len]) return 0;
+    if (strSize(arr) < postfix_len) return 0;
+    for (size_t i = strSize(arr) - postfix_len; i < strSize(arr); i++) {
+        if (strGet(arr, i) != postfix[i - strSize(arr) + postfix_len]) return 0;
     }
     return 1;
 }
 
 int strIsDel(String* s) {
     int res = 1;
-    for (size_t i = 0; i < strLen(s); i++) {
+    for (size_t i = 0; i < strSize(s); i++) {
         res = res && isDel(strGet(s, i));
     }
     return res;
 }
 
 int strIsWord(String* s) {
-    if (strLen(s) == 0) return 1;
+    if (strSize(s) == 0) return 1;
     int res = isWordSymbol(strGet(s, 0)) || (strGet(s, 0) == '+') || (strGet(s, 0) == '-');
-    for (size_t i = 1; i < strLen(s); i++) {
+    for (size_t i = 1; i < strSize(s); i++) {
         res = res && (isWordSymbol(strGet(s, i)));
     }
     return res;
 }
 
 int strIsDigit(String* s) {
-    if (strLen(s) > 9) {
+    if (strSize(s) > 9) {
         return 0;
     }
 
     int res = 1;
-    for (size_t i = 0; i < s->len; i++) {
+    for (size_t i = 0; i < strSize(s); i++) {
         res = (res && (isDigit(strGet(s, i))));
     }
     return res;
@@ -170,7 +135,7 @@ void strInitWith(String* s, const char* src) {
 
 int strToInt(String* s) {
     long res = 0;
-    for (size_t i = 0; i < s->len; i++) {
+    for (size_t i = 0; i < strSize(s); i++) {
         res += strGet(s, i) - '0';
         res *= 10;
     }
@@ -199,7 +164,7 @@ void strIntToString(String* dst, int x) {
 }
 
 void fprintString(FILE* fl, String* arr) {
-    for (size_t i = 0; i < arr->len; i++) {
+    for (size_t i = 0; i < strSize(arr); i++) {
         putc(strGet(arr, i), fl);
     }
 }
@@ -225,7 +190,7 @@ void strFloatToString(String* res, float temp) {
 }
 
 void strPrint(String* str) {
-    for (size_t i = 0; i < strLen(str); i++) {
-        printf("%c", str->str[i]);
+    for (size_t i = 0; i < strSize(str); i++) {
+        printf("%c", str->data[i]);
     }
 }

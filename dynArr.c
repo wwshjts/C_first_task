@@ -5,42 +5,7 @@
 #include "dynArr.h"
 #include "support.h"
 
-//here is typical functions
-void arrInit(DynArr* arr) {
-    arr->size = 0;
-    arr->capacity = BASE_ARR_CAPACITY;
-    arr->data = (String*) malloc(sizeof(String) * BASE_ARR_CAPACITY);
-    nullCheck(arr->data);
-}
-
-void arrResize(DynArr* arr) {
-    if (arr->capacity == arr->size) {
-        arr->capacity *= 2;
-        arr->data = (String*) realloc(arr->data, arr->capacity * sizeof(String));
-        nullCheck(arr->data);
-    }
-}
-
-String* arrPeek(DynArr* arr) {
-    assert(arrSize(arr) > 0);
-    size_t size = arrSize(arr) - 1;
-    return arrGet(arr, size);
-}
-
-String* arrPop(DynArr* arr) {
-    assert(arrSize(arr) > 0);
-    String* res = arrPeek(arr);
-    arr->size--;
-    return res;
-}
-
-size_t arrSize(DynArr* arr) {
-    return arr->size;
-}
-
-int arrIsEmpty(DynArr* arr) {
-    return arr->size > 0;
-}
+DYNAMIC_ARR_GENERATE_CODE(DynArr, arr, String, *)
 
 //here is unique functions for this datatype
 String* arrGet(DynArr* arr, size_t i) {

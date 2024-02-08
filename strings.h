@@ -1,19 +1,6 @@
-#define BASE_String_CAPACITY 10
+#include "dynamicArray.h"
 
-typedef struct{
-    char* str;
-    size_t len;
-    size_t capacity;
-} String;
-
-// typical functions
-void strInit(String* struct_ptr);
-void strResize(String* struct_ptr);
-char strPeek(String* s);
-char strPop(String* s);
-size_t strLen(String* struct_ptr);
-int strIsEmpty(String* s);
-
+DYNAMIC_ARR_GENERATE_HERDER(String, str, char, )
 // unique functions for this data sturcture
 void strInitWith(String* s, const char* src);
 void strSet(String* s, int ch, size_t i);

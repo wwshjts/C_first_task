@@ -1,18 +1,5 @@
-#define BASE_ARR_CAPACITY 10
-
-typedef struct {
-    String* data;
-    size_t size;
-    size_t capacity;
-} DynArr;
-
-// typical functions
-void arrInit(DynArr* arr);
-void arrResize(DynArr* arr);
-String* arrPeek(DynArr* arr);
-String* arrPop(DynArr* arr);
-size_t arrSize(DynArr* arr);
-int arrIsEmpty(DynArr* arr);
+#include "dynamicArray.h"
+DYNAMIC_ARR_GENERATE_HERDER(DynArr, arr, String, *)
 
 //unique functions for this data type
 void arrAdd(DynArr* arr, String* item);

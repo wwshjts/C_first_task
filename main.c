@@ -87,15 +87,15 @@ int main(int argc, char** argv) {
 
     //delete spaces
     for (size_t i = start; i <= stop; i++) {
-        String* s = &arr.data[i];
-        if (strCmpConst(s, " ") && ((i > 0) && strIsDel(&arr.data[i - 1]))) {
+        String* s = arrGet(&arr, i);
+        if (strCmpConst(s, " ") && ((i > 0) && strIsDel(arrGet(&arr, i - 1)))) {
             continue;
         }
-        if (strCmpConst(s, "\n") && ( (i > 1) && strCmpConst(&arr.data[i - 1], "\n") &&
-                                        strCmpConst(&arr.data[i - 2], "\n"))) {
+        if (strCmpConst(s, "\n") && ( (i > 1) && strCmpConst(arrGet(&arr, i - 1), "\n") &&
+                                        strCmpConst(arrGet(&arr, i - 2), "\n"))) {
             continue;
         }
-        fprintString(fout, &arr.data[i]);
+        fprintString(fout, arrGet(&arr, i));
     }
     if (lf == LF) {
         fprintf(fout, "%c", LF);
@@ -154,29 +154,28 @@ int isPal(String* str) {
     if (!strIsWord(str)) {
         return 0;
     }
-    char* s = str->str;
-    size_t size = strLen(str);
+    size_t size = strSize(str);
 
     Stack st;
     stackInit(&st);
 
     for (size_t i = 0; i < size / 2; i++) {
-        stackAdd(&st, s[i]);
+        stackAdd(&st, strGet(str, i));
     }
 
     //case a1a
-    if ((size % 2 != 0) && (!isLetter(s[size / 2]))) {
+    if ((size % 2 != 0) && (!isLetter(strGet(str, size / 2)))) {
         stackFree(&st);
         return 0;
     }
 
     for (size_t i = size / 2 + size % 2; i < size; i++) {
-        if (stackPeek(&st) == s[i]) {
+        if (stackPeek(&st) == strGet(str, i)) {
             stackPop(&st);
         }
     }
     stackFree(&st);
-    return st.size == 0;
+    return stackIsEmpty(&st);
 }
 
 int isMathSign(String* s) {
@@ -227,7 +226,7 @@ int convertToPolish(DynArr* arr, DynArr* res) {
             arrAdd(&st, &curr);
         }
     }
-    if (res->size == 0) {
+    if (arrIsEmpty(res)) {
         arrFree(&st);
         return 0;
     }
@@ -244,8 +243,8 @@ int evalPolish(DynArr* expr, String* res) {
     Stack st;
     stackInit(&st);
     int errFlag = 0;
-    for (size_t i = 0; i < expr->size; i++) {
-        String* curr = &expr->data[i];
+    for (size_t i = 0; i < arrSize(expr); i++) {
+        String* curr = arrGet(expr, i);
         if (strIsDigit(curr)) {
             stackAdd(&st, strToInt(curr));
         } else {
@@ -253,18 +252,18 @@ int evalPolish(DynArr* expr, String* res) {
                 stackFree(&st);
                 return 0;
             }
-            char op = expr->data[i].str[0];
+            char op = strGet(arrGet(expr, i), 0);
             int sc = stackPop(&st);
             int fr = stackPop(&st);
             switch(op) {
                 case '+' :
-                    stackAdd(&st, fr + sc); 
+                    stackAdd(&st, fr + sc);
                 break;
                 case '-' :
-                    stackAdd(&st, fr - sc); 
+                    stackAdd(&st, fr - sc);
                 break;
                 case '*' :
-                    stackAdd(&st, fr * sc); 
+                    stackAdd(&st, fr * sc);
                 break;
                 case '/' :
                     if (sc == 0) {
