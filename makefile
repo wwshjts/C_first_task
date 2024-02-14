@@ -1,11 +1,12 @@
-.PHONY : all clean
+.PHONY : all clean allocator
 
 objects = strings.o support.o stack.o dynArr.o
 
 IN = $(wildcard test/*-input.txt)
 PASS = $(IN:-input.txt=.passed)
 
-all : main
+
+all : main 
 
 main : main.c strings.o support.o stack.o dynArr.o  
 	if ! [ -d bin ]; then mkdir bin; fi
@@ -28,6 +29,12 @@ dynArr.o : dynArr.c dynArr.h
 
 stack.o : stack.c support.o
 	gcc -c stack.c
+
+allocator.o : allocator.c allocator.h linked_list.o types.h
+	gcc -c allocator.c linked_list.o
+
+linked_list.o : linked_list.c linked_list.h types.h 
+	gcc -c linked_list.c 
 
 clean : 
 	rm -f $(objects)
