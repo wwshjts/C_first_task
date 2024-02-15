@@ -35,15 +35,7 @@ void arrFree(DynArr* arr) {
     for (size_t i = 0; i < size; i++) {
         strFree(&data[i]);
     }
-    free(data);
-}
-
-void arrShrink(DynArr* arr) {
-    if (arr->size < arr->capacity / 4) {
-        arr->capacity /= 4;
-        arr->data = (String*) realloc(arr->data, arr->capacity * sizeof(String));
-        nullCheck(arr->data);
-    }
+    myFree(data);
 }
 
 void arrPrint(DynArr* arr) {

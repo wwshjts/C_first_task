@@ -26,7 +26,7 @@ void stackAdd(Stack* st, int item) {
 }
 
 void stackFree(Stack* st) {
-    free(st->data);
+    myFree(st->data);
 }
 
 void stackPrint(Stack* st) {

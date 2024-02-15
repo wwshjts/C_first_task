@@ -6,21 +6,16 @@
 
 typedef struct node {
     struct node* next;
-    struct node* prev;
     pointer val;
-} listNode;
+} header;
 
 typedef struct {
-    listNode* head;
-    listNode* tail;
+    header* head;
     size_t size;
-} linkedList;
+} headerList;
 
-void listInit(linkedList* list);
-void listAddToHead(linkedList* list, listNode* v);
-void listAddToTail(linkedList* list,listNode* v);
-void listInsertPrev(linkedList* list, listNode* curr, listNode * node);
-listNode* listPopHead(linkedList* list);
-int listIsEmpty(linkedList* list);
-void listFree(linkedList* list);
-void listDelete(linkedList*, listNode*);
+void initHeaderList(headerList* list);
+void addHeader(headerList* list, header* v);
+header* storeHeader(pointer mem);
+header* getHeader(headerList* list);
+int listIsEmpty(headerList* list);

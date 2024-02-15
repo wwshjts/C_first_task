@@ -29,12 +29,12 @@ void strAdd(String* arr, int ch) {
 }
 
 void strFree(String* s) {
-    free(s->data);
+    myFree(s->data);
 }
 
 void strAlloc(String* arr, size_t size) {
     size_t capacity = size * 2;
-    arr->data = (char*) realloc(arr->data, sizeof(char) * capacity);
+    arr->data = (char*) myRealloc(arr->data);
     arr->capacity = capacity;
     nullCheck(arr->data);
 }

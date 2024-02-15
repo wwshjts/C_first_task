@@ -1,5 +1,7 @@
 #pragma once
 
+#include "allocator.h"
+
 #define BASE_ARR_CAPACITY 10
 
 #define DYNAMIC_ARR_GENERATE_HERDER(NAME, PREFIX, T, REFERENCE_TYPE)\
@@ -19,14 +21,15 @@ int PREFIX##IsEmpty(NAME *);
 void PREFIX##Init(NAME * arr) {\
     arr->size = 0;\
     arr->capacity = BASE_ARR_CAPACITY;\
-    arr->data = (T *) malloc(sizeof(T) * BASE_ARR_CAPACITY);\
+    void* p = myAlloc();\
+    arr->data = (T *) p;\
     nullCheck(arr->data);\
 }\
 \
 void PREFIX##Resize(NAME * arr) {\
     if (arr->capacity == arr->size) {\
         arr->capacity *= 2;\
-        arr->data = (T *) realloc(arr->data, arr->capacity * sizeof(T));\
+        arr->data = (T *) myRealloc(arr->data);\
         nullCheck(arr->data);\
     }\
 }\

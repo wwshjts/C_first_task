@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
         printf("ERROR: cant open %s\n", argv[2]);
         exit(1);
     }
+    startAllocate(32064, 2700);
     DynArr arr;
     arrInit(&arr);
 
@@ -102,6 +103,7 @@ int main(int argc, char** argv) {
     }
 
     arrFree(&arr);
+    stopAllocate();
     if (fclose(fin) != 0) {
         printf("ERROR: trouble in closing file%s\n", argv[1]);
     }

@@ -5,7 +5,7 @@
 void nullCheck(void* ptr) {
     if (ptr == NULL) {
         printf("ERROR: out of memory\n");
-        exit(0);
+        exit(1);
     }
 }
 

@@ -5,82 +5,101 @@
 #include "allocator.h"
 #include "linked_list.h"
 
-#define DEBUG
+//#define DEBUG
+
+#ifdef DEBUG
+    pointer* allocated_mem;
+#endif
 
 typedef struct{
-    linkedList* list;
+    headerList* list;
     pointer mem;
+    pointer mem_end;
     size_t n;
-    size_t memory_used;
+    size_t chunks_used;
     size_t chunk_size;
 } allocator;
 
 static allocator* a;
 
 static void memcheck(pointer ptr){
-    if(!ptr){
+    if (ptr == NULL) {
         printf("in allocation: Out of memory");
         exit(1);
     }
 }
 
-//store node to begining of the memory block
-listNode* storeNodeAtList(pointer mem){
-    listNode* node = (listNode*)mem;
-    node->val = mem;
-    node->next = NULL;
-    node->prev = NULL;
-    return node;
-}
-
 void startAllocate(size_t chunk_size, size_t n) {
-    //in this case we can't build our allocator
-    assert(chunk_size > sizeof(listNode));
-    
-    //allocate memory
-    pointer mem = malloc(chunk_size * n);
+    pointer mem = calloc(n, chunk_size);
     memcheck(mem);
 
-    linkedList* list = (linkedList*)(malloc(sizeof(linkedList)));
+    headerList* list = (headerList*) malloc(sizeof(headerList));
     memcheck(list);
-    listInit(list);
-    
-    a = (allocator*)(malloc(sizeof(allocator)));
+    initHeaderList(list);
+
+    #ifdef DEBUG
+        allocated_mem = (pointer*) malloc(sizeof(pointer) * n);
+        memcheck(allocated_mem);
+        for (size_t i = 0; i < n; i++) {
+            allocated_mem[i] = mem + chunk_size * i;
+        }
+    #endif
+
+    for (size_t i = 0; i < n; i++) {
+        addHeader(list, storeHeader(mem + i * chunk_size));
+    }
+
+    a = (allocator*) malloc(sizeof(allocator));
     memcheck(a);
 
-    a->list = list;
-    a->mem = mem;
-    a->n = n;
     a->chunk_size = chunk_size;
-    a->memory_used = 0;
+    a->chunks_used = 0;
+    a->n = n;
+    a->mem = mem;
+    a->mem_end = mem + (chunk_size * (n - 1));
+    a->list = list;
+}
 
-    for(size_t i = 0; i < n; i++){
-        listAddToHead(list, storeNodeAtList(mem + i * chunk_size));
+pointer myAlloc() {
+    if (listIsEmpty(a->list)) {
+        return NULL;
     }
-}
-
-pointer myAlloc(){ 
-    if(listIsEmpty(a->list)) return NULL;
-    listNode* header = listPopHead(a->list);
-    a->memory_used++;
+    a->chunks_used++;
+    header* h = getHeader(a->list);
     #ifdef DEBUG
-        printf("memory allocated: chuncks used %zu; all chuncks %zu\n", a->memory_used, a->n);
+        printf("Allocator: memory allocated %p %p; chunks_used %zu; all memory %zu\n", h->val, a->mem_end, a->chunks_used, a->n);
     #endif
-    return header->val;
+    return h->val;
 }
 
-//dumb realloc and it's okey
-pointer myRealloc(pointer mem){
-   return mem; 
+pointer myRealloc(pointer mem) {
+    return mem;
 }
 
-void myAllocatorFree(pointer mem){
-    listNode* node = storeNodeAtList(mem);
-    a->memory_used--;
-    listAddToHead(a->list, node);
+void myFree(pointer mem) {
+    a->chunks_used--;
+    #ifdef DEBUG
+        int flag = 0;
+        for (size_t i = 0; i < a->n; i++) {
+            if (mem == allocated_mem[i]) {
+                flag = 1;
+            }
+        }
+        if (!flag) {
+            printf("ERROR in allocator: unknown address in free");
+            exit(1);
+        }
+    printf("Allocator: memory freed %p; %zu; all memory %zu\n", mem, a->chunks_used, a->n);
+    #endif
+    addHeader(a->list, storeHeader(mem));
 }
 
-void myAllocatorStopAllocate(){
+void stopAllocate() {
+    #ifdef DEBUG
+        free(allocated_mem);
+    #endif
+
     free(a->mem);
+    free(a->list);
     free(a);
 }
