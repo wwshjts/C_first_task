@@ -73,8 +73,12 @@ pointer myAlloc() {
 }
 
 pointer myRealloc(pointer mem, size_t size) {
-    assert(size < a->chunk_size);
-    return mem;
+    if (size < a->chunk_size) {
+        return mem;
+    }
+    else {
+        return NULL;
+    }
 }
 
 void myFree(pointer mem) {
