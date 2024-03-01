@@ -29,7 +29,7 @@ void PREFIX##Init(NAME * arr) {\
 void PREFIX##Resize(NAME * arr) {\
     if (arr->capacity == arr->size) {\
         arr->capacity *= 2;\
-        arr->data = (T *) myRealloc(arr->data);\
+        arr->data = (T *) myRealloc(arr->data, arr->capacity * sizeof(T));\
         nullCheck(arr->data);\
     }\
 }\

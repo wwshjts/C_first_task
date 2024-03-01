@@ -34,7 +34,8 @@ int main(int argc, char** argv) {
         printf("ERROR: cant open %s\n", argv[2]);
         exit(1);
     }
-    startAllocate(32064, 2700);
+    // around 160Mib
+    startAllocate(62064, 2700);
     DynArr arr;
     arrInit(&arr);
 

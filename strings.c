@@ -34,7 +34,7 @@ void strFree(String* s) {
 
 void strAlloc(String* arr, size_t size) {
     size_t capacity = size * 2;
-    arr->data = (char*) myRealloc(arr->data);
+    arr->data = (char*) myRealloc(arr->data, capacity * sizeof(char));
     arr->capacity = capacity;
     nullCheck(arr->data);
 }

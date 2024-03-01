@@ -72,7 +72,8 @@ pointer myAlloc() {
     return h->val;
 }
 
-pointer myRealloc(pointer mem) {
+pointer myRealloc(pointer mem, size_t size) {
+    assert(size < a->chunk_size);
     return mem;
 }
 
@@ -95,10 +96,6 @@ void myFree(pointer mem) {
 }
 
 void stopAllocate() {
-    #ifdef DEBUG
-        free(allocated_mem);
-    #endif
-
     free(a->mem);
     free(a->list);
     free(a);
